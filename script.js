@@ -1,65 +1,43 @@
-// Slider Infinite Loop + Arrow + Swipe
-const slider = document.querySelector('.product-slider');
-const leftBtn = document.querySelector('.left-btn');
-const rightBtn = document.querySelector('.right-btn');
+const track = document.querySelector(".carousel-track");
+const leftBtn = document.querySelector(".arrow.left");
+const rightBtn = document.querySelector(".arrow.right");
 
-let isDragging = false;
+let isDown = false;
 let startX;
 let scrollLeft;
 
-// Clone first and last products for infinite loop
-const slides = slider.children;
-slider.appendChild(slides[0].cloneNode(true));
-slider.insertBefore(slides[slides.length-2].cloneNode(true), slides[0]);
+/* Arrow scroll */
+rightBtn.onclick = () => track.scrollBy({ left: 350, behavior: "smooth" });
+leftBtn.onclick  = () => track.scrollBy({ left: -350, behavior: "smooth" });
 
-// Current index
-let index = 1;
-const slideWidth = slides[0].offsetWidth + 30; // card width + gap
-slider.style.transform = `translateX(-${slideWidth * index}px)`;
-
-// Arrow click
-function moveToSlide(direction){
-    index += direction;
-    slider.style.transition = 'transform 0.5s ease';
-    slider.style.transform = `translateX(-${slideWidth * index}px)`;
-}
-
-rightBtn.addEventListener('click', ()=> moveToSlide(1));
-leftBtn.addEventListener('click', ()=> moveToSlide(-1));
-
-// Loop check
-slider.addEventListener('transitionend', () => {
-    if(slides[index].id === 'lastClone'){
-        slider.style.transition = 'none';
-        index = slides.length - 2;
-        slider.style.transform = `translateX(-${slideWidth * index}px)`;
-    }
-    if(slides[index].id === 'firstClone'){
-        slider.style.transition = 'none';
-        index = 1;
-        slider.style.transform = `translateX(-${slideWidth * index}px)`;
-    }
+/* Drag (Desktop) */
+track.addEventListener("mousedown", e => {
+  isDown = true;
+  startX = e.pageX;
+  scrollLeft = track.scrollLeft;
+});
+track.addEventListener("mouseleave", () => isDown = false);
+track.addEventListener("mouseup", () => isDown = false);
+track.addEventListener("mousemove", e => {
+  if(!isDown) return;
+  track.scrollLeft = scrollLeft - (e.pageX - startX);
 });
 
-// Mouse drag
-slider.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.pageX - slider.offsetLeft;
-    scrollLeft = slider.offsetLeft;
+/* Touch Swipe (Mobile) */
+track.addEventListener("touchstart", e => {
+  startX = e.touches[0].pageX;
+  scrollLeft = track.scrollLeft;
 });
-slider.addEventListener('mouseup', ()=> isDragging = false);
-slider.addEventListener('mouseleave', ()=> isDragging = false);
-slider.addEventListener('mousemove', (e) => {
-    if(!isDragging) return;
-    const x = e.pageX - slider.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    slider.scrollLeft = scrollLeft - walk;
+track.addEventListener("touchmove", e => {
+  track.scrollLeft = scrollLeft - (e.touches[0].pageX - startX);
 });
 
-// Touch swipe
-slider.addEventListener('touchstart', e => startX = e.touches[0].pageX - slider.offsetLeft);
-slider.addEventListener('touchmove', e => {
-    const x = e.touches[0].pageX - slider.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    slider.scrollLeft -= walk;
+/* Infinite Loop */
+track.addEventListener("scroll", () => {
+  if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 5) {
+    track.scrollLeft = 0;
+  }
+  if (track.scrollLeft <= 0) {
+    track.scrollLeft = track.scrollWidth;
+  }
 });
