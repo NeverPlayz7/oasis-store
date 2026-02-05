@@ -1,16 +1,16 @@
-let products = JSON.parse(localStorage.getItem("products")) || [
+let products = [
   {name:"Sneakers", price:49},
   {name:"Smart Watch", price:89},
-  {name:"Headset", price:39},
-  {name:"Hoodie", price:29}
+  {name:"Gaming Headset", price:39},
+  {name:"Hoodie", price:29},
+  {name:"Backpack", price:59}
 ];
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let user = localStorage.getItem("user");
-
+let cart = [];
+let index = 0;
 const track = document.getElementById("track");
 
-function renderProducts() {
+function render() {
   track.innerHTML = "";
   products.forEach(p => {
     track.innerHTML += `
@@ -18,68 +18,55 @@ function renderProducts() {
         <h3>${p.name}</h3>
         <p>$${p.price}</p>
         <button onclick="addToCart('${p.name}',${p.price})">Add to Cart</button>
-      </div>`;
+      </div>
+    `;
   });
 }
 
-function addToCart(name, price) {
-  cart.push({name,price});
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCart();
+function slide(dir) {
+  index += dir;
+  if (index < 0) index = products.length - 1;
+  if (index > products.length - 1) index = 0;
+  track.style.transform = `translateX(${-index * 275}px)`;
 }
 
-function updateCart() {
-  document.getElementById("cart-count").innerText = cart.length;
+/* Auto Infinite */
+setInterval(() => slide(1), 3000);
+
+/* Cart */
+function addToCart(name, price) {
+  cart.push({name,price});
+  document.getElementById("cartCount").innerText = cart.length;
 }
 
 function openCart() {
-  document.getElementById("cartPopup").style.display = "block";
-  let items = document.getElementById("cartItems");
-  items.innerHTML = "";
-  cart.forEach(i => items.innerHTML += `<p>${i.name} - $${i.price}</p>`);
+  cartItems.innerHTML = cart.map(i => `<p>${i.name} - $${i.price}</p>`).join("");
+  cart.style.display = "block";
 }
 
 function closeCart() {
-  document.getElementById("cartPopup").style.display = "none";
+  cart.style.display = "none";
 }
 
 function checkout() {
-  alert("Order placed successfully 🎉");
+  alert("Order Placed 🚀");
   cart = [];
-  localStorage.removeItem("cart");
-  updateCart();
+  cartCount.innerText = 0;
   closeCart();
 }
 
-/* AUTH */
+/* Auth */
 function openAuth() {
-  document.getElementById("authPopup").style.display = "block";
+  auth.style.display = "block";
 }
 
 function closeAuth() {
-  document.getElementById("authPopup").style.display = "none";
+  auth.style.display = "none";
 }
 
 function login() {
-  let u = document.getElementById("username").value;
-  localStorage.setItem("user", u);
-  alert("Welcome " + u);
+  alert("Welcome " + user.value);
   closeAuth();
-  if (u === "admin") document.getElementById("adminPopup").style.display = "block";
 }
 
-/* ADMIN */
-function addProduct() {
-  let name = pname.value;
-  let price = pprice.value;
-  products.push({name,price});
-  localStorage.setItem("products", JSON.stringify(products));
-  renderProducts();
-}
-
-function closeAdmin() {
-  document.getElementById("adminPopup").style.display = "none";
-}
-
-renderProducts();
-updateCart();
+render();
