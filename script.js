@@ -10,6 +10,7 @@ let cart = [];
 let wishlist = [];
 let index = 0;
 
+// DOM Elements
 const track = document.getElementById("track");
 const cartPopup = document.getElementById("cart");
 const cartItems = document.getElementById("cartItems");
@@ -46,15 +47,15 @@ function slide(dir) {
 // Auto Infinite Slider
 setInterval(() => slide(1), 3000);
 
-// Cart
+// Cart Functions
 function addToCart(name, price) {
   cart.push({name, price});
   document.getElementById("cartCount").innerText = cart.length;
 }
 
 function openCart() {
-  if(cart.length === 0) cartItems.innerHTML = "<p>Cart is empty</p>";
-  else cartItems.innerHTML = cart.map(i => `<p>${i.name} - $${i.price}</p>`).join("");
+  cartItems.innerHTML = cart.length === 0 ? "<p>Cart is empty</p>" :
+    cart.map(i => `<p>${i.name} - $${i.price}</p>`).join("");
   cartPopup.style.display = "block";
 }
 
@@ -68,27 +69,31 @@ function checkout() {
   closeCart();
 }
 
-// Wishlist
+// Wishlist Functions
 function addToWishlist(name, price){
   wishlist.push({name, price});
   alert(name + " added to wishlist ❤️");
 }
 
 function openWishlist(){
-  if(wishlist.length === 0) wishlistItems.innerHTML = "<p>No items in wishlist</p>";
-  else wishlistItems.innerHTML = wishlist.map(i=> `<p>${i.name} - $${i.price}</p>`).join("");
+  wishlistItems.innerHTML = wishlist.length === 0 ? "<p>No items in wishlist</p>" :
+    wishlist.map(i=> `<p>${i.name} - $${i.price}</p>`).join("");
   wishlistPopup.style.display = "block";
 }
 
 function closeWishlist(){ wishlistPopup.style.display = "none"; }
 
-// Auth
+// Auth Functions
 function openAuth(){ auth.style.display = "block"; }
 function closeAuth(){ auth.style.display = "none"; }
-function login(){ alert("Welcome " + user.value); closeAuth(); }
+function login(){ 
+  if(user.value.trim() === "") { alert("Enter username"); return; }
+  alert("Welcome " + user.value); 
+  closeAuth(); 
+}
 function socialLogin(platform){ alert("Logged in via " + platform + " ✅"); closeAuth(); }
 
-// Admin
+// Admin Functions
 function openAdmin(){ admin.style.display = "block"; }
 function closeAdmin(){ admin.style.display = "none"; }
 
@@ -97,6 +102,7 @@ function addProduct(){
   const price = Number(document.getElementById("adminProductPrice").value);
   const imgFile = document.getElementById("adminProductImage").files[0];
   if(!name || !price || !imgFile){ alert("Fill all fields"); return; }
+
   const reader = new FileReader();
   reader.onload = () => {
     products.push({name, price, image: reader.result});
@@ -106,4 +112,5 @@ function addProduct(){
   reader.readAsDataURL(imgFile);
 }
 
+// Initial render
 render();
