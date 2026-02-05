@@ -89,8 +89,14 @@ header {
   box-shadow: 0 0 30px cyan;
 }
 
+.card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
 .card button {
   margin-top: 10px;
+  cursor: pointer;
 }
 
 /* ARROWS */
@@ -119,4 +125,21 @@ header {
   border-radius: 15px;
   display: none;
   z-index: 5;
+}
+
+.popup input {
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+}
+
+.popup button {
+  margin: 5px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: cyan;
+  color: black;
 }
