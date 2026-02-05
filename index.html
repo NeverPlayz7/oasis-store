@@ -1,28 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Oasis Store</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body class="dark">
-
-<header class="top">
-  <h1>🌴 Oasis Store</h1>
-  <button onclick="toggleTheme()">🌙 / ☀️</button>
-</header>
-
-<section class="products" id="products"></section>
-
-<section class="cart">
-  <h2>🛒 Cart</h2>
-  <ul id="cart"></ul>
-  <p>Total: Rs <span id="total">0</span></p>
-
-  <a id="waBtn" target="_blank">📲 Order on WhatsApp</a>
-  <a href="https://instagram.com/YOUR_INSTAGRAM" target="_blank" class="insta">📸 Instagram</a>
+<!-- Featured Products Slider -->
+<section class="featured" id="products">
+  <h2>Featured Products</h2>
+  <div class="slider-container">
+    <button class="slider-btn left-btn">&#10094;</button>
+    <div class="product-slider">
+      <div class="product-card">
+        <img src="https://via.placeholder.com/300x200" alt="Cool Sneakers">
+        <h3>Cool Sneakers</h3>
+        <p>Step up your game with these amazing sneakers.</p>
+        <button>Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/300x200" alt="Smart Watch">
+        <h3>Smart Watch</h3>
+        <p>Track your fitness and stay connected in style.</p>
+        <button>Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/300x200" alt="Gaming Headset">
+        <h3>Gaming Headset</h3>
+        <p>Immersive sound for epic gaming sessions.</p>
+        <button>Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/300x200" alt="Hoodie">
+        <h3>Hoodie</h3>
+        <p>Comfortable, stylish hoodie for every day.</p>
+        <button>Add to Cart</button>
+      </div>
+    </div>
+    <button class="slider-btn right-btn">&#10095;</button>
+  </div>
 </section>
-
-<script src="script.js"></script>
-</body>
-</html>
