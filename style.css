@@ -1,6 +1,4 @@
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -9,7 +7,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 🌌 Animated Background */
+/* BACKGROUND ANIMATION */
 .bg {
   position: fixed;
   inset: 0;
@@ -25,7 +23,6 @@ body {
   100% {background-position: 0% 50%;}
 }
 
-/* ✨ Particles */
 .particles::before {
   content: "";
   position: fixed;
@@ -47,27 +44,23 @@ header {
   justify-content: space-between;
   padding: 20px 40px;
   backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 3;
 }
 
 .header-actions {
   display: flex;
-  gap: 15px;
+  gap: 10px;
 }
 
-.cart-btn {
-  cursor: pointer;
-}
+.cart-btn { cursor: pointer; }
 
 /* PRODUCTS */
-.products {
-  padding: 40px;
-  text-align: center;
-}
+.products { padding: 40px; text-align: center; }
 
-.slider {
-  position: relative;
-  overflow: hidden;
-}
+.slider { position: relative; overflow: hidden; }
 
 .track {
   display: flex;
@@ -89,15 +82,9 @@ header {
   box-shadow: 0 0 30px cyan;
 }
 
-.card img {
-  width: 100%;
-  border-radius: 10px;
-}
+.card img { width: 100%; border-radius: 10px; }
 
-.card button {
-  margin-top: 10px;
-  cursor: pointer;
-}
+.card button { margin-top: 10px; cursor: pointer; }
 
 /* ARROWS */
 .arrow {
@@ -127,40 +114,21 @@ header {
   z-index: 5;
 }
 
-.popup input {
-  margin: 10px 0;
-  padding: 8px;
-  border-radius: 8px;
-  border: none;
-}
-
+.popup input { margin: 10px 0; padding: 8px; border-radius: 8px; border: none; }
 .popup button {
   margin: 5px;
   padding: 8px 12px;
   border-radius: 8px;
-  border: none;.social-login {
-  margin: 15px 0;
-  text-align: center;
-}
-
-.social-login p {
-  margin-bottom: 10px;
-}
-
-.social-login button {
-  margin: 5px;
-  padding: 8px 12px;
-  border-radius: 8px;
   border: none;
-  cursor: pointer;
-  color: white;
-}
-
-.social-login .facebook { background: #1877f2; }
-.social-login .instagram { background: #e1306c; }
-.social-login .google { background: #db4437; }
-
   cursor: pointer;
   background: cyan;
   color: black;
 }
+
+/* SOCIAL LOGIN */
+.social-login { margin: 15px 0; text-align: center; }
+.social-login p { margin-bottom: 10px; }
+.social-login button { margin: 5px; padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; color: white; }
+.social-login .facebook { background: #1877f2; }
+.social-login .instagram { background: #e1306c; }
+.social-login .google { background: #db4437; }
