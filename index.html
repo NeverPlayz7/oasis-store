@@ -2,52 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🔥 Hype Market</title>
+  <title>Oasis Store</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark">
 
-<canvas id="particles"></canvas>
-
-<header>
-  <h1>🔥 HYPE MARKET</h1>
-  <p>Next-Gen Digital Marketplace</p>
+<header class="top">
+  <h1>🌴 Oasis Store</h1>
+  <button onclick="toggleTheme()">🌙 / ☀️</button>
 </header>
 
-<section class="products">
-  <div class="product">
-    <h2>Premium Account</h2>
-    <p>High quality digital product</p>
-    <span>Rs 999</span>
-    <button onclick="addToCart('Premium Account', 999)">Add to Cart</button>
-  </div>
-
-  <div class="product">
-    <h2>Gaming Item</h2>
-    <p>Limited edition item</p>
-    <span>Rs 1499</span>
-    <button onclick="addToCart('Gaming Item', 1499)">Add to Cart</button>
-  </div>
-
-  <div class="product">
-    <h2>Pro Service</h2>
-    <p>Fast & trusted service</p>
-    <span>Rs 1999</span>
-    <button onclick="addToCart('Pro Service', 1999)">Add to Cart</button>
-  </div>
-</section>
+<section class="products" id="products"></section>
 
 <section class="cart">
-  <h2>🛒 Your Cart</h2>
-  <ul id="cart-list"></ul>
-  <h3>Total: Rs <span id="total">0</span></h3>
+  <h2>🛒 Cart</h2>
+  <ul id="cart"></ul>
+  <p>Total: Rs <span id="total">0</span></p>
 
-  <button class="checkout" onclick="checkout()">Order on WhatsApp</button>
+  <a id="waBtn" target="_blank">📲 Order on WhatsApp</a>
+  <a href="https://instagram.com/YOUR_INSTAGRAM" target="_blank" class="insta">📸 Instagram</a>
 </section>
-
-<audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3"></audio>
 
 <script src="script.js"></script>
 </body>
 </html>
-
