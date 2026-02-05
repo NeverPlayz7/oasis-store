@@ -37,10 +37,19 @@
 </div>
 
 <!-- AUTH -->
+<!-- AUTH -->
 <div class="popup" id="auth">
   <h2>Login / Signup</h2>
   <input id="user" placeholder="Username">
   <button onclick="login()">Login</button>
+  
+  <div class="social-login">
+    <p>Or login with:</p>
+    <button class="facebook" onclick="socialLogin('Facebook')">Facebook</button>
+    <button class="instagram" onclick="socialLogin('Instagram')">Instagram</button>
+    <button class="google" onclick="socialLogin('Google')">Google</button>
+  </div>
+
   <button onclick="closeAuth()">Close</button>
 </div>
 
