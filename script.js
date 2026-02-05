@@ -10,7 +10,7 @@ left.onclick = () => {
   track.scrollBy({ left: -300, behavior: 'smooth' });
 };
 
-// swipe support
+// Swipe support
 let startX;
 track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
 track.addEventListener('touchend', e => {
@@ -18,3 +18,18 @@ track.addEventListener('touchend', e => {
   if (startX - endX > 50) track.scrollBy({ left: 300, behavior: 'smooth' });
   if (endX - startX > 50) track.scrollBy({ left: -300, behavior: 'smooth' });
 });
+
+// 🛒 CART SYSTEM
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function addToCart(name, price) {
+  cart.push({ name, price });
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+}
+
+function updateCartCount() {
+  document.getElementById("cart-count").innerText = cart.length;
+}
+
+updateCartCount();
