@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oasis Store</title>
 <link rel="stylesheet" href="style.css?v=1.1">
 </head>
@@ -13,7 +14,8 @@
 
 <!-- HEADER -->
 <header>
-  <h1>Oasis Store</h1>
+  <div class="logo">Oasis</div>
+  <input type="text" placeholder="Search products..." class="search-bar">
   <div class="header-actions">
     <button onclick="openAuth()">Login</button>
     <div class="cart-btn" onclick="openCart()">🛒 <span id="cartCount">0</span></div>
@@ -22,7 +24,7 @@
   </div>
 </header>
 
-<!-- FEATURED PRODUCTS -->
+<!-- FEATURED PRODUCTS SLIDER -->
 <section class="products">
   <h2>Featured Products</h2>
   <div class="slider">
@@ -32,7 +34,10 @@
   </div>
 </section>
 
-<!-- CART -->
+<!-- PRODUCT GRID -->
+<section class="product-grid" id="productGrid"></section>
+
+<!-- CART POPUP -->
 <div class="popup" id="cart">
   <h2>Your Cart</h2>
   <div id="cartItems"></div>
@@ -40,14 +45,14 @@
   <button onclick="closeCart()">Close</button>
 </div>
 
-<!-- WISHLIST -->
+<!-- WISHLIST POPUP -->
 <div class="popup" id="wishlist">
   <h2>Your Wishlist ❤️</h2>
   <div id="wishlistItems"></div>
   <button onclick="closeWishlist()">Close</button>
 </div>
 
-<!-- LOGIN / SIGNUP -->
+<!-- LOGIN / SIGNUP POPUP -->
 <div class="popup" id="auth">
   <h2>Login / Signup</h2>
   <input id="user" placeholder="Username">
@@ -61,7 +66,7 @@
   <button onclick="closeAuth()">Close</button>
 </div>
 
-<!-- ADMIN DASHBOARD -->
+<!-- ADMIN PANEL POPUP -->
 <div class="popup" id="admin">
   <h2>Admin Dashboard</h2>
   <input type="text" id="adminProductName" placeholder="Product Name">
