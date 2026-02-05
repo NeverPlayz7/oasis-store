@@ -107,3 +107,18 @@ header, footer {
   margin: 10px 0;
   padding: 10px;
 }
+.cart-icon {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+#cart-count {
+  background: red;
+  padding: 3px 8px;
+  border-radius: 50%;
+  font-size: 14px;
+  margin-left: 5px;
+}
