@@ -1,1 +1,118 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
 
+body {
+  background: radial-gradient(circle at top, #0f2027, #000);
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* PARTICLES */
+#particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+header h1 {
+  font-size: 3rem;
+  color: #00ffcc;
+  text-shadow: 0 0 25px #00ffcc;
+}
+
+header p {
+  opacity: 0.8;
+}
+
+/* PRODUCTS */
+.products {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 40px;
+}
+
+.product {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 30px;
+  width: 260px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0,255,200,0.25);
+  transition: 0.4s ease;
+}
+
+.product:hover {
+  transform: translateY(-12px) scale(1.05);
+  box-shadow: 0 0 60px rgba(0,255,200,0.9);
+}
+
+.product h2 {
+  margin-bottom: 10px;
+}
+
+.product span {
+  display: block;
+  margin: 15px 0;
+  font-size: 1.2rem;
+  color: #00ff99;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(45deg, #00ffcc, #00ff99);
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0,255,120,0.6); }
+  70% { box-shadow: 0 0 0 15px rgba(0,255,120,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,255,120,0); }
+}
+
+/* CART */
+.cart {
+  margin: 40px auto;
+  width: 320px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 0 30px rgba(0,255,200,0.4);
+  animation: slideUp 1s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(80px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.cart ul {
+  list-style: none;
+  margin: 15px 0;
+}
+
+.cart li {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
