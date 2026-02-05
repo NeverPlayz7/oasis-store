@@ -1,65 +1,65 @@
-// Particles code (keep it as before)
-particlesJS("particles-js", {
-    "particles": { "number": {"value":100,"density":{"enable":true,"value_area":800}},
-    "color":{"value":["#00ffe4","#ff00ff","#ffea00"]},
-    "shape":{"type":"circle","stroke":{"width":0},"polygon":{"nb_sides":5}},
-    "opacity":{"value":0.7,"random":true,"anim":{"enable":true,"speed":1,"opacity_min":0.1}},
-    "size":{"value":4,"random":true,"anim":{"enable":true,"speed":3,"size_min":0.1}},
-    "line_linked":{"enable":true,"distance":150,"color":"#00ffe4","opacity":0.4,"width":1},
-    "move":{"enable":true,"speed":2,"direction":"none","random":true,"straight":false,"out_mode":"out"} },
-    "interactivity":{"detect_on":"canvas",
-    "events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"},"resize":true},
-    "modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2},
-    "repulse":{"distance":100},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},
-    "retina_detect":true
-});
-
-// Slider Arrows Functionality
+// Slider Infinite Loop + Arrow + Swipe
 const slider = document.querySelector('.product-slider');
 const leftBtn = document.querySelector('.left-btn');
 const rightBtn = document.querySelector('.right-btn');
 
-leftBtn.addEventListener('click', () => {
-  slider.scrollBy({ left: -300, behavior: 'smooth' });
-});
-rightBtn.addEventListener('click', () => {
-  slider.scrollBy({ left: 300, behavior: 'smooth' });
-});
-
-// Swipe Support for Mobile
-let isDown = false;
+let isDragging = false;
 let startX;
 let scrollLeft;
 
-slider.addEventListener('mousedown', (e) => {
-  isDown = true;
-  slider.classList.add('active');
-  startX = e.pageX - slider.offsetLeft;
-  scrollLeft = slider.scrollLeft;
-});
-slider.addEventListener('mouseleave', () => {
-  isDown = false;
-  slider.classList.remove('active');
-});
-slider.addEventListener('mouseup', () => {
-  isDown = false;
-  slider.classList.remove('active');
-});
-slider.addEventListener('mousemove', (e) => {
-  if(!isDown) return;
-  e.preventDefault();
-  const x = e.pageX - slider.offsetLeft;
-  const walk = (x - startX) * 2; //scroll-fast
-  slider.scrollLeft = scrollLeft - walk;
+// Clone first and last products for infinite loop
+const slides = slider.children;
+slider.appendChild(slides[0].cloneNode(true));
+slider.insertBefore(slides[slides.length-2].cloneNode(true), slides[0]);
+
+// Current index
+let index = 1;
+const slideWidth = slides[0].offsetWidth + 30; // card width + gap
+slider.style.transform = `translateX(-${slideWidth * index}px)`;
+
+// Arrow click
+function moveToSlide(direction){
+    index += direction;
+    slider.style.transition = 'transform 0.5s ease';
+    slider.style.transform = `translateX(-${slideWidth * index}px)`;
+}
+
+rightBtn.addEventListener('click', ()=> moveToSlide(1));
+leftBtn.addEventListener('click', ()=> moveToSlide(-1));
+
+// Loop check
+slider.addEventListener('transitionend', () => {
+    if(slides[index].id === 'lastClone'){
+        slider.style.transition = 'none';
+        index = slides.length - 2;
+        slider.style.transform = `translateX(-${slideWidth * index}px)`;
+    }
+    if(slides[index].id === 'firstClone'){
+        slider.style.transition = 'none';
+        index = 1;
+        slider.style.transform = `translateX(-${slideWidth * index}px)`;
+    }
 });
 
-// Touch events for mobile swipe
-slider.addEventListener('touchstart', e => {
-  startX = e.touches[0].pageX - slider.offsetLeft;
-  scrollLeft = slider.scrollLeft;
+// Mouse drag
+slider.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.offsetLeft;
 });
+slider.addEventListener('mouseup', ()=> isDragging = false);
+slider.addEventListener('mouseleave', ()=> isDragging = false);
+slider.addEventListener('mousemove', (e) => {
+    if(!isDragging) return;
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    slider.scrollLeft = scrollLeft - walk;
+});
+
+// Touch swipe
+slider.addEventListener('touchstart', e => startX = e.touches[0].pageX - slider.offsetLeft);
 slider.addEventListener('touchmove', e => {
-  const x = e.touches[0].pageX - slider.offsetLeft;
-  const walk = (x - startX) * 2;
-  slider.scrollLeft = scrollLeft - walk;
+    const x = e.touches[0].pageX - slider.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    slider.scrollLeft -= walk;
 });
