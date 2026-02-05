@@ -1,13 +1,18 @@
-* { box-sizing: border-box; }
+/* ================== Reset & Base ================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  margin: 0;
   font-family: 'Segoe UI', sans-serif;
   color: white;
   overflow-x: hidden;
+  background: #000;
 }
 
-/* BACKGROUND ANIMATION */
+/* ================== Animated Background ================== */
 .bg {
   position: fixed;
   inset: 0;
@@ -18,11 +23,12 @@ body {
 }
 
 @keyframes gradient {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
+/* ================== Particles ================== */
 .particles::before {
   content: "";
   position: fixed;
@@ -34,20 +40,26 @@ body {
 }
 
 @keyframes move {
-  from {background-position: 0 0;}
-  to {background-position: 100px 200px;}
+  from { background-position: 0 0; }
+  to { background-position: 100px 200px; }
 }
 
-/* HEADER */
+/* ================== Header ================== */
 header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 20px 40px;
   backdrop-filter: blur(12px);
+  background: rgba(0,0,0,0.5);
   position: sticky;
   top: 0;
-  background: rgba(0,0,0,0.5);
   z-index: 3;
+}
+
+header h1 {
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .header-actions {
@@ -55,12 +67,32 @@ header {
   gap: 10px;
 }
 
-.cart-btn { cursor: pointer; }
+.header-actions button,
+.cart-btn {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: cyan;
+  color: black;
+  font-weight: bold;
+}
 
-/* PRODUCTS */
-.products { padding: 40px; text-align: center; }
+/* ================== Products / Slider ================== */
+.products {
+  padding: 40px;
+  text-align: center;
+}
 
-.slider { position: relative; overflow: hidden; }
+.products h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+.slider {
+  position: relative;
+  overflow: hidden;
+}
 
 .track {
   display: flex;
@@ -74,7 +106,7 @@ header {
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 0 15px #00ffff40;
-  transition: 0.4s;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .card:hover {
@@ -82,11 +114,24 @@ header {
   box-shadow: 0 0 30px cyan;
 }
 
-.card img { width: 100%; border-radius: 10px; }
+.card img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
 
-.card button { margin-top: 10px; cursor: pointer; }
+.card button {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: cyan;
+  color: black;
+  font-weight: bold;
+}
 
-/* ARROWS */
+/* ================== Slider Arrows ================== */
 .arrow {
   position: absolute;
   top: 50%;
@@ -96,12 +141,14 @@ header {
   font-size: 25px;
   cursor: pointer;
   z-index: 2;
+  border-radius: 50%;
+  padding: 5px 10px;
 }
 
 .left { left: 10px; }
 .right { right: 10px; }
 
-/* POPUPS */
+/* ================== Popups ================== */
 .popup {
   position: fixed;
   top: 50%;
@@ -112,23 +159,57 @@ header {
   border-radius: 15px;
   display: none;
   z-index: 5;
+  width: 300px;
+  max-width: 90%;
 }
 
-.popup input { margin: 10px 0; padding: 8px; border-radius: 8px; border: none; }
+.popup h2 {
+  margin-bottom: 15px;
+  font-size: 22px;
+  text-align: center;
+}
+
+.popup input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+}
+
 .popup button {
-  margin: 5px;
+  width: 100%;
+  margin: 5px 0;
   padding: 8px 12px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   background: cyan;
   color: black;
+  font-weight: bold;
 }
 
-/* SOCIAL LOGIN */
-.social-login { margin: 15px 0; text-align: center; }
-.social-login p { margin-bottom: 10px; }
-.social-login button { margin: 5px; padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; color: white; }
+/* ================== Social Login Buttons ================== */
+.social-login {
+  margin: 15px 0;
+  text-align: center;
+}
+
+.social-login p {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.social-login button {
+  margin: 5px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
 .social-login .facebook { background: #1877f2; }
 .social-login .instagram { background: #e1306c; }
 .social-login .google { background: #db4437; }
