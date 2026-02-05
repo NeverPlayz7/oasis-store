@@ -1,124 +1,80 @@
-* { box-sizing: border-box; }
-
 body {
+  font-family: Arial;
   margin: 0;
-  font-family: Poppins, sans-serif;
-  background: radial-gradient(circle at top, #0a1a2f, #000);
+  background: #111;
   color: white;
 }
 
-header, footer {
-  text-align: center;
-  padding: 20px;
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: black;
+  align-items: center;
 }
 
-.carousel-section {
+.actions {
   display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 15px;
 }
 
-.carousel-wrapper {
-  overflow: hidden;
-  width: 80%;
-}
-
-.carousel-track {
-  display: flex;
-  gap: 30px;
-  scroll-behavior: smooth;
-  overflow-x: auto;
-}
-
-.carousel-track::-webkit-scrollbar {
-  display: none;
-}
-
-.product-card {
-  min-width: 260px;
-  background: rgba(255,255,255,0.05);
-  padding: 20px;
-  border-radius: 20px;
-  text-align: center;
-  transition: 0.4s;
-}
-
-.product-card:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 25px cyan;
-}
-
-.product-card img {
-  width: 100%;
-  border-radius: 15px;
-}
-
-.product-card button {
-  background: cyan;
-  border: none;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.product-card button:hover {
-  transform: scale(1.15);
-}
-
-.arrow {
-  background: none;
-  border: none;
-  color: cyan;
-  font-size: 40px;
-  cursor: pointer;
-}
-
-.contact {
-  text-align: center;
-  margin: 30px;
-}
-
-.contact a {
-  margin: 0 15px;
-  color: #00eaff;
-  font-size: 22px;
-  text-decoration: none;
-}
-
-.signup-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.signup-box {
-  background: rgba(0,0,0,0.7);
-  padding: 40px;
-  border-radius: 20px;
-  text-align: center;
-}
-
-.signup-box input {
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-}
 .cart-icon {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  font-size: 22px;
   cursor: pointer;
+  font-size: 20px;
 }
 
 #cart-count {
   background: red;
-  padding: 3px 8px;
+  padding: 2px 6px;
   border-radius: 50%;
-  font-size: 14px;
-  margin-left: 5px;
+}
+
+.slider {
+  padding: 20px;
+}
+
+.carousel {
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  gap: 20px;
+  animation: scroll 15s linear infinite;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.card {
+  min-width: 220px;
+  background: #1c1c1c;
+  padding: 15px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 20px cyan;
+}
+
+button {
+  padding: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #222;
+  padding: 20px;
+  display: none;
+  z-index: 10;
+  border-radius: 10px;
 }
