@@ -102,7 +102,11 @@ function addProduct(){
     products.push({name, price, image: reader.result});
     render();
     alert(name + " added successfully");
-  }
+  }function socialLogin(platform){
+  alert("Logged in via " + platform + " ✅");
+  closeAuth();
+}
+
   reader.readAsDataURL(imgFile);
 }
 
