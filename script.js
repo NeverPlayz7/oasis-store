@@ -1,7 +1,10 @@
 let total = 0;
+let cartItems = [];
 
 function addToCart(product, price) {
   document.getElementById("clickSound").play();
+
+  cartItems.push({ product, price });
 
   const list = document.getElementById("cart-list");
   const item = document.createElement("li");
@@ -12,24 +15,38 @@ function addToCart(product, price) {
   document.getElementById("total").innerText = total;
 }
 
-/* PARTICLES BACKGROUND */
+function checkout() {
+  if (cartItems.length === 0) {
+    alert("Cart is empty!");
+    return;
+  }
+
+  let message = "🔥 *New Order* 🔥%0A%0A";
+  cartItems.forEach((item, i) => {
+    message += `${i + 1}. ${item.product} - Rs ${item.price}%0A`;
+  });
+  message += `%0A*Total:* Rs ${total}`;
+
+  // 👇 CHANGE THIS NUMBER TO YOUR WHATSAPP
+  const phone = "923XXXXXXXXX";
+
+  window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+}
+
+/* PARTICLES */
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let particles = [];
-
-for (let i = 0; i < 90; i++) {
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 2 + 1,
-    dx: Math.random() - 0.5,
-    dy: Math.random() - 0.5
-  });
-}
+let particles = Array.from({ length: 90 }, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random() * 2 + 1,
+  dx: Math.random() - 0.5,
+  dy: Math.random() - 0.5
+}));
 
 function animateParticles() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
