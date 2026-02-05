@@ -7,18 +7,22 @@
 </head>
 <body>
 
-<!-- ANIMATED BACKGROUND -->
+<!-- BACKGROUND -->
 <div class="bg"></div>
 <div class="particles"></div>
 
+<!-- HEADER -->
 <header>
   <h1>Oasis Store</h1>
   <div class="header-actions">
     <button onclick="openAuth()">Login</button>
     <div class="cart-btn" onclick="openCart()">🛒 <span id="cartCount">0</span></div>
+    <button onclick="openWishlist()">❤️ Wishlist</button>
+    <button onclick="openAdmin()">Admin</button>
   </div>
 </header>
 
+<!-- FEATURED PRODUCTS -->
 <section class="products">
   <h2>Featured Products</h2>
   <div class="slider">
@@ -36,28 +40,25 @@
   <button onclick="closeCart()">Close</button>
 </div>
 
-<!-- AUTH -->
-<!-- AUTH -->
+<!-- WISHLIST -->
+<div class="popup" id="wishlist">
+  <h2>Your Wishlist ❤️</h2>
+  <div id="wishlistItems"></div>
+  <button onclick="closeWishlist()">Close</button>
+</div>
+
+<!-- LOGIN / SIGNUP -->
 <div class="popup" id="auth">
   <h2>Login / Signup</h2>
   <input id="user" placeholder="Username">
   <button onclick="login()">Login</button>
-  
   <div class="social-login">
     <p>Or login with:</p>
     <button class="facebook" onclick="socialLogin('Facebook')">Facebook</button>
     <button class="instagram" onclick="socialLogin('Instagram')">Instagram</button>
     <button class="google" onclick="socialLogin('Google')">Google</button>
   </div>
-
   <button onclick="closeAuth()">Close</button>
-</div>
-
-<!-- WISHLIST -->
-<div class="popup" id="wishlist">
-  <h2>Your Wishlist ❤️</h2>
-  <div id="wishlistItems"></div>
-  <button onclick="closeWishlist()">Close</button>
 </div>
 
 <!-- ADMIN DASHBOARD -->
