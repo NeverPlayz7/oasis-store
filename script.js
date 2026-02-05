@@ -46,7 +46,7 @@ function slide(dir) {
 // Auto Infinite Slider
 setInterval(() => slide(1), 3000);
 
-// Cart Functions
+// Cart
 function addToCart(name, price) {
   cart.push({name, price});
   document.getElementById("cartCount").innerText = cart.length;
@@ -63,13 +63,12 @@ function closeCart() { cartPopup.style.display = "none"; }
 function checkout() {
   if(cart.length === 0){ alert("Cart is empty"); return; }
   alert("Payment Page would open (Stripe/JazzCash integration here) 🚀");
-  // Clear cart
   cart = [];
   document.getElementById("cartCount").innerText = 0;
   closeCart();
 }
 
-// Wishlist Functions
+// Wishlist
 function addToWishlist(name, price){
   wishlist.push({name, price});
   alert(name + " added to wishlist ❤️");
@@ -83,12 +82,13 @@ function openWishlist(){
 
 function closeWishlist(){ wishlistPopup.style.display = "none"; }
 
-// Auth Functions
+// Auth
 function openAuth(){ auth.style.display = "block"; }
 function closeAuth(){ auth.style.display = "none"; }
 function login(){ alert("Welcome " + user.value); closeAuth(); }
+function socialLogin(platform){ alert("Logged in via " + platform + " ✅"); closeAuth(); }
 
-// Admin Dashboard
+// Admin
 function openAdmin(){ admin.style.display = "block"; }
 function closeAdmin(){ admin.style.display = "none"; }
 
@@ -102,11 +102,7 @@ function addProduct(){
     products.push({name, price, image: reader.result});
     render();
     alert(name + " added successfully");
-  }function socialLogin(platform){
-  alert("Logged in via " + platform + " ✅");
-  closeAuth();
-}
-
+  }
   reader.readAsDataURL(imgFile);
 }
 
