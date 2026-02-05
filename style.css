@@ -1,12 +1,31 @@
-body{font-family:sans-serif;background:#0b1320;color:white}
-.light{background:#f5f5f5;color:#111}
-.top{display:flex;justify-content:space-between;padding:20px}
-.products{display:flex;gap:20px;flex-wrap:wrap;padding:20px}
-.card{background:#111;padding:15px;border-radius:12px;width:200px}
-.light .card{background:white}
-img{width:100%;border-radius:10px}
-button,a{padding:10px;border:none;background:#00e676;color:black;border-radius:20px;display:inline-block}
-.cart{padding:20px}
-.login-box{background:#111;padding:30px;border-radius:12px}
-.center{display:flex;justify-content:center;align-items:center;height:100vh}
-.insta{background:#e1306c;color:white;margin-left:10px}
+/* Product hover zoom + glow */
+.product-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 255, 228, 0.7);
+}
+
+/* Add to Cart button pop effect */
+.product-card button {
+  transition: transform 0.3s, background 0.3s;
+}
+.product-card button:hover {
+  transform: scale(1.15);
+  background: #00bdb2;
+}
+
+/* Infinite loop slider container */
+.slider-container {
+  overflow: hidden;
+  position: relative;
+}
+.product-slider {
+  display: flex;
+  gap: 30px;
+  transition: transform 0.5s ease;
+}
+
+/* Arrows remain same */
