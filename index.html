@@ -44,6 +44,23 @@
   <button onclick="closeAuth()">Close</button>
 </div>
 
+<!-- WISHLIST -->
+<div class="popup" id="wishlist">
+  <h2>Your Wishlist ❤️</h2>
+  <div id="wishlistItems"></div>
+  <button onclick="closeWishlist()">Close</button>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="popup" id="admin">
+  <h2>Admin Dashboard</h2>
+  <input type="text" id="adminProductName" placeholder="Product Name">
+  <input type="number" id="adminProductPrice" placeholder="Price">
+  <input type="file" id="adminProductImage">
+  <button onclick="addProduct()">Add Product</button>
+  <button onclick="closeAdmin()">Close</button>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
