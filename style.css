@@ -138,7 +138,28 @@ header {
   margin: 5px;
   padding: 8px 12px;
   border-radius: 8px;
+  border: none;.social-login {
+  margin: 15px 0;
+  text-align: center;
+}
+
+.social-login p {
+  margin-bottom: 10px;
+}
+
+.social-login button {
+  margin: 5px;
+  padding: 8px 12px;
+  border-radius: 8px;
   border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.social-login .facebook { background: #1877f2; }
+.social-login .instagram { background: #e1306c; }
+.social-login .google { background: #db4437; }
+
   cursor: pointer;
   background: cyan;
   color: black;
