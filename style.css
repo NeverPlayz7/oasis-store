@@ -1,31 +1,75 @@
-/* Product hover zoom + glow */
-.product-card {
-  transition: transform 0.3s, box-shadow 0.3s;
-  cursor: pointer;
-}
-.product-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 15px 30px rgba(0, 255, 228, 0.7);
+.featured {
+  padding: 80px 0;
+  text-align: center;
 }
 
-/* Add to Cart button pop effect */
+.carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 30px;
+  padding: 30px;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+
+/* Product Card */
+.product-card {
+  min-width: 280px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 20px;
+  padding: 20px;
+  color: white;
+  transition: 0.35s;
+}
+
+.product-card:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 30px rgba(0,255,228,0.8);
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+/* Button Pop Effect */
 .product-card button {
-  transition: transform 0.3s, background 0.3s;
+  margin-top: 15px;
+  padding: 10px 25px;
+  border-radius: 30px;
+  border: none;
+  background: #00ffe4;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
 }
 .product-card button:hover {
-  transform: scale(1.15);
+  transform: scale(1.2);
   background: #00bdb2;
 }
 
-/* Infinite loop slider container */
-.slider-container {
-  overflow: hidden;
-  position: relative;
+/* Arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.7);
+  color: #00ffe4;
+  border: none;
+  font-size: 2.5rem;
+  padding: 10px 15px;
+  cursor: pointer;
+  z-index: 5;
+  border-radius: 50%;
 }
-.product-slider {
-  display: flex;
-  gap: 30px;
-  transition: transform 0.5s ease;
-}
+.arrow:hover { background:#00bdb2; }
 
-/* Arrows remain same */
+.arrow.left { left: 10px; }
+.arrow.right { right: 10px; }
