@@ -7,50 +7,41 @@
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ANIMATED BACKGROUND -->
+<div class="bg"></div>
+<div class="particles"></div>
+
 <header>
   <h1>Oasis Store</h1>
-  <div class="actions">
-    <button onclick="openAuth()">Login / Signup</button>
-    <div class="cart-icon" onclick="openCart()">
-      🛒 <span id="cart-count">0</span>
-    </div>
+  <div class="header-actions">
+    <button onclick="openAuth()">Login</button>
+    <div class="cart-btn" onclick="openCart()">🛒 <span id="cartCount">0</span></div>
   </div>
 </header>
 
-<!-- PRODUCT SLIDER -->
-<section class="slider">
+<section class="products">
   <h2>Featured Products</h2>
-  <div class="carousel">
-    <div class="track" id="track">
-      <!-- products injected by JS -->
-    </div>
+  <div class="slider">
+    <button class="arrow left" onclick="slide(-1)">❮</button>
+    <div class="track" id="track"></div>
+    <button class="arrow right" onclick="slide(1)">❯</button>
   </div>
 </section>
 
-<!-- CART POPUP -->
-<div class="popup" id="cartPopup">
+<!-- CART -->
+<div class="popup" id="cart">
   <h2>Your Cart</h2>
   <div id="cartItems"></div>
   <button onclick="checkout()">Checkout</button>
   <button onclick="closeCart()">Close</button>
 </div>
 
-<!-- AUTH POPUP -->
-<div class="popup" id="authPopup">
+<!-- AUTH -->
+<div class="popup" id="auth">
   <h2>Login / Signup</h2>
-  <input id="username" placeholder="Username">
+  <input id="user" placeholder="Username">
   <button onclick="login()">Login</button>
   <button onclick="closeAuth()">Close</button>
-</div>
-
-<!-- ADMIN PANEL -->
-<div class="popup" id="adminPopup">
-  <h2>Admin Panel</h2>
-  <input id="pname" placeholder="Product name">
-  <input id="pprice" placeholder="Price">
-  <button onclick="addProduct()">Add Product</button>
-  <button onclick="closeAdmin()">Close</button>
 </div>
 
 <script src="script.js"></script>
