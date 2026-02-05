@@ -1,28 +1,20 @@
-/* ===== AUTOPLAY FEATURE ===== */
-let autoplayInterval;
-const AUTOPLAY_DELAY = 3000; // 3 seconds
+const track = document.querySelector('.carousel-track');
+const left = document.querySelector('.left');
+const right = document.querySelector('.right');
 
-function startAutoplay() {
-  autoplayInterval = setInterval(() => {
-    track.scrollBy({ left: 350, behavior: "smooth" });
-  }, AUTOPLAY_DELAY);
-}
+right.onclick = () => {
+  track.scrollBy({ left: 300, behavior: 'smooth' });
+};
 
-function stopAutoplay() {
-  clearInterval(autoplayInterval);
-}
+left.onclick = () => {
+  track.scrollBy({ left: -300, behavior: 'smooth' });
+};
 
-/* Start autoplay on load */
-startAutoplay();
-
-/* Pause on hover */
-track.addEventListener("mouseenter", stopAutoplay);
-track.addEventListener("mouseleave", startAutoplay);
-
-/* Pause while user interacts */
-track.addEventListener("mousedown", stopAutoplay);
-track.addEventListener("touchstart", stopAutoplay);
-
-/* Resume after interaction */
-track.addEventListener("mouseup", startAutoplay);
-track.addEventListener("touchend", startAutoplay);
+// swipe support
+let startX;
+track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+track.addEventListener('touchend', e => {
+  let endX = e.changedTouches[0].clientX;
+  if (startX - endX > 50) track.scrollBy({ left: 300, behavior: 'smooth' });
+  if (endX - startX > 50) track.scrollBy({ left: -300, behavior: 'smooth' });
+});
