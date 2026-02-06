@@ -1,116 +1,52 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAYwc4wlCgMNZoikTbt-ph48zatsUo6Kw0",
-  authDomain: "oasis-own.firebaseapp.com",
-  projectId: "oasis-own",
-  storageBucket: "oasis-own.firebasestorage.app",
-  messagingSenderId: "621399635023",
-  appId: "1:621399635023:web:7bb98a8f74eb72cb9fa63a"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-
-let STATE = {
-    user: null, cart: [],
-    products: [
-        {id: 1, name: "Chronos V1", price: 299, img: "https://picsum.photos/400/500?random=101"},
-        {id: 2, name: "Neural Buds", price: 149, img: "https://picsum.photos/400/500?random=102"},
-        {id: 3, name: "Ghost Runner", price: 599, img: "https://picsum.photos/400/500?random=103"},
-        {id: 4, name: "Apex Shell", price: 199, img: "https://picsum.photos/400/500?random=104"}
-    ]
-};
-
-// --- AUTH & INITIALIZATION ---
-window.loginWithGoogle = () => signInWithPopup(auth, provider);
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        STATE.user = user;
-        document.getElementById('authScreen').classList.add('opacity-0', 'pointer-events-none');
-        document.getElementById('mainApp').classList.remove('hidden');
-        setTimeout(() => document.getElementById('mainApp').classList.add('opacity-100'), 100);
-        document.getElementById('userImg').src = user.photoURL;
-        // CHANGE THIS TO YOUR EMAIL FOR ADMIN ACCESS
-        if(user.email === "ahmedboss8603@gmail.com") document.getElementById('adminBtn').classList.remove('hidden');
-        renderProducts();
-    }
-});
-
-// --- SHOP LOGIC ---
-function renderProducts() {
-    document.getElementById('productGrid').innerHTML = STATE.products.map(p => `
-        <div class="product-card p-6 group">
-            <div class="overflow-hidden rounded-[40px] mb-8 bg-black">
-                <img src="${p.img}" class="w-full h-80 object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-1000">
-            </div>
-            <h3 class="text-[10px] tracking-[5px] text-gray-500 font-black mb-2 uppercase">${p.name}</h3>
-            <div class="flex justify-between items-end">
-                <p class="text-4xl font-black italic italic">$${p.price}</p>
-                <button onclick="addToCart(${p.id})" class="bg-white text-black w-14 h-14 rounded-2xl hover:bg-cyan-500 transition-all flex items-center justify-center">
-                    <i class="fa-solid fa-plus text-xl"></i>
-                </button>
-            </div>
-        </div>
-    `).join('');
+:root {
+    --accent: #00f2ff;
+    --accent-glow: rgba(0, 242, 255, 0.2);
 }
 
-window.addToCart = (id) => {
-    STATE.cart.push(STATE.products.find(x => x.id === id));
-    updateCartUI();
-};
+[data-theme="purple"] { --accent: #bc1888; --accent-glow: rgba(188, 24, 136, 0.2); }
+[data-theme="gold"] { --accent: #ffae00; --accent-glow: rgba(255, 174, 0, 0.2); }
 
-function updateCartUI() {
-    let total = 0;
-    document.getElementById('cartItems').innerHTML = STATE.cart.map((item, i) => {
-        total += item.price;
-        return `<div class="bg-white/5 p-6 rounded-[30px] flex justify-between items-center">
-            <div><p class="text-[10px] text-cyan-500 font-bold uppercase tracking-widest">${item.name}</p><b class="text-2xl italic font-black">$${item.price}</b></div>
-            <button onclick="STATE.cart.splice(${i},1); updateCartUI();" class="text-red-500/50 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
-        </div>`;
-    }).join('');
-    document.getElementById('cartTotal').innerText = `$${total}`;
-    document.getElementById('cartCount').innerText = STATE.cart.length;
+body { font-family: 'Inter', sans-serif; transition: 0.3s; }
+
+.text-accent { color: var(--accent); }
+.bg-accent { background-color: var(--accent); }
+
+/* --- Responsive Hero Text --- */
+.hero-text {
+    background: linear-gradient(90deg, #fff, var(--accent), #fff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 5s linear infinite;
+    font-size: clamp(3.5rem, 18vw, 15rem); /* Ye line font size handle karti hai */
 }
+@keyframes shine { to { background-position: 200% center; } }
 
-window.processPayment = async () => {
-    if(!STATE.cart.length) return;
-    await addDoc(collection(db, "orders"), {
-        uid: STATE.user.uid, email: STATE.user.email,
-        total: STATE.cart.reduce((a,b)=>a+b.price,0), timestamp: new Date().toISOString()
-    });
-    confetti({ particleCount: 200, spread: 80, colors: ['#00f2ff', '#ffffff'] });
-    alert("ORDER ARCHIVED SUCCESSFULLY");
-    STATE.cart = []; updateCartUI(); toggleCart();
-};
+/* --- Mobile Responsive Sidebar --- */
+.sidebar {
+    position: fixed; top: 0; right: 0; height: 100vh;
+    width: 450px; max-width: 100%; /* Mobile par full width automatically */
+    background: rgba(10,10,10,0.98); backdrop-filter: blur(40px);
+    transform: translateX(100%); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000;
+}
+.sidebar.active { transform: translateX(0); }
 
-// --- HELPERS ---
-window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
-window.toggleHistory = async () => {
-    document.getElementById('historySidebar').classList.toggle('active');
-    const q = query(collection(db, "orders"), where("uid", "==", STATE.user.uid), orderBy("timestamp", "desc"));
-    const snap = await getDocs(q);
-    document.getElementById('historyItems').innerHTML = snap.docs.map(doc => `
-        <div class="bg-white/5 p-8 rounded-[40px]">
-            <p class="text-[9px] font-black text-cyan-500 mb-2">#${doc.id.slice(0,8)}</p>
-            <p class="text-4xl font-black italic">$${doc.data().total}</p>
-        </div>
-    `).join('');
-};
+/* --- Cards --- */
+.product-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 40px; transition: 0.4s;
+}
+.product-card:hover { border-color: var(--accent); transform: translateY(-10px); box-shadow: 0 20px 40px var(--accent-glow); }
 
-// --- PARTICLES ---
-particlesJS("particles-js", {
-    "particles": {
-        "number": { "value": 100 },
-        "color": { "value": ["#00f2ff", "#ffffff"] },
-        "opacity": { "value": 0.4 },
-        "size": { "value": 2, "random": true },
-        "line_linked": { "enable": true, "distance": 150, "color": "#00f2ff", "opacity": 0.1 },
-        "move": { "enable": true, "speed": 1.5 }
-    },
-    "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" } } }
-});
+/* --- Nav & Buttons --- */
+.nav-icon { background: rgba(255,255,255,0.05); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.3s; }
+.nav-icon:hover { background: var(--accent); color: #000; }
+.badge { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #000; padding: 2px 6px; border-radius: 50%; font-weight: 900; }
+
+/* Contact Buttons */
+.contact-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s; font-size: 1.2rem; }
+.whatsapp-bg { background: #25D366; }
+.insta-bg { background: linear-gradient(45deg, #f09433, #bc1888); }
+.tooltip { position: absolute; right: 60px; background: black; padding: 5px 12px; border-radius: 8px; font-size: 8px; font-weight: 900; opacity: 0; transition: 0.3s; white-space: nowrap; border: 1px solid var(--accent); color: var(--accent); }
