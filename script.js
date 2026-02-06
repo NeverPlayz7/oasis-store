@@ -1,22 +1,24 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-// 🔥 REPLACE WITH YOUR FIREBASE CONFIG
+// 🔥 Aapka Real Firebase Config
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAYwc4wlCgMNZoikTbt-ph48zatsUo6Kw0",
+  authDomain: "oasis-own.firebaseapp.com",
+  projectId: "oasis-own",
+  storageBucket: "oasis-own.firebasestorage.app",
+  messagingSenderId: "621399635023",
+  appId: "1:621399635023:web:7bb98a8f74eb72cb9fa63a"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
+// App State
 let STATE = {
     user: null,
     cart: [],
@@ -29,21 +31,37 @@ let STATE = {
 };
 
 // --- AUTH LOGIC ---
-window.loginWithGoogle = () => signInWithPopup(auth, provider);
+window.loginWithGoogle = async () => {
+    try {
+        await signInWithPopup(auth, provider);
+    } catch (error) {
+        console.error("Auth Error:", error);
+        alert("Login failed! Please check your Firebase settings.");
+    }
+};
+
+window.handleLogout = () => signOut(auth);
 
 onAuthStateChanged(auth, (user) => {
+    const authScreen = document.getElementById('authScreen');
+    const mainApp = document.getElementById('mainApp');
+    
     if (user) {
         STATE.user = user;
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('mainApp').classList.replace('hidden', 'block');
-        setTimeout(() => document.getElementById('mainApp').style.opacity = '1', 100);
+        authScreen.classList.add('hidden');
+        mainApp.classList.remove('hidden');
+        setTimeout(() => mainApp.style.opacity = '1', 100);
         document.getElementById('userImg').src = user.photoURL;
         
-        // Admin Access Logic (Change to your email)
-        if(user.email === "your-admin-email@gmail.com") {
+        // ADMIN CHECK: Apni email yahan daalein
+        if(user.email === "your-email@gmail.com") { 
             document.getElementById('adminBtn').classList.remove('hidden');
         }
         renderProducts();
+    } else {
+        STATE.user = null;
+        authScreen.classList.remove('hidden');
+        mainApp.classList.add('hidden');
     }
 });
 
@@ -51,7 +69,7 @@ onAuthStateChanged(auth, (user) => {
 function renderProducts() {
     const grid = document.getElementById('productGrid');
     grid.innerHTML = STATE.products.map(p => `
-        <div class="product-card p-5 group">
+        <div class="product-card p-5 group glass rounded-[40px]">
             <div class="overflow-hidden rounded-[30px] mb-6">
                 <img src="${p.img}" class="w-full h-72 object-cover group-hover:scale-110 transition duration-700">
             </div>
@@ -75,22 +93,28 @@ window.addToCart = (id) => {
 function updateCartUI() {
     const container = document.getElementById('cartItems');
     let total = 0;
-    container.innerHTML = STATE.cart.map(item => {
+    container.innerHTML = STATE.cart.map((item, index) => {
         total += item.price;
-        return `<div class="glass p-5 rounded-3xl flex justify-between items-center animate-pop">
+        return `<div class="glass p-5 rounded-3xl flex justify-between items-center">
             <div><p class="font-black text-xs uppercase">${item.name}</p><b>$${item.price}</b></div>
-            <button class="opacity-30 hover:opacity-100">&times;</button>
+            <button onclick="removeFromCart(${index})" class="opacity-30 hover:opacity-100 text-red-500">
+                <i class="fa-solid fa-trash"></i>
+            </button>
         </div>`;
     }).join('');
     document.getElementById('cartTotal').innerText = `$${total}`;
     document.getElementById('cartCount').innerText = STATE.cart.length;
 }
 
+window.removeFromCart = (index) => {
+    STATE.cart.splice(index, 1);
+    updateCartUI();
+};
+
 // --- PAYMENTS & DATA ---
 window.processPayment = async () => {
     if(!STATE.cart.length) return alert("Archive Bag is empty");
     
-    // Simulate Gateway Redirection
     const total = STATE.cart.reduce((a,b) => a + b.price, 0);
     const order = {
         uid: STATE.user.uid,
@@ -104,15 +128,18 @@ window.processPayment = async () => {
 
     try {
         await addDoc(collection(db, "orders"), order);
-        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 }, colors: ['#00f2ff', '#ffffff'] });
+        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
         alert("TRANSACTION VERIFIED: Order placed successfully.");
         STATE.cart = [];
         updateCartUI();
         toggleCart();
-    } catch (e) { console.error(e); }
+    } catch (e) { 
+        console.error("Order Error:", e);
+        alert("Could not save order. Make sure Firestore is in 'Test Mode'.");
+    }
 };
 
-// --- NAVIGATION ---
+// --- NAVIGATION & SIDEBARS ---
 window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 window.toggleHistory = async () => {
     const sidebar = document.getElementById('historySidebar');
@@ -122,13 +149,12 @@ window.toggleHistory = async () => {
         const q = query(collection(db, "orders"), where("uid", "==", STATE.user.uid), orderBy("timestamp", "desc"));
         const snap = await getDocs(q);
         document.getElementById('historyItems').innerHTML = snap.docs.map(doc => `
-            <div class="glass p-6 rounded-3xl">
-                <div class="flex justify-between mb-4">
-                    <span class="text-[9px] font-black tracking-widest text-cyan-500 uppercase">Order #${doc.id.slice(0,8)}</span>
+            <div class="glass p-6 rounded-3xl mb-4">
+                <div class="flex justify-between mb-2">
+                    <span class="text-[9px] font-black text-cyan-500 uppercase">#${doc.id.slice(0,8)}</span>
                     <span class="text-[9px] opacity-40">${new Date(doc.data().timestamp).toLocaleDateString()}</span>
                 </div>
                 <p class="text-3xl font-black italic">$${doc.data().total}</p>
-                <p class="text-[10px] mt-2 opacity-60">${doc.data().items.length} Items Purchased</p>
             </div>
         `).join('');
     }
@@ -140,22 +166,23 @@ window.toggleAdmin = async (show) => {
     if(show) {
         const snap = await getDocs(collection(db, "orders"));
         document.getElementById('adminOrders').innerHTML = snap.docs.map(doc => `
-            <div class="glass p-8 rounded-[40px] flex justify-between items-center">
+            <div class="glass p-6 rounded-[30px] flex justify-between items-center mb-4">
                 <div>
                     <h4 class="font-black text-xl uppercase">${doc.data().userName}</h4>
                     <p class="text-xs opacity-50">${doc.data().email}</p>
                 </div>
                 <div class="text-right">
                     <p class="text-3xl font-black text-green-400">$${doc.data().total}</p>
-                    <span class="text-[10px] bg-green-400/10 px-3 py-1 rounded-full font-bold">PAID</span>
                 </div>
             </div>
         `).join('');
     }
 };
 
-// --- MOUSE ENGINE ---
+// --- MOUSE CURSOR ---
 document.addEventListener('mousemove', e => {
-    document.getElementById('cursor-dot').style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-    document.getElementById('cursor-outline').style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`;
+    const dot = document.getElementById('cursor-dot');
+    const outline = document.getElementById('cursor-outline');
+    dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    outline.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`;
 });
