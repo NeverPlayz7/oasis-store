@@ -1,66 +1,125 @@
-/* ================== Reset & Base ================== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
-
-/* ================== Background ================== */
-.bg {
-  position: fixed; inset: 0;
-  background: linear-gradient(120deg,#050d1a,#020024,#090979,#00d4ff);
-  background-size:400% 400%; animation:gradient 15s ease infinite; z-index:-3;
+/* Custom Variables & Reset */
+body {
+    background-color: #000000;
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+    font-family: sans-serif;
 }
-@keyframes gradient { 0%{background-position:0%50%} 50%{background-position:100%50%} 100%{background-position:0%50%} }
-.particles::before {
-  content:""; position:fixed; inset:0;
-  background-image: radial-gradient(#ffffff33 1px, transparent 1px);
-  background-size: 40px 40px; animation: move 20s linear infinite; z-index:-2;
-}
-@keyframes move { from{background-position:0 0} to{background-position:100px 200px} }
 
-/* ================== Header ================== */
 header {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:15px 40px; backdrop-filter:blur(12px); background:rgba(0,0,0,0.5); position:sticky; top:0; z-index:3;
-}
-.logo { font-size:28px; font-weight:bold; }
-.search-bar { flex:1; margin:0 15px; padding:8px 12px; border-radius:8px; border:none; }
-.header-actions { display:flex; gap:10px; }
-.header-actions button, .cart-btn {
-  cursor:pointer; padding:8px 12px; border-radius:8px; border:none; background:cyan; color:black; font-weight:bold;
+    text-align: center;
+    margin-bottom: 50px;
 }
 
-/* ================== Slider ================== */
-.products { padding:40px; text-align:center; }
-.products h2 { margin-bottom:20px; font-size:28px; }
-.slider { position:relative; overflow:hidden; }
-.track { display:flex; gap:25px; transition: transform 0.6s ease; }
-.card { min-width:250px; background:rgba(0,0,0,0.55); border-radius:15px; padding:20px; box-shadow:0 0 15px #00ffff40; transition:transform 0.3s, box-shadow 0.3s; }
-.card:hover { transform:scale(1.1); box-shadow:0 0 30px cyan; }
-.card img { width:100%; border-radius:10px; margin-bottom:10px; }
-.card button { margin-top:10px; padding:8px 10px; border:none; border-radius:8px; cursor:pointer; background:cyan; color:black; font-weight:bold; }
-
-/* ================== Arrows ================== */
-.arrow { position:absolute; top:50%; transform:translateY(-50%); background:black; border:none; font-size:25px; cursor:pointer; z-index:2; border-radius:50%; padding:5px 10px; }
-.left { left:10px; } .right { right:10px; }
-
-/* ================== Popups ================== */
-.popup {
-  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-  background:#000c; padding:25px; border-radius:15px; display:none; z-index:5; width:300px; max-width:90%;
+.neon-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #00f2ff;
+    text-shadow: 0 0 15px rgba(0, 242, 255, 0.7);
+    margin-bottom: 10px;
 }
-.popup h2 { margin-bottom:15px; font-size:22px; text-align:center; }
-.popup input { width:100%; margin:10px 0; padding:8px; border-radius:8px; border:none; }
-.popup button { width:100%; margin:5px 0; padding:8px 12px; border-radius:8px; border:none; cursor:pointer; background:cyan; color:black; font-weight:bold; }
 
-/* ================== Social Login ================== */
-.social-login { margin:15px 0; text-align:center; }
-.social-login p { margin-bottom:10px; font-weight:bold; }
-.social-login button { margin:5px; padding:8px 12px; border-radius:8px; border:none; cursor:pointer; color:white; font-weight:bold; }
-.social-login .facebook { background:#1877f2; }
-.social-login .instagram { background:#e1306c; }
-.social-login .google { background:#db4437; }
-
-/* ================== Product Grid ================== */
-.product-grid {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; padding:20px 40px;
+.subtitle {
+    color: #cccccc;
+    font-size: 1.1rem;
 }
-.product-grid .card { margin-bottom:20px; }
+
+/* Grid Layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Card Styling */
+.product-card {
+    background-color: #121212;
+    border: 1px solid #222;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    border-color: #333;
+}
+
+.img-placeholder {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.product-card h3 {
+    color: #00f2ff;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.product-card p {
+    color: #999;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Button Styling */
+.cart-btn {
+    background-color: #00f2ff;
+    color: #000;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.cart-btn:hover {
+    background-color: #00c4cf;
+    transform: scale(1.05);
+}
+
+/* Footer & FAB */
+footer {
+    margin-top: 80px;
+    text-align: center;
+    color: #555;
+}
+
+.footer-line {
+    border-top: 1px solid #222;
+    margin-bottom: 20px;
+}
+
+.fab-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fab {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.phone { background-color: #22c55e; }
+.instagram { background-color: #06b6d4; }
