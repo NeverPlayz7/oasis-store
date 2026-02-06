@@ -1,6 +1,5 @@
-// Firebase CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } 
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -13,12 +12,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export function googleLogin(){
-  signInWithPopup(auth, new GoogleAuthProvider())
-    .then(res => alert("Welcome " + res.user.displayName));
+window.googleLogin = function(){
+  signInWithPopup(auth,new GoogleAuthProvider())
+    .then(res=>alert("Welcome "+res.user.displayName));
 }
 
-export function facebookLogin(){
-  signInWithPopup(auth, new FacebookAuthProvider())
-    .then(res => alert("Welcome " + res.user.displayName));
+window.facebookLogin = function(){
+  signInWithPopup(auth,new FacebookAuthProvider())
+    .then(res=>alert("Welcome "+res.user.displayName));
 }
