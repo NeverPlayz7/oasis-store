@@ -35,7 +35,7 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('mainApp').classList.remove('hidden');
         setTimeout(() => document.getElementById('mainApp').classList.add('opacity-100'), 100);
         document.getElementById('userImg').src = user.photoURL;
-        if(user.email === "your-email@gmail.com") document.getElementById('adminBtn').classList.remove('hidden');
+        if(user.email === "ahmedboss8603@gmail.com") document.getElementById('adminBtn').classList.remove('hidden');
         renderProducts();
     }
 });
