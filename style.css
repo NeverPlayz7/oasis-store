@@ -1,26 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
 
 :root { --accent: #00f2ff; }
-body { font-family: 'Inter', sans-serif; cursor: none; }
+body { font-family: 'Inter', sans-serif; }
 
-/* 🖱 Custom Cursor */
-#cursor-dot { width: 6px; height: 6px; background: #fff; position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999; }
-#cursor-outline { width: 30px; height: 30px; border: 2px solid var(--accent); position: fixed; border-radius: 50%; pointer-events: none; z-index: 9998; transition: 0.15s cubic-bezier(0.16, 1, 0.3, 1); }
-
-/* 🌫 Glassmorphism */
-.glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+/* 🌫 Glassmorphism & Effects */
+.glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); }
 
 /* 🛒 Sidebars */
-.sidebar { position: fixed; top: 0; right: 0; height: 100vh; width: 450px; background: rgba(5,5,5,0.98); border-left: 1px solid rgba(255,255,255,0.05); transform: translateX(100%); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; }
+.sidebar { position: fixed; top: 0; right: 0; height: 100vh; width: 500px; background: rgba(5,5,5,0.98); backdrop-filter: blur(30px); border-left: 1px solid rgba(255,255,255,0.05); transform: translateX(100%); transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; }
 .sidebar.active { transform: translateX(0); }
 
 /* 📦 Cards */
-.product-card { background: #080808; border-radius: 40px; border: 1px solid #111; transition: 0.5s; }
-.product-card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 40px 80px rgba(0,242,255,0.1); }
+.product-card { background: rgba(255,255,255,0.02); border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.product-card:hover { transform: translateY(-15px) scale(1.02); border-color: var(--accent); box-shadow: 0 50px 100px rgba(0,242,255,0.15); }
 
-/* 🎖 Badge */
-.badge { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #000; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 10px; }
-.nav-icon { background: rgba(255,255,255,0.05); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.3s; }
-.nav-icon:hover { background: var(--accent); color: #000; }
+/* 🎖 Badge & Nav */
+.badge { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #000; font-size: 10px; font-weight: 900; padding: 2px 7px; border-radius: 50%; }
+.nav-icon { background: rgba(255,255,255,0.05); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.4s; font-size: 1.2rem; }
+.nav-icon:hover { background: var(--accent); color: #000; transform: rotate(10deg); }
 
-@keyframes pop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+/* Custom Scrollbar */
+.custom-scroll::-webkit-scrollbar { width: 5px; }
+.custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
