@@ -11,19 +11,20 @@
   <div class="logo">Oasis<span>.in</span></div>
 
   <div class="search">
-    <input type="text" placeholder="Search Oasis">
+    <input placeholder="Search Oasis">
     <button>🔍</button>
   </div>
 
   <div class="actions">
     <div onclick="openLogin()">Login</div>
+    <div onclick="openOrders()">📦 Orders</div>
     <div onclick="openWishlist()">❤️ <span id="wishCount" class="badge">0</span></div>
     <div onclick="openCart()">🛒 <span id="cartCount" class="badge">0</span></div>
   </div>
 </header>
 
 <section class="banner">
-  <h1>Welcome to Oasis<br>Shop Smart. Shop Premium.</h1>
+  <h1>Welcome to Oasis<br>Amazon-Style Premium Store</h1>
 </section>
 
 <section class="products" id="products"></section>
@@ -32,6 +33,7 @@
 <div class="popup" id="cart">
   <h2>Your Cart</h2>
   <div id="cartItems"></div>
+  <button onclick="checkout()">Checkout</button>
   <button onclick="closeCart()">Close</button>
 </div>
 
@@ -42,10 +44,17 @@
   <button onclick="closeWishlist()">Close</button>
 </div>
 
+<!-- ORDERS -->
+<div class="popup" id="orders">
+  <h2>Order History</h2>
+  <div id="orderItems"></div>
+  <button onclick="closeOrders()">Close</button>
+</div>
+
 <!-- LOGIN -->
 <div class="popup" id="login">
   <h2>Login to Oasis</h2>
-  <input type="text" placeholder="Email">
+  <input placeholder="Email">
   <button onclick="social('Google')">Login with Google</button>
   <button onclick="social('Facebook')">Login with Facebook</button>
   <button onclick="social('Instagram')">Login with Instagram</button>
@@ -53,7 +62,7 @@
 </div>
 
 <footer>
-  © 2026 Oasis Store — Amazon Inspired
+  © 2026 Oasis Store — Amazon Inspired UI
 </footer>
 
 <script src="script.js"></script>
