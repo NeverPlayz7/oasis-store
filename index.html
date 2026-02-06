@@ -1,32 +1,94 @@
-<input type="text" id="searchInput" onkeyup="searchProducts()" placeholder="Search premium gear..." class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-2 focus:ring-2 focus:ring-cyan-500 outline-none transition-all">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oasis Store | Ultra Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#050505] text-white overflow-x-hidden">
 
-<div id="profileModal" class="modal-overlay hidden">
-    <div class="modal-content bg-[#111] border border-white/10 p-8 rounded-3xl max-w-sm w-full text-center">
-        <div class="w-24 h-24 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-bold">JD</div>
-        <h2 class="text-2xl font-bold">John Doe</h2>
-        <p class="text-gray-500 mb-6">Premium Member</p>
-        <div class="text-left space-y-4">
-            <div class="bg-white/5 p-3 rounded-xl flex items-center gap-3"><i class="fa-solid fa-box text-cyan-400"></i> My Orders</div>
-            <div class="bg-white/5 p-3 rounded-xl flex items-center gap-3"><i class="fa-solid fa-gear text-gray-400"></i> Settings</div>
-        </div>
-        <button onclick="toggleModal('profileModal')" class="mt-8 text-gray-500 hover:text-white">Close</button>
-    </div>
-</div>
+    <div id="particles-js"></div>
 
-<div id="cartSidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-[#0a0a0a]/95 backdrop-blur-xl z-[100] translate-x-full transition-transform duration-300 border-l border-white/10">
-    <div class="p-6 h-full flex flex-col">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-black">YOUR CART</h2>
-            <button onclick="toggleCart()" class="text-2xl">&times;</button>
+    <nav class="glass-nav sticky top-0 z-50 p-4 border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div class="text-3xl font-black tracking-tighter neon-text cursor-pointer" onclick="location.reload()">OASIS.</div>
+            
+            <div class="flex-1 max-w-xl hidden md:block">
+                <div class="relative group">
+                    <input type="text" id="searchInput" onkeyup="searchProducts()" placeholder="Search premium gear..." class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-2 focus:ring-2 focus:ring-cyan-500 outline-none transition-all">
+                    <i class="fas fa-search absolute right-5 top-3 text-gray-500 group-hover:text-cyan-400"></i>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 md:gap-6">
+                <button onclick="toggleModal('adminModal')" class="icon-btn" title="Admin Panel"><i class="fa-solid fa-screwdriver-wrench"></i></button>
+                <button onclick="toggleModal('profileModal')" class="icon-btn" title="Profile"><i class="fa-regular fa-user"></i></button>
+                <div class="relative cursor-pointer" onclick="toggleModal('wishlistModal')">
+                    <i class="fa-regular fa-heart text-xl hover:text-red-500 transition-colors"></i>
+                    <span id="wish-count" class="badge">0</span>
+                </div>
+                <div class="relative cursor-pointer" onclick="toggleCart()">
+                    <i class="fa-solid fa-cart-shopping text-xl hover:text-cyan-400 transition-colors"></i>
+                    <span id="cart-count" class="badge bg-cyan-500 text-black">0</span>
+                </div>
+            </div>
         </div>
-        <div id="cart-items-container" class="flex-1 overflow-y-auto space-y-4">
+    </nav>
+
+    <main class="relative z-10 max-w-7xl mx-auto py-12 px-6">
+        <h2 class="text-4xl font-bold mb-10">Premium Collection</h2>
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             </div>
-        <div class="border-t border-white/10 pt-6">
-            <div class="flex justify-between text-xl font-bold mb-4">
-                <span>Total:</span>
-                <span id="cart-total">$0.00</span>
+    </main>
+
+    <div id="cartSidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-[#0a0a0a]/95 backdrop-blur-2xl z-[100] translate-x-full transition-transform duration-300 border-l border-white/10">
+        <div class="p-6 h-full flex flex-col">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black">YOUR CART</h2>
+                <button onclick="toggleCart()" class="text-3xl hover:text-red-500">&times;</button>
             </div>
-            <button class="w-full bg-cyan-500 text-black font-black py-4 rounded-xl hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all">CHECKOUT NOW</button>
+            <div id="cart-items-container" class="flex-1 overflow-y-auto space-y-4"></div>
+            <div class="border-t border-white/10 pt-6">
+                <div class="flex justify-between text-xl font-bold mb-4">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-cyan-400">$0.00</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-cyan-500 text-black font-black py-4 rounded-xl hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all active:scale-95">CHECKOUT</button>
+            </div>
         </div>
     </div>
-</div>
+
+    <div id="profileModal" class="modal-overlay hidden">
+        <div class="modal-content bg-[#111] border border-white/10 p-8 rounded-3xl max-w-sm w-full text-center">
+            <div class="w-24 h-24 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-bold">JD</div>
+            <h2 class="text-2xl font-bold">John Doe</h2>
+            <p class="text-gray-500 mb-6">Premium Member</p>
+            <div class="text-left space-y-3">
+                <button class="w-full bg-white/5 p-3 rounded-xl flex items-center gap-3 hover:bg-white/10"><i class="fa-solid fa-box text-cyan-400"></i> My Orders</button>
+                <button class="w-full bg-white/5 p-3 rounded-xl flex items-center gap-3 hover:bg-white/10"><i class="fa-solid fa-gear text-gray-400"></i> Settings</button>
+                <button class="w-full bg-red-500/10 text-red-500 p-3 rounded-xl flex items-center gap-3 mt-4">Log Out</button>
+            </div>
+            <button onclick="toggleModal('profileModal')" class="mt-6 text-gray-500 underline">Close</button>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal-overlay hidden">
+        <div class="modal-content bg-[#111] border border-white/10 p-8 rounded-3xl max-w-lg w-full">
+            <h2 class="text-2xl font-black mb-6">Add New Product</h2>
+            <div class="space-y-4">
+                <input id="pName" type="text" placeholder="Product Title" class="admin-input">
+                <input id="pPrice" type="number" placeholder="Price ($)" class="admin-input">
+                <input id="pImage" type="text" placeholder="Image URL (Unsplash/Direct link)" class="admin-input">
+                <button onclick="adminAddProduct()" class="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-cyan-400 transition-colors">PUBLISH PRODUCT</button>
+            </div>
+            <button onclick="toggleModal('adminModal')" class="mt-4 w-full text-gray-500 text-sm italic">Cancel & Exit</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
