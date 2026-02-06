@@ -4,34 +4,77 @@
 <meta charset="UTF-8">
 <title>Oasis Store</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link rel="stylesheet" href="style.css">
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-<header>
-  <h1>Oasis</h1>
-  <input type="text" placeholder="Search Oasis">
-  <button onclick="checkout()">🛒 Cart</button>
+<!-- 🔥 HEADER -->
+<header class="header">
+  <div class="logo">Oasis</div>
+  <input type="text" placeholder="Search Oasis Store">
+  <div class="header-btns">
+    <button>Login</button>
+    <button>🛒</button>
+  </div>
 </header>
 
-<section class="auth">
-  <button onclick="googleLogin()">Google Login</button>
-  <button onclick="facebookLogin()">Facebook Login</button>
+<!-- 🌌 HERO -->
+<section class="hero">
+  <h1>Welcome to Oasis</h1>
+  <p>Premium Shopping Experience</p>
 </section>
 
+<!-- 🛍 PRODUCTS -->
 <section class="products">
   <div class="card">
-    <img src="https://via.placeholder.com/150">
-    <h3>Oasis Product</h3>
-    <p>$50</p>
+    <img src="https://via.placeholder.com/200">
+    <h3>Oasis Hoodie</h3>
+    <p>$49</p>
+    <button>Add to Cart</button>
+  </div>
+
+  <div class="card">
+    <img src="https://via.placeholder.com/200">
+    <h3>Oasis Watch</h3>
+    <p>$89</p>
     <button>Add to Cart</button>
   </div>
 </section>
 
-<button class="pay" onclick="checkout()">Pay with Stripe</button>
+<!-- 🔥 FOOTER -->
+<footer>
+  <div>
+    <h3>Oasis</h3>
+    <p>Premium online store experience</p>
+  </div>
 
-<script type="module" src="firebase.js"></script>
+  <div>
+    <h4>Quick Links</h4>
+    <a href="#">Home</a>
+    <a href="#">Orders</a>
+    <a href="#">Support</a>
+  </div>
+
+  <div>
+    <h4>Contact</h4>
+    <p>Email: support@oasis.com</p>
+  </div>
+</footer>
+
+<!-- 💬 FLOATING SOCIAL -->
+<div class="social-float">
+  <a href="https://wa.me/923000000000" target="_blank" class="whatsapp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <a href="https://instagram.com" target="_blank" class="instagram">
+    <i class="fab fa-instagram"></i>
+  </a>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
