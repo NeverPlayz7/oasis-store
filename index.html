@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OASIS | Universal Archive</title>
+    <title>OASIS | Luxury Archive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -11,58 +11,58 @@
 </head>
 <body class="bg-black text-white selection:bg-cyan-500 overflow-x-hidden" data-theme="cyan">
 
+    <div class="mesh-bg"></div>
     <div id="particles-js" class="fixed inset-0 z-[-1]"></div>
 
     <div id="authScreen" class="fixed inset-0 z-[5000] bg-black flex items-center justify-center p-4 transition-all duration-700">
-        <div class="glass p-8 md:p-12 rounded-[40px] md:rounded-[60px] text-center max-w-md w-full border border-white/10">
+        <div class="glass p-8 md:p-12 rounded-[40px] text-center max-w-md w-full border border-white/10">
             <h1 class="text-5xl md:text-7xl font-black mb-2 italic tracking-tighter hero-text">OASIS.</h1>
-            <p class="text-[8px] md:text-[10px] tracking-[6px] text-accent mb-8 font-bold">SESSION AUTHORIZATION</p>
+            <p class="text-[8px] tracking-[6px] text-accent mb-8 font-bold uppercase">Authorized Access Only</p>
             <button onclick="loginWithGoogle()" class="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-accent transition-all text-xs tracking-widest">
-                <i class="fab fa-google mr-2"></i> LOGIN
+                <i class="fab fa-google mr-2"></i> AUTHORIZE SESSION
             </button>
         </div>
     </div>
 
     <div id="mainApp" class="hidden opacity-0 transition-opacity duration-1000">
-        <nav class="sticky top-0 z-[100] bg-black/60 backdrop-blur-3xl border-b border-white/5 h-16 md:h-20 px-4 md:px-10 flex justify-between items-center">
+        <nav class="sticky top-0 z-[100] bg-black/40 backdrop-blur-3xl border-b border-white/5 h-16 md:h-20 px-4 md:px-10 flex justify-between items-center">
             <div class="text-xl md:text-3xl font-black italic tracking-tighter">OA<span class="text-accent">SIS.</span></div>
             
-            <div class="flex items-center gap-3 md:gap-6">
-                <select id="themeSelect" onchange="changeTheme(this.value)" class="bg-white/5 border border-white/10 rounded-full px-2 py-1 text-[9px] font-black outline-none cursor-pointer">
+            <div class="flex items-center gap-2 md:gap-6">
+                <select id="themeSelect" onchange="changeTheme(this.value)" class="bg-white/5 border border-white/10 rounded-full px-2 py-1 text-[8px] md:text-[10px] font-black outline-none cursor-pointer">
                     <option value="cyan">CYAN</option>
                     <option value="purple">PURPLE</option>
                     <option value="gold">GOLD</option>
                 </select>
-
-                <div class="nav-icon scale-90 md:scale-100" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                <div class="relative nav-icon scale-90 md:scale-100" onclick="toggleCart()">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span id="cartCount" class="badge text-[8px]">0</span>
+                <div class="nav-icon" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left text-xs md:text-base"></i></div>
+                <div class="relative nav-icon" onclick="toggleCart()">
+                    <i class="fa-solid fa-cart-shopping text-xs md:text-base"></i>
+                    <span id="cartCount" class="badge">0</span>
                 </div>
-                <img id="userImg" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/10" onclick="handleLogout()">
+                <img id="userImg" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/10 cursor-pointer" onclick="handleLogout()">
             </div>
         </nav>
 
-        <div class="relative py-16 md:py-32 px-4 text-center overflow-hidden">
+        <div class="relative py-12 md:py-24 px-4 text-center overflow-hidden">
             <h1 class="hero-text font-black italic tracking-tighter leading-none mb-4 opacity-90">OASIS</h1>
-            <p class="text-[8px] md:text-[12px] tracking-[10px] md:tracking-[20px] font-bold text-gray-500 uppercase">Archive your identity</p>
+            <p class="text-[7px] md:text-[12px] tracking-[8px] md:tracking-[20px] font-bold text-gray-500 uppercase">Archive your identity in the void</p>
         </div>
 
-        <main class="max-w-[1500px] mx-auto p-4 md:p-10">
-            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12"></div>
+        <main class="max-w-[1800px] mx-auto p-2 md:p-10">
+            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-8"></div>
         </main>
 
-        <footer class="mt-20 border-t border-white/5 py-10 px-6 text-center text-[10px] text-gray-600 font-black tracking-[4px]">
-            © 2026 OASIS PROTOCOL. ALL RIGHTS RESERVED.
+        <footer class="mt-20 border-t border-white/5 py-12 px-6 text-center">
+            <p class="text-[8px] md:text-[10px] text-gray-600 font-black tracking-[4px] uppercase">© 2026 OASIS PROTOCOL. Universal Interface v3.0</p>
         </footer>
     </div>
 
-    <div id="cartSidebar" class="sidebar p-8 md:p-12 flex flex-col">
+    <div id="cartSidebar" class="sidebar p-6 md:p-12 flex flex-col">
         <div class="flex justify-between items-center mb-10"><h2 class="text-3xl font-black italic">BAG.</h2><button onclick="toggleCart()" class="text-3xl">&times;</button></div>
-        <div id="cartItems" class="flex-1 space-y-4 overflow-y-auto"></div>
+        <div id="cartItems" class="flex-1 space-y-4 overflow-y-auto custom-scroll"></div>
         <div class="pt-6 border-t border-white/10 mt-6">
             <div class="flex justify-between text-2xl font-black italic mb-6"><span>TOTAL</span><span id="cartTotal">$0</span></div>
-            <button onclick="processPayment()" class="w-full bg-accent text-black py-4 rounded-xl font-black tracking-widest hover:bg-white transition-all">CHECKOUT</button>
+            <button onclick="processPayment()" class="w-full bg-accent text-black py-4 rounded-xl font-black tracking-widest hover:bg-white transition-all">CHECKOUT SESSION</button>
         </div>
     </div>
 
