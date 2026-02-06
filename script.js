@@ -1,8 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-const firebaseConfig = { /* APKA FIREBASE CONFIG YAHA DAALEIN */ };
+const firebaseConfig = {
+    apiKey: "AIzaSyAYwc4wlCgMNZoikTbt-ph48zatsUo6Kw0",
+    authDomain: "oasis-own.firebaseapp.com",
+    projectId: "oasis-own",
+    storageBucket: "oasis-own.firebasestorage.app",
+    messagingSenderId: "621399635023",
+    appId: "1:621399635023:web:7bb98a8f74eb72cb9fa63a"
+};
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -17,28 +25,33 @@ let STATE = {
         {id: 4, name: "Luxury Villa", price: 450, img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=600"},
         {id: 5, name: "The Penthouse", price: 899, img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600"},
         {id: 6, name: "Studio Room", price: 120, img: "https://images.unsplash.com/photo-1554995207-c18c203602cb?q=80&w=600"},
-        // Mazeed products add karein taaki PC pe 6 columns bhare huye lagyein
+        {id: 7, name: "Mariven View", price: 340, img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600"},
+        {id: 8, name: "Minimalist Loft", price: 210, img: "https://images.unsplash.com/photo-1502672023488-70e25813efdf?q=80&w=600"}
     ]
 };
 
-// --- AUTH ---
+// --- AUTH LOGIC ---
 window.loginWithGoogle = () => signInWithPopup(auth, provider);
+window.handleLogout = () => { if(confirm("End Session?")) signOut(auth).then(() => location.reload()); };
+
 onAuthStateChanged(auth, (user) => {
+    const authScr = document.getElementById('authScreen');
+    const appScr = document.getElementById('mainApp');
     if (user) {
         STATE.user = user;
-        document.getElementById('authScreen').classList.add('opacity-0', 'pointer-events-none');
-        document.getElementById('mainApp').classList.remove('hidden');
-        setTimeout(() => document.getElementById('mainApp').classList.add('opacity-100'), 100);
+        authScr.style.opacity = '0';
+        setTimeout(() => { authScr.classList.add('hidden'); appScr.classList.remove('hidden'); }, 700);
+        setTimeout(() => appScr.classList.add('opacity-100'), 800);
         document.getElementById('userImg').src = user.photoURL;
         renderProducts();
     }
 });
 
-// --- SHOP ---
+// --- SHOP ENGINE ---
 function renderProducts() {
     document.getElementById('productGrid').innerHTML = STATE.products.map(p => `
         <div class="product-card group" onclick="addToCart(${p.id})">
-            <div class="overflow-hidden bg-gray-100">
+            <div class="overflow-hidden bg-[#F0F0F0]">
                 <img src="${p.img}" alt="${p.name}">
             </div>
             <div class="info">
@@ -52,19 +65,17 @@ function renderProducts() {
 window.addToCart = (id) => {
     STATE.cart.push(STATE.products.find(x => x.id === id));
     updateCartUI();
-    // Subtle luxury vibration/feedback
-    if (navigator.vibrate) navigator.vibrate(10);
 };
 
 function updateCartUI() {
-    let total = STATE.cart.reduce((a,b)=> a+b.price, 0);
+    const total = STATE.cart.reduce((a,b) => a + b.price, 0);
     document.getElementById('cartItems').innerHTML = STATE.cart.map((item, i) => `
-        <div class="flex justify-between items-center border-b border-gray-50 pb-4">
+        <div class="flex justify-between items-center border-b border-gray-100 pb-4">
             <div>
                 <p class="text-[9px] font-bold tracking-widest uppercase">${item.name}</p>
-                <span class="font-serif italic">$${item.price}</span>
+                <span class="font-serif italic text-sm">$${item.price}</span>
             </div>
-            <button onclick="event.stopPropagation(); STATE.cart.splice(${i},1); updateCartUI();" class="text-xs text-gray-400 hover:text-black">REMOVE</button>
+            <button onclick="event.stopPropagation(); STATE.cart.splice(${i},1); updateCartUI();" class="text-[10px] text-gray-400 hover:text-black">REMOVE</button>
         </div>
     `).join('');
     document.getElementById('cartTotal').innerText = `$${total}`;
@@ -75,11 +86,12 @@ window.processPayment = async () => {
     if(!STATE.cart.length) return;
     await addDoc(collection(db, "orders"), {
         uid: STATE.user.uid,
+        email: STATE.user.email,
         total: STATE.cart.reduce((a,b)=>a+b.price,0),
         timestamp: new Date().toISOString()
     });
-    confetti({ particleCount: 50, spread: 60, colors: ['#000000', '#C5A37D'] });
-    alert("ORDER CONFIRMED. THANK YOU FOR CHOOSING OASIS.");
+    confetti({ particleCount: 100, spread: 70, colors: ['#C5A37D', '#000000'] });
+    alert("ORDER ARCHIVED. THANK YOU.");
     STATE.cart = []; updateCartUI(); toggleCart();
 };
 
@@ -87,4 +99,10 @@ window.toggleCart = () => document.getElementById('cartSidebar').classList.toggl
 
 window.changeTheme = (theme) => {
     document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('oasis-theme', theme);
 };
+
+// Init Theme
+const savedTheme = localStorage.getItem('oasis-theme') || 'pearl';
+document.getElementById('themeSelect').value = savedTheme;
+changeTheme(savedTheme);
