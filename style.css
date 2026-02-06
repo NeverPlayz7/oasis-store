@@ -6,10 +6,19 @@
 }
 
 body{
+  color:white;
+  background:#000;
+  overflow-x:hidden;
+}
+
+/* 🌌 Animated Background */
+.bg{
+  position:fixed;
+  inset:0;
   background:linear-gradient(-45deg,#020024,#090979,#00d4ff,#000);
   background-size:400% 400%;
-  animation:bg 15s ease infinite;
-  color:white;
+  animation:bg 16s ease infinite;
+  z-index:-1;
 }
 
 @keyframes bg{
@@ -21,9 +30,9 @@ body{
 /* HEADER */
 .header{
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  gap:15px;
-  padding:15px;
+  padding:15px 30px;
   background:#131921;
   position:sticky;
   top:0;
@@ -31,72 +40,116 @@ body{
 }
 
 .logo{
-  font-size:26px;
+  font-size:28px;
   font-weight:bold;
   color:#ffd814;
 }
 
-.header input{
-  flex:1;
-  padding:10px;
-  border-radius:10px;
-  border:none;
+nav a{
+  margin:0 12px;
+  color:white;
+  text-decoration:none;
+  opacity:.8;
 }
 
-.header-btns button{
-  padding:10px 14px;
-  border:none;
-  border-radius:20px;
-  cursor:pointer;
+.actions{
+  display:flex;
+  gap:15px;
 }
 
 /* HERO */
 .hero{
   text-align:center;
-  padding:60px 20px;
+  padding:80px 20px;
 }
 
 .hero h1{
-  font-size:42px;
+  font-size:46px;
 }
 
-.hero p{
-  opacity:.8;
+.hero button{
+  margin-top:20px;
+  padding:14px 28px;
+  border:none;
+  border-radius:30px;
+  background:#ffd814;
+  cursor:pointer;
 }
 
 /* PRODUCTS */
 .products{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:20px;
-  padding:30px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+  padding:40px;
 }
 
 .card{
   background:rgba(0,0,0,.6);
-  border-radius:20px;
   padding:15px;
+  border-radius:22px;
   text-align:center;
-  transition:.4s;
   backdrop-filter:blur(10px);
+  transition:.4s;
 }
 
 .card:hover{
-  transform:scale(1.08);
-  box-shadow:0 0 25px cyan;
+  transform:scale(1.07);
+  box-shadow:0 0 30px cyan;
 }
 
 .card img{
   width:100%;
-  border-radius:15px;
+  border-radius:18px;
 }
 
 .card button{
   margin-top:10px;
   padding:10px;
+  width:100%;
   border:none;
   border-radius:20px;
   background:#ffd814;
+}
+
+/* LOGIN */
+.login-modal{
+  position:fixed;
+  inset:0;
+  background:#000c;
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-box{
+  background:#111;
+  padding:30px;
+  border-radius:25px;
+  width:300px;
+  text-align:center;
+  animation:pop .4s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.5)}
+  to{transform:scale(1)}
+}
+
+.login-box input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:none;
+  border-radius:12px;
+}
+
+.social-login button{
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  border:none;
+  border-radius:20px;
   cursor:pointer;
 }
 
@@ -105,18 +158,11 @@ footer{
   background:#0b0b0b;
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:20px;
-  padding:30px;
+  gap:25px;
+  padding:40px;
 }
 
-footer a{
-  display:block;
-  color:#ccc;
-  text-decoration:none;
-  margin-top:5px;
-}
-
-/* FLOATING SOCIAL */
+/* SOCIAL FLOAT */
 .social-float{
   position:fixed;
   bottom:20px;
@@ -130,18 +176,14 @@ footer a{
   width:55px;
   height:55px;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   border-radius:50%;
   font-size:28px;
-  color:white;
   animation:pulse 2s infinite;
 }
 
-.whatsapp{
-  background:#25D366;
-}
-
+.whatsapp{background:#25D366;}
 .instagram{
   background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af,#515bd4);
 }
