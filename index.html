@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OASIS | Elite Archive</title>
+    <title>OASIS | Elite Archive v4.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -16,8 +16,9 @@
 
     <audio id="snd-cart" src="https://assets.mixkit.co/active_storage/sfx/607/607-preview.mp3" preload="auto"></audio>
     <audio id="snd-click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
+    <audio id="snd-checkout" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
-    <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700">
+    <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex flex-col items-center justify-center p-6 text-center">
         <h1 class="text-7xl font-serif italic mb-2 tracking-tighter">Oasis.</h1>
         <p class="text-[9px] tracking-[6px] text-gray-400 mb-12 uppercase font-bold">Authorized Archive Access</p>
         <button id="loginBtn" class="border border-black px-12 py-4 rounded-full text-[10px] tracking-[4px] font-bold uppercase hover:bg-black hover:text-white transition-all">
@@ -25,31 +26,46 @@
         </button>
     </div>
 
-    <div id="mainApp" class="hidden opacity-0">
+    <div id="mainApp" class="hidden opacity-0 transition-opacity duration-1000">
         <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl h-20 flex justify-between items-center px-4 md:px-16 border-b border-gray-100">
             <div class="text-3xl font-serif italic font-black">O.</div>
+            
+            <div class="hidden md:block">
+                <select id="priceFilter" class="bg-transparent text-[10px] font-bold tracking-[2px] uppercase outline-none cursor-pointer">
+                    <option value="default">Sort: Recommended</option>
+                    <option value="low">Price: Low to High</option>
+                    <option value="high">Price: High to Low</option>
+                </select>
+            </div>
+
             <div class="flex items-center gap-5">
                 <div class="relative cursor-pointer" id="wishBtn"><i class="fa-solid fa-heart"></i><span id="wishCount" class="badge">0</span></div>
                 <div class="relative cursor-pointer" id="cartBtn"><i class="fa-solid fa-bag-shopping"></i><span id="cartCount" class="badge">0</span></div>
-                <img id="userImg" class="w-9 h-9 rounded-full border border-black/5 grayscale hover:grayscale-0 transition cursor-pointer">
+                <img id="userImg" class="w-9 h-9 rounded-full border border-black/5 grayscale cursor-pointer" onclick="logout()">
             </div>
         </nav>
 
-        <header class="relative h-[60vh] flex items-center justify-center overflow-hidden pt-20">
+        <header class="relative h-[50vh] flex items-center justify-center overflow-hidden pt-20">
             <div class="mesh-gradient"></div>
             <div class="relative z-10 text-center">
-                <h1 class="text-6xl md:text-[9rem] font-serif italic leading-none animate-fade">Archive</h1>
-                <p class="text-[10px] tracking-[15px] uppercase font-bold text-gray-400 mt-4">Session 2026</p>
+                <h1 class="text-5xl md:text-[8rem] font-serif italic leading-none">The Collection</h1>
+                <div class="md:hidden mt-4">
+                     <select id="priceFilterMobile" class="bg-white/50 px-4 py-1 rounded-full text-[8px] font-bold tracking-[2px] uppercase outline-none border border-black/10">
+                        <option value="default">Sort</option>
+                        <option value="low">Price ↓</option>
+                        <option value="high">Price ↑</option>
+                    </select>
+                </div>
             </div>
         </header>
 
-        <main class="max-w-[1800px] mx-auto py-16 px-2 md:px-12">
+        <main class="max-w-[1800px] mx-auto py-12 px-2 md:px-12">
             <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-10"></div>
         </main>
     </div>
 
     <div id="cartSidebar" class="sidebar p-8 flex flex-col">
-        <div class="flex justify-between items-center mb-10"><h2 class="text-4xl font-serif italic">Bag</h2><button class="close-btn">&times;</button></div>
+        <div class="flex justify-between items-center mb-10"><h2 class="text-4xl font-serif italic">Bag</h2><button id="closeCart" class="text-2xl">&times;</button></div>
         <div id="cartItems" class="flex-1 space-y-6 overflow-y-auto"></div>
         <div class="pt-8 border-t mt-auto">
             <div class="flex justify-between text-2xl font-serif italic mb-6"><span>Total</span><span id="cartTotal">$0</span></div>
