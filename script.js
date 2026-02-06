@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 const firebaseConfig = { /* APKA FIREBASE CONFIG YAHA */ };
 const app = initializeApp(firebaseConfig);
@@ -9,23 +9,26 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 let STATE = {
-    user: null, cart: [],
+    user: null, cart: [], wishlist: [],
     products: [
-        {id: 1, name: "Silk Drape", price: 420, img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=500"},
-        {id: 2, name: "Velvet Void", price: 850, img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=500"},
-        {id: 3, name: "Ivory Shell", price: 310, img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=500"},
-        {id: 4, name: "Noir Frame", price: 590, img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=500"},
-        {id: 5, name: "Satin Mist", price: 280, img: "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=500"},
-        {id: 6, name: "Onyx Vest", price: 920, img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=500"},
-        {id: 7, name: "Lace Archive", price: 1100, img: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=500"},
-        {id: 8, name: "Pure Sand", price: 150, img: "https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=500"}
+        {id: 1, name: "Silk Drape", price: 420, img: "https://picsum.photos/400/600?random=1"},
+        {id: 2, name: "Noir Frame", price: 590, img: "https://picsum.photos/400/600?random=2"},
+        {id: 3, name: "Aura Mist", price: 150, img: "https://picsum.photos/400/600?random=3"},
+        {id: 4, name: "Velvet Void", price: 850, img: "https://picsum.photos/400/600?random=4"},
+        {id: 5, name: "Satin Shell", price: 280, img: "https://picsum.photos/400/600?random=5"},
+        {id: 6, name: "Onyx Gaze", price: 340, img: "https://picsum.photos/400/600?random=6"},
+        {id: 7, name: "Pure Sand", price: 120, img: "https://picsum.photos/400/600?random=7"},
+        {id: 8, name: "Lace Archive", price: 900, img: "https://picsum.photos/400/600?random=8"}
     ]
 };
 
-// --- AUTH ---
-window.loginWithGoogle = () => signInWithPopup(auth, provider);
-window.handleLogout = () => { if(confirm("End Session?")) signOut(auth).then(() => location.reload()); };
+// --- AUDIO HELPERS ---
+window.playSound = (id) => {
+    const s = document.getElementById(id);
+    if(s) { s.currentTime = 0; s.play(); }
+};
 
+// --- AUTH ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
         STATE.user = user;
@@ -34,29 +37,26 @@ onAuthStateChanged(auth, (user) => {
         setTimeout(() => document.getElementById('mainApp').classList.add('opacity-100'), 100);
         document.getElementById('userImg').src = user.photoURL;
         renderProducts();
+        fetchHistory();
     }
 });
-
-// --- FANCY CURSOR LOGIC ---
-const cursor = document.getElementById('cursor');
-document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-});
+window.loginWithGoogle = () => signInWithPopup(auth, provider);
+window.handleLogout = () => signOut(auth).then(() => location.reload());
 
 // --- SHOP ENGINE ---
 function renderProducts() {
     document.getElementById('productGrid').innerHTML = STATE.products.map(p => `
-        <div class="product-card group" onclick="addToCart(${p.id})">
-            <div class="img-container">
+        <div class="product-card group relative cursor-pointer">
+            <div class="overflow-hidden bg-gray-100 relative">
                 <img src="${p.img}" alt="${p.name}">
-                <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span class="text-white text-[8px] tracking-[4px] font-bold">+ ACQUIRE</span>
+                <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-4">
+                    <button onclick="addToWishlist(${p.id}); event.stopPropagation()" class="bg-white p-3 rounded-full hover:bg-black hover:text-white transition"><i class="fa-solid fa-heart"></i></button>
+                    <button onclick="addToCart(${p.id}); event.stopPropagation()" class="bg-white p-3 rounded-full hover:bg-black hover:text-white transition"><i class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
-            <div class="info">
-                <h3>${p.name}</h3>
-                <b>$${p.price}</b>
+            <div class="info mt-3 text-center">
+                <h3 class="text-[9px] font-bold uppercase tracking-widest text-gray-400">${p.name}</h3>
+                <b class="text-xl font-serif italic">$${p.price}</b>
             </div>
         </div>
     `).join('');
@@ -64,37 +64,70 @@ function renderProducts() {
 
 window.addToCart = (id) => {
     STATE.cart.push(STATE.products.find(x => x.id === id));
-    updateCartUI();
-    cursor.style.transform = 'scale(2.5)';
-    setTimeout(() => cursor.style.transform = 'scale(1)', 200);
+    playSound('snd-cart');
+    updateUI();
 };
 
-function updateCartUI() {
-    const total = STATE.cart.reduce((a,b) => a + b.price, 0);
+window.addToWishlist = (id) => {
+    if(!STATE.wishlist.find(x => x.id === id)) {
+        STATE.wishlist.push(STATE.products.find(x => x.id === id));
+        playSound('snd-click');
+        updateUI();
+    }
+};
+
+function updateUI() {
+    document.getElementById('cartCount').innerText = STATE.cart.length;
+    document.getElementById('wishCount').innerText = STATE.wishlist.length;
+    
     document.getElementById('cartItems').innerHTML = STATE.cart.map((item, i) => `
-        <div class="flex justify-between items-start border-b border-gray-50 pb-8 animate-up">
-            <div>
-                <p class="text-[9px] font-bold tracking-[3px] uppercase text-gray-400 mb-2">${item.name}</p>
-                <span class="font-serif italic text-2xl">$${item.price}</span>
-            </div>
-            <button onclick="event.stopPropagation(); STATE.cart.splice(${i},1); updateCartUI();" class="text-[10px] underline tracking-widest">REMOVE</button>
+        <div class="flex justify-between items-center border-b pb-4">
+            <div><p class="text-[10px] font-bold uppercase">${item.name}</p><b class="font-serif italic">$${item.price}</b></div>
+            <button onclick="STATE.cart.splice(${i},1); updateUI()" class="text-gray-400 text-xs">REMOVE</button>
         </div>
     `).join('');
+    
+    const total = STATE.cart.reduce((a,b) => a + b.price, 0);
     document.getElementById('cartTotal').innerText = `$${total}`;
-    document.getElementById('cartCount').innerText = STATE.cart.length;
 }
 
 window.processPayment = async () => {
     if(!STATE.cart.length) return;
-    await addDoc(collection(db, "orders"), {
+    playSound('snd-checkout');
+    const orderData = {
         uid: STATE.user.uid,
         items: STATE.cart.map(i => i.name),
-        total: STATE.cart.reduce((a,b)=>a+b.price,0),
+        total: STATE.cart.reduce((a,b)=>a+b.price, 0),
+        status: "Acquired",
         timestamp: new Date().toISOString()
-    });
-    confetti({ particleCount: 40, spread: 50, colors: ['#000', '#fff'] });
-    alert("ORDER PROCESSED IN THE ARCHIVE.");
-    STATE.cart = []; updateCartUI(); toggleCart();
+    };
+    await addDoc(collection(db, "orders"), orderData);
+    confetti({ particleCount: 150, spread: 70, colors: ['#000', '#C5A37D'] });
+    STATE.cart = []; updateUI(); toggleSidebar('cartSidebar');
+    fetchHistory();
 };
 
-window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
+// Sidebars & Tracking
+window.toggleSidebar = (id) => document.getElementById(id).classList.toggle('active');
+window.toggleHistory = () => toggleSidebar('historySidebar');
+
+async function fetchHistory() {
+    const q = query(collection(db, "orders"), where("uid", "==", STATE.user.uid), orderBy("timestamp", "desc"));
+    const snap = await getDocs(q);
+    document.getElementById('historyItems').innerHTML = snap.docs.map(doc => `
+        <div class="p-4 border rounded-xl">
+            <div class="flex justify-between text-[10px] font-bold mb-2">
+                <span>${doc.data().status.toUpperCase()}</span>
+                <span class="font-serif italic text-lg">$${doc.data().total}</span>
+            </div>
+            <div class="w-full bg-gray-100 h-1 rounded-full"><div class="bg-black h-full" style="width: 30%"></div></div>
+        </div>
+    `).join('');
+}
+
+// Cursor
+document.addEventListener('mousemove', e => {
+    const c = document.getElementById('cursor');
+    c.style.left = e.clientX + 'px';
+    c.style.top = e.clientY + 'px';
+});
