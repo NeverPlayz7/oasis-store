@@ -3,91 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OASIS | The Luxury Collection</title>
+    <title>OASIS | Luxury Archive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#FDFCF9] text-[#1A1A1A] selection:bg-[#C5A37D] selection:text-white">
+<body class="bg-black text-white selection:bg-cyan-500 overflow-x-hidden" data-theme="cyan">
 
-    <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex items-center justify-center p-6 transition-all duration-1000">
-        <div class="text-center max-w-sm w-full">
-            <h1 class="text-5xl font-serif italic mb-2 tracking-tighter">Oasis.</h1>
-            <p class="text-[10px] tracking-[5px] text-gray-400 mb-12 uppercase font-semibold">Private Archive Access</p>
-            <button onclick="loginWithGoogle()" class="w-full border border-black text-black font-semibold py-4 rounded-full hover:bg-black hover:text-white transition-all duration-500 text-[11px] tracking-[3px]">
-                SIGN IN WITH GOOGLE
+    <div class="mesh-bg"></div>
+    <div id="particles-js" class="fixed inset-0 z-[-1]"></div>
+
+    <div id="authScreen" class="fixed inset-0 z-[5000] bg-black flex items-center justify-center p-4 transition-all duration-700">
+        <div class="glass p-8 md:p-12 rounded-[40px] text-center max-w-md w-full border border-white/10">
+            <h1 class="text-5xl md:text-7xl font-black mb-2 italic tracking-tighter hero-text">OASIS.</h1>
+            <p class="text-[8px] tracking-[6px] text-accent mb-8 font-bold uppercase">Authorized Access Only</p>
+            <button onclick="loginWithGoogle()" class="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-accent transition-all text-xs tracking-widest">
+                <i class="fab fa-google mr-2"></i> AUTHORIZE SESSION
             </button>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden opacity-0">
-        <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-md border-b border-gray-100 h-20 flex justify-between items-center px-6 md:px-12">
-            <div class="text-2xl font-serif italic font-bold">Oasis.</div>
+    <div id="mainApp" class="hidden opacity-0 transition-opacity duration-1000">
+        <nav class="sticky top-0 z-[100] bg-black/40 backdrop-blur-3xl border-b border-white/5 h-16 md:h-20 px-4 md:px-10 flex justify-between items-center">
+            <div class="text-xl md:text-3xl font-black italic tracking-tighter">OA<span class="text-accent">SIS.</span></div>
             
-            <div class="flex items-center gap-4 md:gap-8">
-                <select id="themeSelect" onchange="changeTheme(this.value)" class="bg-transparent border-none text-[10px] font-bold tracking-widest outline-none cursor-pointer uppercase">
-                    <option value="luxury">Pearl</option>
-                    <option value="dark">Ebony</option>
-                    <option value="sand">Sand</option>
+            <div class="flex items-center gap-2 md:gap-6">
+                <select id="themeSelect" onchange="changeTheme(this.value)" class="bg-white/5 border border-white/10 rounded-full px-2 py-1 text-[8px] md:text-[10px] font-black outline-none cursor-pointer">
+                    <option value="cyan">CYAN</option>
+                    <option value="purple">PURPLE</option>
+                    <option value="gold">GOLD</option>
                 </select>
-                <div class="relative cursor-pointer" onclick="toggleCart()">
-                    <i class="fa-solid fa-bag-shopping text-xl"></i>
-                    <span id="cartCount" class="absolute -top-2 -right-2 bg-black text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">0</span>
+                <div class="nav-icon" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left text-xs md:text-base"></i></div>
+                <div class="relative nav-icon" onclick="toggleCart()">
+                    <i class="fa-solid fa-cart-shopping text-xs md:text-base"></i>
+                    <span id="cartCount" class="badge">0</span>
                 </div>
-                <img id="userImg" class="w-8 h-8 rounded-full border border-gray-200 object-cover grayscale hover:grayscale-0 transition duration-500">
+                <img id="userImg" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/10 cursor-pointer" onclick="handleLogout()">
             </div>
         </nav>
 
-        <header class="relative h-[90vh] flex items-center justify-center text-center px-4 overflow-hidden pt-20">
-            <div class="max-w-4xl">
-                <p class="text-[11px] tracking-[8px] uppercase mb-6 font-semibold text-gray-500 animate-fadeIn">Limited Edition Collection</p>
-                <h1 class="text-6xl md:text-[10rem] font-serif italic leading-none mb-8 opacity-90 transition-transform duration-1000 hover:scale-105">Modern Elegance</h1>
-                <div class="w-12 h-[1px] bg-black mx-auto mb-8"></div>
-            </div>
-        </header>
+        <div class="relative py-12 md:py-24 px-4 text-center overflow-hidden">
+            <h1 class="hero-text font-black italic tracking-tighter leading-none mb-4 opacity-90">OASIS</h1>
+            <p class="text-[7px] md:text-[12px] tracking-[8px] md:tracking-[20px] font-bold text-gray-500 uppercase">Archive your identity in the void</p>
+        </div>
 
-        <main class="max-w-[1700px] mx-auto pb-32 px-2 md:px-10">
-            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-12"></div>
+        <main class="max-w-[1800px] mx-auto p-2 md:p-10">
+            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-8"></div>
         </main>
 
-        <section class="bg-white border-y border-gray-100 py-24 px-6">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-4xl md:text-6xl font-serif italic mb-6">Get In Touch</h2>
-                <p class="text-gray-500 font-light mb-12">Your perfect experience is just a message away.</p>
-                <div class="flex flex-col md:flex-row gap-6">
-                    <input type="text" placeholder="NAME" class="flex-1 border-b border-gray-200 py-4 text-[10px] tracking-widest outline-none focus:border-black transition">
-                    <input type="email" placeholder="EMAIL" class="flex-1 border-b border-gray-200 py-4 text-[10px] tracking-widest outline-none focus:border-black transition">
-                </div>
-                <button class="mt-12 text-[10px] tracking-[4px] font-bold uppercase border border-black px-12 py-4 hover:bg-black hover:text-white transition duration-500">Submit Request</button>
-            </div>
-        </section>
-
-        <footer class="py-12 text-center text-[9px] tracking-[5px] text-gray-400 uppercase font-medium">
-            © 2026 Oasis Protocol • Established for the refined
+        <footer class="mt-20 border-t border-white/5 py-12 px-6 text-center">
+            <p class="text-[8px] md:text-[10px] text-gray-600 font-black tracking-[4px] uppercase">© 2026 OASIS PROTOCOL. Universal Interface v3.0</p>
         </footer>
     </div>
 
-    <div id="cartSidebar" class="sidebar p-8 md:p-12 flex flex-col">
-        <div class="flex justify-between items-center mb-16">
-            <h2 class="text-4xl font-serif italic">Your Bag.</h2>
-            <button onclick="toggleCart()" class="text-2xl font-light hover:rotate-90 transition duration-300">&times;</button>
-        </div>
-        <div id="cartItems" class="flex-1 space-y-8 overflow-y-auto pr-2 custom-scroll"></div>
-        <div class="pt-8 border-t border-gray-100 mt-8">
-            <div class="flex justify-between text-2xl font-serif italic mb-8">
-                <span>Total</span><span id="cartTotal">$0</span>
-            </div>
-            <button onclick="processPayment()" class="w-full bg-black text-white py-5 rounded-none font-bold tracking-[4px] text-[11px] uppercase hover:bg-gray-800 transition-all">Complete Order</button>
+    <div id="cartSidebar" class="sidebar p-6 md:p-12 flex flex-col">
+        <div class="flex justify-between items-center mb-10"><h2 class="text-3xl font-black italic">BAG.</h2><button onclick="toggleCart()" class="text-3xl">&times;</button></div>
+        <div id="cartItems" class="flex-1 space-y-4 overflow-y-auto custom-scroll"></div>
+        <div class="pt-6 border-t border-white/10 mt-6">
+            <div class="flex justify-between text-2xl font-black italic mb-6"><span>TOTAL</span><span id="cartTotal">$0</span></div>
+            <button onclick="processPayment()" class="w-full bg-accent text-black py-4 rounded-xl font-black tracking-widest hover:bg-white transition-all">CHECKOUT SESSION</button>
         </div>
     </div>
 
-    <div class="fixed bottom-8 right-8 z-[100] flex flex-col gap-4">
-        <a href="https://wa.me/YOUR_NUM" target="_blank" class="w-12 h-12 bg-white text-black flex items-center justify-center rounded-full shadow-lg border border-gray-100 hover:bg-black hover:text-white transition duration-500"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://instagram.com/YOUR_ID" target="_blank" class="w-12 h-12 bg-white text-black flex items-center justify-center rounded-full shadow-lg border border-gray-100 hover:bg-black hover:text-white transition duration-500"><i class="fab fa-instagram"></i></a>
+    <div class="fixed bottom-6 right-6 z-[1000] flex flex-col gap-3">
+        <a href="https://wa.me/YOUR_NUMBER" target="_blank" class="contact-btn whatsapp-bg group"><i class="fab fa-whatsapp"></i><span class="tooltip group-hover:opacity-100">WhatsApp</span></a>
+        <a href="https://instagram.com/YOUR_ID" target="_blank" class="contact-btn insta-bg group"><i class="fab fa-instagram"></i><span class="tooltip group-hover:opacity-100">Instagram</span></a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>
