@@ -2,67 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oasis | Elite Archive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OASIS | Elite Archive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400;1,700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Montserrat', sans-serif; cursor: none; background: #fafafa; }
-        .font-serif { font-family: 'Bodoni Moda', serif; }
-        #cursor { width: 12px; height: 12px; background: black; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transition: transform 0.1s ease; }
-        .sidebar { position: fixed; top: 0; right: 0; height: 100vh; width: 400px; max-width: 100%; background: white; transform: translateX(100%); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; border-left: 1px solid #eee; }
-        .sidebar.active { transform: translateX(0); }
-        .mesh-gradient { position: absolute; width: 150%; height: 150%; top: -25%; left: -25%; background: radial-gradient(circle at 50% 50%, rgba(197, 163, 125, 0.15), transparent 50%); animation: rotate 20s linear infinite; filter: blur(60px); }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .badge { position: absolute; -top: 5px; -right: 5px; background: black; color: white; font-size: 7px; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400;1,700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-[#fafafa] text-[#111] overflow-x-hidden">
 
     <div id="cursor" class="hidden md:block"></div>
 
-    <audio id="snd-cart" src="https://assets.mixkit.co/active_storage/sfx/607/607-preview.mp3"></audio>
-    <audio id="snd-click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="snd-cart" src="https://assets.mixkit.co/active_storage/sfx/607/607-preview.mp3" preload="auto"></audio>
+    <audio id="snd-click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
 
-    <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex flex-col items-center justify-center p-6 text-center">
-        <h1 class="text-7xl font-serif italic mb-2">Oasis.</h1>
+    <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700">
+        <h1 class="text-7xl font-serif italic mb-2 tracking-tighter">Oasis.</h1>
         <p class="text-[9px] tracking-[6px] text-gray-400 mb-12 uppercase font-bold">Authorized Archive Access</p>
         <button id="loginBtn" class="border border-black px-12 py-4 rounded-full text-[10px] tracking-[4px] font-bold uppercase hover:bg-black hover:text-white transition-all">
             Identify Session
         </button>
     </div>
 
-    <div id="mainApp" class="hidden opacity-0 transition-opacity duration-1000">
-        <nav class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl h-20 flex justify-between items-center px-6 md:px-16 border-b border-gray-100">
+    <div id="mainApp" class="hidden opacity-0">
+        <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl h-20 flex justify-between items-center px-4 md:px-16 border-b border-gray-100">
             <div class="text-3xl font-serif italic font-black">O.</div>
-            <div class="flex items-center gap-6">
-                <div class="relative cursor-pointer" onclick="toggleSidebar('wishSidebar')"><i class="fa-solid fa-heart"></i><span id="wishCount" class="badge">0</span></div>
-                <div class="relative cursor-pointer" onclick="toggleSidebar('cartSidebar')"><i class="fa-solid fa-bag-shopping"></i><span id="cartCount" class="badge">0</span></div>
-                <img id="userImg" class="w-10 h-10 rounded-full border grayscale cursor-pointer" onclick="logout()">
+            <div class="flex items-center gap-5">
+                <div class="relative cursor-pointer" id="wishBtn"><i class="fa-solid fa-heart"></i><span id="wishCount" class="badge">0</span></div>
+                <div class="relative cursor-pointer" id="cartBtn"><i class="fa-solid fa-bag-shopping"></i><span id="cartCount" class="badge">0</span></div>
+                <img id="userImg" class="w-9 h-9 rounded-full border border-black/5 grayscale hover:grayscale-0 transition cursor-pointer">
             </div>
         </nav>
 
         <header class="relative h-[60vh] flex items-center justify-center overflow-hidden pt-20">
             <div class="mesh-gradient"></div>
             <div class="relative z-10 text-center">
-                <h1 class="text-6xl md:text-[9rem] font-serif italic leading-none">The Collection</h1>
-                <p class="text-[10px] tracking-[15px] uppercase font-bold text-gray-400 mt-4">Archive 2026</p>
+                <h1 class="text-6xl md:text-[9rem] font-serif italic leading-none animate-fade">Archive</h1>
+                <p class="text-[10px] tracking-[15px] uppercase font-bold text-gray-400 mt-4">Session 2026</p>
             </div>
         </header>
 
-        <main class="max-w-[1800px] mx-auto py-20 px-4 md:px-12">
-            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-10"></div>
+        <main class="max-w-[1800px] mx-auto py-16 px-2 md:px-12">
+            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-10"></div>
         </main>
     </div>
 
     <div id="cartSidebar" class="sidebar p-8 flex flex-col">
-        <div class="flex justify-between items-center mb-10"><h2 class="text-4xl font-serif italic">Bag</h2><button onclick="toggleSidebar('cartSidebar')" class="text-2xl">&times;</button></div>
-        <div id="cartItems" class="flex-1 space-y-4 overflow-y-auto"></div>
-        <div class="pt-6 border-t mt-6">
+        <div class="flex justify-between items-center mb-10"><h2 class="text-4xl font-serif italic">Bag</h2><button class="close-btn">&times;</button></div>
+        <div id="cartItems" class="flex-1 space-y-6 overflow-y-auto"></div>
+        <div class="pt-8 border-t mt-auto">
             <div class="flex justify-between text-2xl font-serif italic mb-6"><span>Total</span><span id="cartTotal">$0</span></div>
-            <button onclick="checkout()" class="w-full bg-black text-white py-4 font-bold uppercase tracking-widest text-[10px]">Checkout</button>
+            <button id="checkoutBtn" class="w-full bg-black text-white py-5 font-bold uppercase tracking-widest text-[10px]">Checkout</button>
         </div>
     </div>
 
