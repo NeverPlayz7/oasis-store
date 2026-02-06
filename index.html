@@ -3,68 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <title>Oasis Store</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <div class="logo">Oasis<span>.in</span></div>
-
-  <div class="search">
-    <input placeholder="Search Oasis">
-    <button>🔍</button>
-  </div>
-
-  <div class="actions">
-    <div onclick="openLogin()">Login</div>
-    <div onclick="openOrders()">📦 Orders</div>
-    <div onclick="openWishlist()">❤️ <span id="wishCount" class="badge">0</span></div>
-    <div onclick="openCart()">🛒 <span id="cartCount" class="badge">0</span></div>
-  </div>
+  <h1>Oasis</h1>
+  <input type="text" placeholder="Search Oasis">
+  <button onclick="checkout()">🛒 Cart</button>
 </header>
 
-<section class="banner">
-  <h1>Welcome to Oasis<br>Amazon-Style Premium Store</h1>
+<section class="auth">
+  <button onclick="googleLogin()">Google Login</button>
+  <button onclick="facebookLogin()">Facebook Login</button>
 </section>
 
-<section class="products" id="products"></section>
+<section class="products">
+  <div class="card">
+    <img src="https://via.placeholder.com/150">
+    <h3>Oasis Product</h3>
+    <p>$50</p>
+    <button>Add to Cart</button>
+  </div>
+</section>
 
-<!-- CART -->
-<div class="popup" id="cart">
-  <h2>Your Cart</h2>
-  <div id="cartItems"></div>
-  <button onclick="checkout()">Checkout</button>
-  <button onclick="closeCart()">Close</button>
-</div>
+<button class="pay" onclick="checkout()">Pay with Stripe</button>
 
-<!-- WISHLIST -->
-<div class="popup" id="wishlist">
-  <h2>Your Wishlist</h2>
-  <div id="wishItems"></div>
-  <button onclick="closeWishlist()">Close</button>
-</div>
-
-<!-- ORDERS -->
-<div class="popup" id="orders">
-  <h2>Order History</h2>
-  <div id="orderItems"></div>
-  <button onclick="closeOrders()">Close</button>
-</div>
-
-<!-- LOGIN -->
-<div class="popup" id="login">
-  <h2>Login to Oasis</h2>
-  <input placeholder="Email">
-  <button onclick="social('Google')">Login with Google</button>
-  <button onclick="social('Facebook')">Login with Facebook</button>
-  <button onclick="social('Instagram')">Login with Instagram</button>
-  <button onclick="closeLogin()">Close</button>
-</div>
-
-<footer>
-  © 2026 Oasis Store — Amazon Inspired UI
-</footer>
-
+<script type="module" src="firebase.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
