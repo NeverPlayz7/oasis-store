@@ -54,7 +54,7 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('userImg').src = user.photoURL;
         
         // ADMIN CHECK: Apni email yahan daalein
-        if(user.email === "your-email@gmail.com") { 
+        if(user.email === "ahmedboss8603@gmail.com") { 
             document.getElementById('adminBtn').classList.remove('hidden');
         }
         renderProducts();
