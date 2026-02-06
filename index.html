@@ -1,81 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oasis Store</title>
-<link rel="stylesheet" href="style.css?v=1.1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oasis Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- BACKGROUND -->
-<div class="bg"></div>
-<div class="particles"></div>
+    <header>
+        <h1 class="neon-title">Oasis Store</h1>
+        <p class="subtitle">Experience shopping like never before 🚀</p>
+    </header>
 
-<!-- HEADER -->
-<header>
-  <div class="logo">Oasis</div>
-  <input type="text" placeholder="Search products..." class="search-bar">
-  <div class="header-actions">
-    <button onclick="openAuth()">Login</button>
-    <div class="cart-btn" onclick="openCart()">🛒 <span id="cartCount">0</span></div>
-    <button onclick="openWishlist()">❤️ Wishlist</button>
-    <button onclick="openAdmin()">Admin</button>
-  </div>
-</header>
+    <main class="grid-container" id="product-grid">
+        <div class="product-card">
+            <div class="img-placeholder">Cool Sneakers</div>
+            <h3>Cool Sneakers</h3>
+            <p>Step up your game with these amazing sneakers.</p>
+            <button class="cart-btn">Add to Cart</button>
+        </div>
 
-<!-- FEATURED PRODUCTS SLIDER -->
-<section class="products">
-  <h2>Featured Products</h2>
-  <div class="slider">
-    <button class="arrow left" onclick="slide(-1)">❮</button>
-    <div class="track" id="track"></div>
-    <button class="arrow right" onclick="slide(1)">❯</button>
-  </div>
-</section>
+        <div class="product-card">
+            <div class="img-placeholder">Smart Watch</div>
+            <h3>Smart Watch</h3>
+            <p>Track your fitness and stay connected in style.</p>
+            <button class="cart-btn">Add to Cart</button>
+        </div>
 
-<!-- PRODUCT GRID -->
-<section class="product-grid" id="productGrid"></section>
+        <div class="product-card">
+            <div class="img-placeholder">Gaming Headset</div>
+            <h3>Gaming Headset</h3>
+            <p>Immersive sound for epic gaming sessions.</p>
+            <button class="cart-btn">Add to Cart</button>
+        </div>
 
-<!-- CART POPUP -->
-<div class="popup" id="cart">
-  <h2>Your Cart</h2>
-  <div id="cartItems"></div>
-  <button onclick="checkout()">Checkout</button>
-  <button onclick="closeCart()">Close</button>
-</div>
+        <div class="product-card">
+            <div class="img-placeholder">Hoodie</div>
+            <h3>Hoodie</h3>
+            <p>Comfortable, stylish hoodie for every day.</p>
+            <button class="cart-btn">Add to Cart</button>
+        </div>
 
-<!-- WISHLIST POPUP -->
-<div class="popup" id="wishlist">
-  <h2>Your Wishlist ❤️</h2>
-  <div id="wishlistItems"></div>
-  <button onclick="closeWishlist()">Close</button>
-</div>
+        <div class="product-card">
+            <div class="img-placeholder">Backpack</div>
+            <h3>Backpack</h3>
+            <p>Spacious and durable backpack for all your essentials.</p>
+            <button class="cart-btn">Add to Cart</button>
+        </div>
 
-<!-- LOGIN / SIGNUP POPUP -->
-<div class="popup" id="auth">
-  <h2>Login / Signup</h2>
-  <input id="user" placeholder="Username">
-  <button onclick="login()">Login</button>
-  <div class="social-login">
-    <p>Or login with:</p>
-    <button class="facebook" onclick="socialLogin('Facebook')">Facebook</button>
-    <button class="instagram" onclick="socialLogin('Instagram')">Instagram</button>
-    <button class="google" onclick="socialLogin('Google')">Google</button>
-  </div>
-  <button onclick="closeAuth()">Close</button>
-</div>
+        <div class="product-card">
+            <div class="img-placeholder">Sunglasses</div>
+            <h3>Sunglasses</h3>
+            <p>Protect your eyes with style and flair.</p>
+            <button class="cart-btn">Add to Cart</button>
+        </div>
+    </main>
 
-<!-- ADMIN PANEL POPUP -->
-<div class="popup" id="admin">
-  <h2>Admin Dashboard</h2>
-  <input type="text" id="adminProductName" placeholder="Product Name">
-  <input type="number" id="adminProductPrice" placeholder="Price">
-  <input type="file" id="adminProductImage">
-  <button onclick="addProduct()">Add Product</button>
-  <button onclick="closeAdmin()">Close</button>
-</div>
+    <footer>
+        <div class="footer-line"></div>
+        <p>© 2026 Oasis Store. All Rights Reserved.</p>
+    </footer>
 
-<script src="script.js?v=1.1"></script>
+    <div class="fab-container">
+        <div class="fab phone">📞</div>
+        <div class="fab instagram">📸</div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
