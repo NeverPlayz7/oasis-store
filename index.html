@@ -3,83 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oasis Store | Premium Shopping</title>
+    <title>Oasis Store | Ultra Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-black text-white">
+<body class="bg-[#050505] text-white overflow-x-hidden">
 
-    <nav class="sticky top-0 z-50 bg-[#0a0a0a] border-b border-gray-800 p-4">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-            <div class="text-2xl font-bold neon-text">Oasis</div>
+    <div id="particles-js"></div>
+
+    <nav class="glass-nav sticky top-0 z-50 p-4 border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="text-3xl font-black tracking-tighter neon-text">OASIS<span class="text-white">.</span></div>
             
-            <div class="flex-1 max-w-xl mx-4">
-                <div class="relative">
-                    <input type="text" placeholder="Search products..." class="w-full bg-[#161616] border border-gray-700 rounded-lg px-4 py-2 focus:border-cyan-400 outline-none">
+            <div class="hidden md:flex flex-1 mx-10">
+                <div class="relative w-full group">
+                    <input type="text" placeholder="Search premium gear..." class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-2 focus:ring-2 focus:ring-cyan-500 outline-none transition-all">
+                    <i class="fas fa-search absolute right-5 top-3 text-gray-500 group-hover:text-cyan-400"></i>
                 </div>
             </div>
 
             <div class="flex items-center gap-6">
-                <button onclick="toggleModal('adminModal')" class="hover:text-cyan-400"><i class="fas fa-user-shield"></i> Admin</button>
-                <button onclick="toggleModal('loginModal')" class="hover:text-cyan-400">Login</button>
+                <button onclick="toggleModal('adminModal')" class="icon-btn"><i class="fa-solid fa-screwdriver-wrench"></i></button>
+                <button onclick="toggleModal('loginModal')" class="icon-btn"><i class="fa-regular fa-user"></i></button>
                 <div class="relative cursor-pointer" onclick="toggleModal('wishlistModal')">
-                    <i class="far fa-heart text-xl"></i>
-                    <span id="wish-count" class="count-badge">0</span>
+                    <i class="fa-regular fa-heart text-xl hover:text-red-500 transition-colors"></i>
+                    <span id="wish-count" class="badge">0</span>
                 </div>
                 <div class="relative cursor-pointer" onclick="toggleModal('cartModal')">
-                    <i class="fas fa-shopping-cart text-xl"></i>
-                    <span id="cart-count" class="count-badge">0</span>
+                    <i class="fa-solid fa-cart-shopping text-xl hover:text-cyan-400 transition-colors"></i>
+                    <span id="cart-count" class="badge bg-cyan-500">0</span>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="w-full h-[400px] bg-gradient-to-r from-gray-900 to-black flex items-center justify-center mb-12 border-b border-gray-800">
-        <h2 class="text-4xl font-bold italic opacity-50">MEGA SALE - UP TO 50% OFF</h2>
-    </div>
-
-    <div class="max-w-7xl mx-auto p-6">
-        <h2 class="text-2xl font-bold mb-8">Featured Products</h2>
-        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            </div>
-    </div>
-
-    <div id="loginModal" class="modal-overlay hidden">
-        <div class="modal-content bg-[#161616] p-8 rounded-xl max-w-md w-full">
-            <h2 class="text-2xl font-bold mb-6">Login</h2>
-            <div class="flex flex-col gap-4">
-                <button class="bg-blue-600 p-2 rounded flex items-center justify-center gap-2"><i class="fab fa-facebook"></i> Facebook</button>
-                <button class="bg-white text-black p-2 rounded flex items-center justify-center gap-2"><i class="fab fa-google"></i> Google</button>
-                <button class="bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded flex items-center justify-center gap-2"><i class="fab fa-instagram"></i> Instagram</button>
-            </div>
-            <button onclick="toggleModal('loginModal')" class="mt-6 text-gray-400 underline">Close</button>
+    <main class="relative z-10 max-w-7xl mx-auto py-12 px-6">
+        <div class="mb-12">
+            <h2 class="text-4xl font-bold">New Arrivals <span class="text-sm font-normal text-gray-500 ml-4">Spring 2026 Collection</span></h2>
         </div>
-    </div>
-
-    <div id="adminModal" class="modal-overlay hidden">
-        <div class="modal-content bg-[#161616] p-8 rounded-xl max-w-lg w-full">
-            <h2 class="text-2xl font-bold mb-4">Admin: Add Product</h2>
-            <input id="pName" type="text" placeholder="Product Name" class="w-full mb-2 p-2 bg-black border border-gray-700">
-            <input id="pPrice" type="number" placeholder="Price" class="w-full mb-2 p-2 bg-black border border-gray-700">
-            <input id="pImage" type="text" placeholder="Image URL (Unsplash link)" class="w-full mb-4 p-2 bg-black border border-gray-700">
-            <button onclick="adminAddProduct()" class="w-full bg-cyan-500 text-black font-bold p-2 rounded">Add Product</button>
-            <button onclick="toggleModal('adminModal')" class="mt-4 text-gray-400">Close</button>
-        </div>
-    </div>
-
-    <div id="cartModal" class="modal-overlay hidden">
-        <div class="modal-content bg-[#161616] p-8 rounded-xl max-w-md w-full">
-            <h2 class="text-2xl font-bold mb-4">Your Cart</h2>
-            <div id="cart-items" class="max-h-60 overflow-y-auto mb-4"></div>
-            <div class="border-t border-gray-700 pt-4">
-                <button onclick="checkout('Stripe')" class="w-full mb-2 bg-indigo-600 p-2 rounded">Pay with Stripe</button>
-                <button onclick="checkout('JazzCash')" class="w-full bg-red-600 p-2 rounded">Pay with JazzCash</button>
+        
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             </div>
-            <button onclick="toggleModal('cartModal')" class="mt-4 text-gray-400">Close</button>
-        </div>
-    </div>
+    </main>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
