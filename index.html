@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OASIS | Future Archive</title>
+    <title>OASIS | The Sentient Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -13,10 +13,10 @@
 
     <div id="particles-js" class="fixed inset-0 z-[-1]"></div>
 
-    <div id="authScreen" class="fixed inset-0 z-[5000] bg-black flex items-center justify-center p-6 transition-all duration-700">
+    <div id="authScreen" class="fixed inset-0 z-[5000] bg-black flex items-center justify-center p-6">
         <div class="glass p-12 rounded-[60px] text-center max-w-md w-full border border-cyan-500/20 shadow-[0_0_50px_rgba(0,242,255,0.1)]">
             <h1 class="text-7xl font-black mb-2 italic tracking-tighter hero-text">OASIS.</h1>
-            <p class="text-[10px] tracking-[8px] text-cyan-500 mb-10 font-bold">SENTIENT ACCESS ONLY</p>
+            <p class="text-[10px] tracking-[8px] text-cyan-500 mb-10 font-bold uppercase">Archive Access Required</p>
             <button onclick="loginWithGoogle()" class="w-full bg-white text-black font-black py-5 rounded-3xl hover:bg-cyan-400 transition-all tracking-[3px] text-xs">
                 <i class="fab fa-google mr-2"></i> AUTHORIZE SESSION
             </button>
@@ -25,11 +25,11 @@
 
     <div id="mainApp" class="hidden opacity-0 transition-opacity duration-1000">
         <nav class="sticky top-0 z-[100] bg-black/60 backdrop-blur-3xl border-b border-white/5 h-20 px-10 flex justify-between items-center">
-            <div class="text-3xl font-black italic tracking-tighter">OA<span class="text-cyan-500">SIS.</span></div>
-            <div class="flex items-center gap-8">
+            <div class="text-3xl font-black italic tracking-tighter cursor-pointer">OA<span class="text-cyan-500">SIS.</span></div>
+            <div class="flex items-center gap-6 md:gap-8">
                 <button id="adminBtn" onclick="toggleAdmin(true)" class="hidden text-[10px] bg-red-600/20 text-red-500 border border-red-500/30 px-5 py-2 rounded-full font-black tracking-widest">ADMIN</button>
-                <div class="nav-icon" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                <div class="relative nav-icon" onclick="toggleCart()">
+                <div class="nav-icon cursor-pointer" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="relative nav-icon cursor-pointer" onclick="toggleCart()">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span id="cartCount" class="badge">0</span>
                 </div>
@@ -39,8 +39,8 @@
 
         <div class="relative py-32 px-10 text-center overflow-hidden">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-cyan-500/10 blur-[150px] rounded-full"></div>
-            <h1 class="hero-text text-[10rem] md:text-[15rem] font-black italic tracking-tighter leading-none mb-4 opacity-90">OASIS</h1>
-            <p class="text-[12px] tracking-[20px] font-bold text-gray-500 uppercase">Archive your identity</p>
+            <h1 class="hero-text text-[8rem] md:text-[15rem] font-black italic tracking-tighter leading-none mb-4 opacity-90">FUTURE</h1>
+            <p class="text-[12px] tracking-[20px] font-bold text-gray-500 uppercase">Archive your identity in the void</p>
             <div class="mt-20 animate-bounce opacity-20"><i class="fa-solid fa-chevron-down text-3xl"></i></div>
         </div>
 
@@ -48,13 +48,13 @@
             <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"></div>
         </main>
 
-        <footer class="mt-40 border-t border-white/5 bg-white/[0.02] py-24 px-10">
+        <footer class="mt-40 border-t border-white/5 bg-white/[0.02] py-24 px-10 backdrop-blur-md">
             <div class="max-w-[1500px] mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
                 <h2 class="text-4xl font-black italic tracking-tighter">OASIS.</h2>
-                <div class="flex gap-12 text-[10px] font-bold tracking-[4px] text-gray-400">
-                    <a href="#" class="hover:text-cyan-400 transition">INSTAGRAM</a>
-                    <a href="#" class="hover:text-cyan-400 transition">TWITTER</a>
-                    <a href="#" class="hover:text-cyan-400 transition">DISCORD</a>
+                <div class="flex gap-12 text-[10px] font-bold tracking-[4px] text-gray-400 uppercase">
+                    <a href="#" class="hover:text-cyan-400 transition">Privacy</a>
+                    <a href="#" class="hover:text-cyan-400 transition">Terms</a>
+                    <a href="#" class="hover:text-cyan-400 transition">Protocol</a>
                 </div>
                 <p class="text-[10px] text-gray-600 font-black tracking-[5px]">© 2026 OASIS PROTOCOL.</p>
             </div>
@@ -64,10 +64,10 @@
     <div id="cartSidebar" class="sidebar p-12 flex flex-col">
         <div class="flex justify-between items-center mb-16"><h2 class="text-4xl font-black italic">BAG.</h2><button onclick="toggleCart()" class="text-4xl">&times;</button></div>
         <div id="cartItems" class="flex-1 space-y-6 overflow-y-auto"></div>
-        <div class="pt-10 border-t border-white/10 mt-10">
-            <div class="flex justify-between text-4xl font-black italic mb-10"><span class="text-gray-500">TOTAL</span><span id="cartTotal">$0</span></div>
-            <button onclick="processPayment()" class="w-full bg-cyan-500 text-black py-6 rounded-full font-black tracking-[5px]">CHECKOUT</button>
+        <div class="pt-10 border-t border-white/10 mt-10 text-3xl font-black italic flex justify-between mb-8">
+            <span class="text-gray-500 uppercase">Total</span><span id="cartTotal">$0</span>
         </div>
+        <button onclick="processPayment()" class="w-full bg-cyan-500 text-black py-6 rounded-full font-black tracking-[5px] hover:bg-white transition-all">CHECKOUT SESSION</button>
     </div>
 
     <div id="historySidebar" class="sidebar p-12 overflow-y-auto">
@@ -75,9 +75,15 @@
         <div id="historyItems" class="space-y-6"></div>
     </div>
 
-    <div id="adminPanel" class="fixed inset-0 z-[6000] bg-black/95 p-10 hidden overflow-y-auto">
-        <div class="max-w-5xl mx-auto flex justify-between mb-12"><h2 class="text-4xl font-black text-red-500 italic">MASTER CONTROL</h2><button onclick="toggleAdmin(false)" class="bg-white/10 px-8 py-2 rounded-full">EXIT</button></div>
-        <div id="adminOrders" class="grid gap-6"></div>
+    <div class="fixed bottom-8 right-8 z-[1000] flex flex-col gap-4">
+        <a href="https://wa.me/YOUR_NUMBER" target="_blank" class="contact-btn whatsapp-bg group shadow-xl">
+            <i class="fab fa-whatsapp text-2xl"></i>
+            <span class="tooltip group-hover:opacity-100">WhatsApp Us</span>
+        </a>
+        <a href="https://instagram.com/YOUR_USERNAME" target="_blank" class="contact-btn insta-bg group shadow-xl">
+            <i class="fab fa-instagram text-2xl"></i>
+            <span class="tooltip group-hover:opacity-100">Instagram</span>
+        </a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
