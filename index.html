@@ -3,112 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OASIS | Stealth Luxury Archive</title>
+    <title>OASIS | Access Restricted</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#030303] text-white selection:bg-cyan-400 selection:text-black">
+<body class="bg-[#030303] text-white overflow-x-hidden">
 
-    <div id="particles-js"></div>
-
-    <div id="scrollProgress" class="fixed top-0 left-0 h-[2px] bg-cyan-500 z-[200] transition-all duration-100"></div>
-
-    <nav class="main-nav sticky top-0 z-[150] border-b border-white/5">
-        <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-12">
-                <div class="logo-text text-3xl font-black tracking-tighter cursor-pointer" onclick="location.reload()">OASIS<span class="text-cyan-500">.</span></div>
-                <div class="hidden lg:flex gap-10 text-[11px] font-bold uppercase tracking-[3px] text-gray-400">
-                    <a href="javascript:void(0)" onclick="filterCategory('All')" class="nav-link">Catalog</a>
-                    <a href="javascript:void(0)" onclick="filterCategory('Footwear')" class="nav-link">Footwear</a>
-                    <a href="javascript:void(0)" onclick="filterCategory('Gadgets')" class="nav-link">Tech</a>
-                </div>
-            </div>
+    <div id="authScreen" class="fixed inset-0 z-[1000] bg-[#030303] flex items-center justify-center p-6">
+        <div id="authParticles"></div>
+        <div class="auth-card relative z-10 w-full max-w-md p-10 rounded-[40px] border border-white/5 bg-black/40 backdrop-blur-3xl text-center">
+            <div class="logo-glow text-5xl font-black tracking-tighter mb-2">OASIS.</div>
+            <p class="text-cyan-500 text-[10px] font-black tracking-[5px] uppercase mb-10">Identity Verification</p>
             
-            <div class="flex items-center gap-6">
-                <div class="search-box relative hidden md:block">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-                    <input type="text" id="searchInput" onkeyup="searchProducts()" placeholder="SEARCH COLLECTIONS..." class="bg-white/5 border border-white/10 rounded-full pl-10 pr-6 py-2.5 w-60 focus:w-80 focus:border-cyan-500/50 outline-none text-[10px] font-bold tracking-widest transition-all duration-500">
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="toggleModal('adminModal')" class="action-icon" title="Admin Control"><i class="fa-solid fa-shield-halved"></i></button>
-                    <button class="action-icon relative" onclick="toggleCart()">
-                        <i class="fa-solid fa-cart-flatbed-suitcase"></i>
-                        <span id="cart-count" class="badge">0</span>
-                    </button>
-                </div>
+            <div id="loginForm" class="space-y-4">
+                <input type="email" placeholder="ENCRYPTED EMAIL" class="auth-input">
+                <input type="password" placeholder="ACCESS KEY" class="auth-input">
+                <button onclick="bypassAuth()" class="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-cyan-500 transition-all tracking-widest text-xs">INITIALIZE SESSION</button>
+                <p class="text-gray-500 text-[10px] mt-6">NEW APPLICANT? <span onclick="toggleAuth()" class="text-white cursor-pointer hover:text-cyan-400">REGISTER IDENTITY</span></p>
+            </div>
+
+            <div id="registerForm" class="hidden space-y-4">
+                <input type="text" placeholder="FULL NAME" class="auth-input">
+                <input type="email" placeholder="EMAIL ADDRESS" class="auth-input">
+                <input type="password" placeholder="CREATE KEY" class="auth-input">
+                <button onclick="bypassAuth()" class="w-full bg-cyan-500 text-black font-black py-4 rounded-2xl hover:bg-white transition-all tracking-widest text-xs">CREATE ARCHIVE ACCESS</button>
+                <p class="text-gray-500 text-[10px] mt-6">ALREADY VERIFIED? <span onclick="toggleAuth()" class="text-white cursor-pointer hover:text-cyan-400">LOGIN</span></p>
             </div>
         </div>
-    </nav>
-
-    <main class="max-w-[1400px] mx-auto px-6 py-16">
-        <header class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-                <h1 class="text-5xl md:text-7xl font-black tracking-tighter mb-4">THE ARCHIVE<span class="text-cyan-500">/</span>26</h1>
-                <p class="text-gray-500 font-medium tracking-wide uppercase text-xs">Curating the future of stealth aesthetic and utility.</p>
-            </div>
-            <div class="flex gap-4 border-b border-white/10 pb-2">
-                <span class="text-[10px] font-black uppercase tracking-widest text-gray-500">Sort By:</span>
-                <select onchange="sortProducts(this.value)" class="bg-transparent text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer hover:text-cyan-400">
-                    <option value="default">Featured</option>
-                    <option value="low">Price Low-High</option>
-                    <option value="high">Price High-Low</option>
-                </select>
-            </div>
-        </header>
-
-        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
-            </div>
-    </main>
-
-    <footer class="bg-[#050505] border-t border-white/5 pt-24 pb-12">
-        <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12">
-            <div class="md:col-span-4">
-                <div class="text-2xl font-black mb-6">OASIS ARCHIVE.</div>
-                <p class="text-gray-500 text-sm leading-relaxed mb-8">Designing and sourcing high-performance tech and apparel for the modern nomad. Quality is our only metric.</p>
-                <div class="flex gap-4">
-                    <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fa-brands fa-discord"></i></a>
-                </div>
-            </div>
-            <div class="md:col-span-2 md:offset-1">
-                <h4 class="text-[10px] font-black tracking-[3px] uppercase mb-6 text-cyan-500">Shop</h4>
-                <ul class="space-y-4 text-xs font-bold text-gray-400 uppercase tracking-widest">
-                    <li><a href="#" class="hover:text-white transition">All Products</a></li>
-                    <li><a href="#" class="hover:text-white transition">New Arrivals</a></li>
-                    <li><a href="#" class="hover:text-white transition">Limited Drop</a></li>
-                </ul>
-            </div>
-            <div class="md:col-span-5">
-                <h4 class="text-[10px] font-black tracking-[3px] uppercase mb-6 text-cyan-500">Subscribe for Updates</h4>
-                <div class="flex gap-2">
-                    <input type="email" placeholder="ENTER EMAIL" class="bg-white/5 border border-white/10 px-6 py-4 rounded-full w-full outline-none focus:border-cyan-500 transition text-xs">
-                    <button class="bg-white text-black px-8 rounded-full font-black text-xs uppercase tracking-widest hover:bg-cyan-500 transition-colors">Submit</button>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <div class="fixed bottom-10 right-10 flex flex-col gap-4 z-[200]">
-        <a href="https://instagram.com" target="_blank" class="contact-btn insta-gradient"><i class="fa-brands fa-instagram"></i></a>
-        <a href="javascript:void(0)" onclick="sendWhatsAppOrder()" class="contact-btn wa-bg shadow-[0_0_30px_rgba(37,211,102,0.2)]"><i class="fa-brands fa-whatsapp text-2xl"></i></a>
     </div>
 
-    <div id="cartSidebar" class="cart-sidebar shadow-[ -20px_0_50px_rgba(0,0,0,0.5) ]">
-        <div class="p-10 h-full flex flex-col">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-3xl font-black tracking-tighter">CART<span id="cart-info-count" class="text-xs text-gray-500 ml-3">0 ITEMS</span></h2>
-                <button onclick="toggleCart()" class="text-4xl hover:text-cyan-500 transition-transform hover:rotate-90">&times;</button>
-            </div>
-            <div id="cart-container" class="flex-1 overflow-y-auto space-y-8 pr-4 custom-scroll"></div>
-            <div class="pt-8 border-t border-white/10">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Total Amount</span>
-                    <span id="total-price" class="text-2xl font-black text-cyan-400">$0.00</span>
+    <div id="mainApp" class="hidden">
+        <div id="particles-js"></div>
+        
+        <nav class="main-nav sticky top-0 z-[150] border-b border-white/5 bg-black/50 backdrop-blur-xl">
+            <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="text-2xl font-black tracking-tighter">OASIS.</div>
+                <div class="flex items-center gap-6">
+                    <button onclick="logout()" class="text-[10px] font-bold text-gray-500 hover:text-red-500 tracking-widest">TERMINATE SESSION</button>
+                    <div class="relative cursor-pointer nav-icon" onclick="toggleCart()">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span id="cart-count" class="badge">0</span>
+                    </div>
                 </div>
-                <button onclick="processCheckout()" class="w-full bg-cyan-500 text-black font-black py-5 rounded-full text-xs tracking-[4px] uppercase hover:bg-white transition-all active:scale-95 shadow-lg shadow-cyan-500/20">Checkout Archive</button>
             </div>
+        </nav>
+
+        <main class="max-w-[1400px] mx-auto px-6 py-16">
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"></div>
+        </main>
+    </div>
+
+    <div id="productDetail" class="fixed inset-0 z-[500] pointer-events-none">
+        <div id="detailOverlay" class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-500" onclick="closeDetail()"></div>
+        <div id="detailPanel" class="absolute top-0 right-0 h-full w-full md:w-[600px] bg-[#080808] translate-x-full transition-transform duration-700 p-12 overflow-y-auto">
+            <button onclick="closeDetail()" class="absolute top-10 right-10 text-4xl text-gray-500 hover:text-white">&times;</button>
+            <div id="detailContent">
+                </div>
         </div>
     </div>
 
