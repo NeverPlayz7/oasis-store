@@ -3,74 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OASIS | Editorial Collection</title>
+    <title>OASIS | Elite Archive v3.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Montserrat:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400;1,900&family=Montserrat:wght@200;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#fafafa] text-[#111] overflow-x-hidden" data-theme="pearl">
+<body class="bg-[#fafafa] text-[#111] overflow-x-hidden">
+
+    <audio id="snd-cart" src="https://assets.mixkit.co/active_storage/sfx/607/607-preview.mp3"></audio>
+    <audio id="snd-checkout" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
+    <audio id="snd-click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
 
     <div id="cursor" class="hidden md:block"></div>
 
     <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex items-center justify-center p-6 transition-all duration-1000">
         <div class="text-center max-w-sm w-full animate-up">
-            <h1 class="text-7xl font-serif mb-2 tracking-tighter italic">Oasis</h1>
-            <div class="h-[1px] w-12 bg-black mx-auto mb-8"></div>
-            <p class="text-[9px] tracking-[6px] text-gray-400 mb-12 uppercase font-bold">The Editorial Archive</p>
-            <button onclick="loginWithGoogle()" class="fancy-btn w-full py-5 rounded-full text-[10px] tracking-[4px] font-bold uppercase">
-                Identify Yourself
-            </button>
+            <h1 class="text-7xl font-serif italic mb-2">Oasis.</h1>
+            <p class="text-[9px] tracking-[8px] text-gray-400 mb-12 uppercase font-bold">Authorized Archive Access</p>
+            <button onclick="loginWithGoogle()" class="w-full border border-black py-5 rounded-full text-[10px] tracking-[4px] font-bold uppercase hover:bg-black hover:text-white transition-all">Identify Session</button>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden opacity-0">
-        <nav class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl border-b border-gray-100 h-20 flex justify-between items-center px-6 md:px-16">
+    <div id="mainApp" class="hidden opacity-0 transition-opacity duration-1000">
+        <nav class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl border-b border-gray-100 h-20 flex justify-between items-center px-4 md:px-16">
             <div class="text-3xl font-serif italic font-black">O.</div>
             
-            <div class="flex items-center gap-6 md:gap-12">
-                <div class="hidden lg:flex gap-10 text-[10px] tracking-[4px] font-bold uppercase">
-                    <a href="#" class="hover:italic transition-all">Collections</a>
-                    <a href="#" class="hover:italic transition-all">Archive</a>
-                    <a href="#" class="hover:italic transition-all">Contact</a>
+            <div class="flex items-center gap-4 md:gap-10">
+                <div class="nav-icon" onclick="toggleHistory(); playSound('snd-click')"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="nav-icon relative" onclick="toggleSidebar('wishlistSidebar'); playSound('snd-click')">
+                    <i class="fa-solid fa-heart"></i>
+                    <span id="wishCount" class="badge">0</span>
                 </div>
-                <div class="relative cursor-pointer scale-110" onclick="toggleCart()">
+                <div class="nav-icon relative" onclick="toggleSidebar('cartSidebar'); playSound('snd-click')">
                     <i class="fa-solid fa-bag-shopping"></i>
-                    <span id="cartCount" class="absolute -top-2 -right-2 bg-black text-white text-[8px] w-4 h-4 flex items-center justify-center rounded-full font-bold">0</span>
+                    <span id="cartCount" class="badge">0</span>
                 </div>
-                <img id="userImg" class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover grayscale cursor-pointer" onclick="handleLogout()">
+                <img id="userImg" class="w-10 h-10 rounded-full border border-black/5 grayscale cursor-pointer" onclick="handleLogout()">
             </div>
         </nav>
 
-        <header class="relative h-[90vh] flex items-center justify-center pt-24">
-            <div class="text-center">
-                <h1 class="text-[5rem] md:text-[14rem] font-serif italic leading-none mb-4 animate-hero">Refined.</h1>
-                <p class="text-[9px] md:text-[13px] tracking-[10px] md:tracking-[22px] uppercase text-gray-400 font-light">Spring / Summer Archive 2026</p>
+        <header class="mesh-container relative h-[60vh] flex items-center justify-center overflow-hidden pt-20">
+            <div class="mesh-gradient"></div>
+            <div class="relative z-10 text-center">
+                <h1 class="text-6xl md:text-[10rem] font-serif italic leading-none mb-4 animate-hero">Refined</h1>
+                <p class="text-[9px] tracking-[10px] md:tracking-[20px] uppercase font-bold text-gray-400">Spring Archive 2026</p>
             </div>
         </header>
 
-        <main class="max-w-[1800px] mx-auto pb-40 px-3 md:px-12">
-            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-14"></div>
+        <main class="max-w-[1800px] mx-auto pb-40 px-2 md:px-12">
+            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-10"></div>
         </main>
-
-        <footer class="py-20 border-t border-gray-100 text-center">
-            <p class="text-[8px] tracking-[6px] text-gray-400 uppercase font-bold italic">Oasis Concept Store © All Rights Reserved</p>
-        </footer>
     </div>
 
-    <div id="cartSidebar" class="sidebar p-10 flex flex-col">
-        <div class="flex justify-between items-center mb-20">
-            <h2 class="text-5xl font-serif italic">Your Selection</h2>
-            <button onclick="toggleCart()" class="text-4xl font-light hover:rotate-90 transition-transform duration-500">&times;</button>
+    <div id="cartSidebar" class="sidebar p-8 flex flex-col">
+        <div class="flex justify-between items-center mb-10"><h2 class="text-4xl font-serif italic">Bag</h2><button onclick="toggleSidebar('cartSidebar')">&times;</button></div>
+        <div id="cartItems" class="flex-1 space-y-6 overflow-y-auto"></div>
+        <div class="pt-8 border-t">
+            <div class="flex justify-between text-2xl font-serif italic mb-6"><span>Total</span><span id="cartTotal">$0</span></div>
+            <button onclick="processPayment()" class="w-full bg-black text-white py-5 font-bold uppercase tracking-widest text-[10px]">Checkout</button>
         </div>
-        <div id="cartItems" class="flex-1 space-y-10 overflow-y-auto pr-4 custom-scroll"></div>
-        <div class="pt-10 mt-10">
-            <div class="flex justify-between text-3xl font-serif italic mb-10">
-                <span>Total</span><span id="cartTotal">$0</span>
-            </div>
-            <button onclick="processPayment()" class="w-full bg-black text-white py-6 text-[11px] tracking-[5px] font-bold uppercase hover:bg-zinc-800 transition-all">Request Acquisition</button>
-        </div>
+    </div>
+
+    <div id="wishlistSidebar" class="sidebar p-8">
+        <div class="flex justify-between items-center mb-10"><h2 class="text-4xl font-serif italic">Wishlist</h2><button onclick="toggleSidebar('wishlistSidebar')">&times;</button></div>
+        <div id="wishItems" class="space-y-6"></div>
+    </div>
+
+    <div id="historySidebar" class="sidebar p-8">
+        <div class="flex justify-between items-center mb-10"><h2 class="text-4xl font-serif italic">Tracking</h2><button onclick="toggleHistory()">&times;</button></div>
+        <div id="historyItems" class="space-y-4"></div>
     </div>
 
     <script type="module" src="script.js"></script>
