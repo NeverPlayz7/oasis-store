@@ -10,11 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#FDFCF9] text-[#1A1A1A] selection:bg-[#C5A37D] selection:text-white">
+<body class="bg-[#FDFCF9] text-[#1A1A1A]" data-theme="pearl">
 
     <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex items-center justify-center p-6 transition-all duration-1000">
         <div class="text-center max-w-sm w-full">
-            <h1 class="text-5xl font-serif italic mb-2 tracking-tighter">Oasis.</h1>
+            <h1 class="text-6xl font-serif italic mb-2 tracking-tighter">Oasis.</h1>
             <p class="text-[10px] tracking-[5px] text-gray-400 mb-12 uppercase font-semibold">Private Archive Access</p>
             <button onclick="loginWithGoogle()" class="w-full border border-black text-black font-semibold py-4 rounded-full hover:bg-black hover:text-white transition-all duration-500 text-[11px] tracking-[3px]">
                 SIGN IN WITH GOOGLE
@@ -22,70 +22,65 @@
         </div>
     </div>
 
-    <div id="mainApp" class="hidden opacity-0">
+    <div id="mainApp" class="hidden opacity-0 transition-opacity duration-1000">
         <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-md border-b border-gray-100 h-20 flex justify-between items-center px-6 md:px-12">
-            <div class="text-2xl font-serif italic font-bold">Oasis.</div>
+            <div class="text-2xl font-serif italic font-bold tracking-tighter">Oasis.</div>
             
             <div class="flex items-center gap-4 md:gap-8">
                 <select id="themeSelect" onchange="changeTheme(this.value)" class="bg-transparent border-none text-[10px] font-bold tracking-widest outline-none cursor-pointer uppercase">
-                    <option value="luxury">Pearl</option>
-                    <option value="dark">Ebony</option>
-                    <option value="sand">Sand</option>
+                    <option value="pearl">Pearl (Light)</option>
+                    <option value="ebony">Ebony (Dark)</option>
+                    <option value="sand">Sand (Gold)</option>
                 </select>
                 <div class="relative cursor-pointer" onclick="toggleCart()">
                     <i class="fa-solid fa-bag-shopping text-xl"></i>
                     <span id="cartCount" class="absolute -top-2 -right-2 bg-black text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">0</span>
                 </div>
-                <img id="userImg" class="w-8 h-8 rounded-full border border-gray-200 object-cover grayscale hover:grayscale-0 transition duration-500">
+                <img id="userImg" class="w-8 h-8 rounded-full border border-gray-200 object-cover grayscale hover:grayscale-0 transition duration-500 cursor-pointer" title="Logout" onclick="handleLogout()">
             </div>
         </nav>
 
-        <header class="relative h-[90vh] flex items-center justify-center text-center px-4 overflow-hidden pt-20">
+        <header class="relative h-[80vh] flex items-center justify-center text-center px-4 pt-20 overflow-hidden">
             <div class="max-w-4xl">
-                <p class="text-[11px] tracking-[8px] uppercase mb-6 font-semibold text-gray-500 animate-fadeIn">Limited Edition Collection</p>
-                <h1 class="text-6xl md:text-[10rem] font-serif italic leading-none mb-8 opacity-90 transition-transform duration-1000 hover:scale-105">Modern Elegance</h1>
+                <p class="text-[11px] tracking-[8px] uppercase mb-6 font-semibold text-gray-400">Exclusive Collection</p>
+                <h1 class="text-6xl md:text-[9rem] font-serif italic leading-none mb-8 opacity-90">Modern Elegance</h1>
                 <div class="w-12 h-[1px] bg-black mx-auto mb-8"></div>
             </div>
         </header>
 
         <main class="max-w-[1700px] mx-auto pb-32 px-2 md:px-10">
-            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-12"></div>
+            <div id="productGrid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-10"></div>
         </main>
 
         <section class="bg-white border-y border-gray-100 py-24 px-6">
             <div class="max-w-3xl mx-auto text-center">
                 <h2 class="text-4xl md:text-6xl font-serif italic mb-6">Get In Touch</h2>
-                <p class="text-gray-500 font-light mb-12">Your perfect experience is just a message away.</p>
+                <p class="text-gray-500 font-light mb-12 italic">Your bespoke experience is just a message away.</p>
                 <div class="flex flex-col md:flex-row gap-6">
-                    <input type="text" placeholder="NAME" class="flex-1 border-b border-gray-200 py-4 text-[10px] tracking-widest outline-none focus:border-black transition">
-                    <input type="email" placeholder="EMAIL" class="flex-1 border-b border-gray-200 py-4 text-[10px] tracking-widest outline-none focus:border-black transition">
+                    <input type="text" placeholder="NAME" class="flex-1 border-b border-gray-200 py-4 text-[10px] tracking-widest outline-none focus:border-black transition bg-transparent">
+                    <input type="email" placeholder="EMAIL" class="flex-1 border-b border-gray-200 py-4 text-[10px] tracking-widest outline-none focus:border-black transition bg-transparent">
                 </div>
                 <button class="mt-12 text-[10px] tracking-[4px] font-bold uppercase border border-black px-12 py-4 hover:bg-black hover:text-white transition duration-500">Submit Request</button>
             </div>
         </section>
 
         <footer class="py-12 text-center text-[9px] tracking-[5px] text-gray-400 uppercase font-medium">
-            © 2026 Oasis Protocol • Established for the refined
+            © 2026 Oasis Protocol • Refined for the Modern World
         </footer>
     </div>
 
     <div id="cartSidebar" class="sidebar p-8 md:p-12 flex flex-col">
         <div class="flex justify-between items-center mb-16">
-            <h2 class="text-4xl font-serif italic">Your Bag.</h2>
+            <h2 class="text-4xl font-serif italic">The Bag.</h2>
             <button onclick="toggleCart()" class="text-2xl font-light hover:rotate-90 transition duration-300">&times;</button>
         </div>
-        <div id="cartItems" class="flex-1 space-y-8 overflow-y-auto pr-2 custom-scroll"></div>
+        <div id="cartItems" class="flex-1 space-y-8 overflow-y-auto pr-2"></div>
         <div class="pt-8 border-t border-gray-100 mt-8">
             <div class="flex justify-between text-2xl font-serif italic mb-8">
                 <span>Total</span><span id="cartTotal">$0</span>
             </div>
-            <button onclick="processPayment()" class="w-full bg-black text-white py-5 rounded-none font-bold tracking-[4px] text-[11px] uppercase hover:bg-gray-800 transition-all">Complete Order</button>
+            <button onclick="processPayment()" class="w-full bg-black text-white py-5 font-bold tracking-[4px] text-[11px] uppercase hover:bg-gray-800 transition-all">CHECKOUT SESSION</button>
         </div>
-    </div>
-
-    <div class="fixed bottom-8 right-8 z-[100] flex flex-col gap-4">
-        <a href="https://wa.me/YOUR_NUM" target="_blank" class="w-12 h-12 bg-white text-black flex items-center justify-center rounded-full shadow-lg border border-gray-100 hover:bg-black hover:text-white transition duration-500"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://instagram.com/YOUR_ID" target="_blank" class="w-12 h-12 bg-white text-black flex items-center justify-center rounded-full shadow-lg border border-gray-100 hover:bg-black hover:text-white transition duration-500"><i class="fab fa-instagram"></i></a>
     </div>
 
     <script type="module" src="script.js"></script>
