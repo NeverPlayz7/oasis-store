@@ -1,13 +1,14 @@
 *{
+  margin:0;
+  padding:0;
   box-sizing:border-box;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#000);
+  background:linear-gradient(-45deg,#020024,#090979,#00d4ff,#000);
   background-size:400% 400%;
-  animation:bg 12s ease infinite;
+  animation:bg 15s ease infinite;
   color:white;
 }
 
@@ -17,65 +18,136 @@ body{
   100%{background-position:0% 50%}
 }
 
-header{
+/* HEADER */
+.header{
   display:flex;
-  gap:10px;
-  padding:12px;
-  background:#131921;
   align-items:center;
+  gap:15px;
+  padding:15px;
+  background:#131921;
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
-header input{
+.logo{
+  font-size:26px;
+  font-weight:bold;
+  color:#ffd814;
+}
+
+.header input{
   flex:1;
-  padding:8px;
-  border-radius:6px;
+  padding:10px;
+  border-radius:10px;
   border:none;
 }
 
-.auth{
-  padding:15px;
-  display:flex;
-  gap:10px;
-}
-
-.products{
-  padding:15px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:15px;
-}
-
-.card{
-  background:#1c1c1c;
-  padding:12px;
-  border-radius:14px;
-  text-align:center;
-  transition:.3s;
-}
-
-.card:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 20px #00ffd5;
-}
-
-.card img{
-  width:100%;
-  border-radius:10px;
-}
-
-button{
-  padding:10px;
+.header-btns button{
+  padding:10px 14px;
   border:none;
   border-radius:20px;
   cursor:pointer;
 }
 
-.pay{
+/* HERO */
+.hero{
+  text-align:center;
+  padding:60px 20px;
+}
+
+.hero h1{
+  font-size:42px;
+}
+
+.hero p{
+  opacity:.8;
+}
+
+/* PRODUCTS */
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:20px;
+  padding:30px;
+}
+
+.card{
+  background:rgba(0,0,0,.6);
+  border-radius:20px;
+  padding:15px;
+  text-align:center;
+  transition:.4s;
+  backdrop-filter:blur(10px);
+}
+
+.card:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 25px cyan;
+}
+
+.card img{
+  width:100%;
+  border-radius:15px;
+}
+
+.card button{
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:20px;
+  background:#ffd814;
+  cursor:pointer;
+}
+
+/* FOOTER */
+footer{
+  background:#0b0b0b;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+  padding:30px;
+}
+
+footer a{
+  display:block;
+  color:#ccc;
+  text-decoration:none;
+  margin-top:5px;
+}
+
+/* FLOATING SOCIAL */
+.social-float{
   position:fixed;
   bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#ffd814;
-  color:black;
-  font-weight:bold;
+  right:20px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.social-float a{
+  width:55px;
+  height:55px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  font-size:28px;
+  color:white;
+  animation:pulse 2s infinite;
+}
+
+.whatsapp{
+  background:#25D366;
+}
+
+.instagram{
+  background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af,#515bd4);
+}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+  100%{transform:scale(1)}
 }
