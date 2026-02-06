@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OASIS | Sentient Store</title>
+    <title>OASIS | Future Store</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -12,79 +12,94 @@
 </head>
 <body class="bg-black text-white selection:bg-cyan-500 overflow-x-hidden">
 
-    <div id="cursor-dot"></div>
-    <div id="cursor-outline"></div>
+    <div id="particles-js" class="fixed inset-0 z-[-1]"></div>
 
-    <div id="authScreen" class="fixed inset-0 z-[5000] bg-black flex items-center justify-center p-6">
-        <div class="glass p-10 rounded-[40px] text-center max-w-md w-full animate-pop">
-            <h1 class="text-6xl font-black mb-2 italic tracking-tighter">OASIS<span class="text-cyan-500">.</span></h1>
-            <p class="text-[9px] tracking-[5px] text-gray-500 mb-8">SECURE CLOUD ARCHIVE</p>
-            <button onclick="loginWithGoogle()" class="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-cyan-400 transition-all text-[11px] tracking-[3px]">
-                <i class="fab fa-google mr-2"></i> SIGN IN WITH GOOGLE
+    <div id="authScreen" class="fixed inset-0 z-[5000] bg-black flex items-center justify-center p-6 transition-opacity duration-500">
+        <div class="glass p-12 rounded-[50px] text-center max-w-md w-full border border-white/10 shadow-2xl">
+            <h1 class="text-7xl font-black mb-2 italic tracking-tighter text-white">OASIS.</h1>
+            <p class="text-[10px] tracking-[6px] text-cyan-500 mb-10 font-bold uppercase">SENTIENT ARCHIVE ACCESS</p>
+            <button onclick="loginWithGoogle()" class="group relative w-full bg-white text-black font-black py-5 rounded-3xl overflow-hidden transition-all hover:bg-cyan-400">
+                <span class="relative z-10 tracking-[3px] text-xs"><i class="fab fa-google mr-2"></i> AUTHORIZE WITH GOOGLE</span>
             </button>
         </div>
     </div>
 
     <div id="adminPanel" class="fixed inset-0 z-[6000] bg-black/95 backdrop-blur-3xl p-10 hidden overflow-y-auto">
         <div class="max-w-5xl mx-auto">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-4xl font-black italic text-red-500">MASTER CONTROL</h2>
-                <button onclick="toggleAdmin(false)" class="text-xl bg-white/10 px-6 py-2 rounded-full hover:bg-white/20 transition">EXIT</button>
+            <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-8">
+                <h2 class="text-4xl font-black italic text-red-500 tracking-tighter">MASTER CONTROL</h2>
+                <button onclick="toggleAdmin(false)" class="text-xs font-bold bg-white/10 px-8 py-3 rounded-full hover:bg-white/20 uppercase tracking-widest">Exit Terminal</button>
             </div>
             <div id="adminOrders" class="grid gap-6"></div>
         </div>
     </div>
 
     <div id="mainApp" class="hidden opacity-0 transition-opacity duration-1000">
-        <nav class="sticky top-0 z-[100] bg-black/80 backdrop-blur-xl border-b border-white/5 h-20 px-8 flex justify-between items-center">
-            <div class="text-2xl font-black italic tracking-tighter">OASIS.</div>
+        <nav class="sticky top-0 z-[100] bg-black/60 backdrop-blur-2xl border-b border-white/5 h-20 px-10 flex justify-between items-center">
+            <div class="text-3xl font-black italic tracking-tighter group cursor-pointer">
+                OA<span class="text-cyan-500 group-hover:text-white transition">SIS.</span>
+            </div>
             
-            <div class="flex items-center gap-6">
-                <button id="adminBtn" onclick="toggleAdmin(true)" class="hidden text-[10px] bg-red-600 px-4 py-1.5 rounded-full font-black tracking-widest">ADMIN</button>
-                
-                <div class="relative cursor-pointer nav-icon" onclick="toggleHistory()">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                </div>
-                
-                <div class="relative cursor-pointer nav-icon" onclick="toggleCart()">
+            <div class="flex items-center gap-8">
+                <button id="adminBtn" onclick="toggleAdmin(true)" class="hidden text-[10px] bg-red-600/20 text-red-500 border border-red-500/30 px-5 py-2 rounded-full font-black tracking-widest hover:bg-red-600 hover:text-white transition">ADMIN</button>
+                <div class="nav-icon cursor-pointer" onclick="toggleHistory()"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="relative nav-icon cursor-pointer" onclick="toggleCart()">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span id="cartCount" class="badge">0</span>
                 </div>
-                
-                <img id="userImg" class="w-10 h-10 rounded-full border-2 border-cyan-500/30 p-0.5">
+                <img id="userImg" class="w-10 h-10 rounded-full border-2 border-white/10 hover:border-cyan-500 transition cursor-pointer" onclick="handleLogout()">
             </div>
         </nav>
 
-        <main class="max-w-[1500px] mx-auto p-8">
-            <div class="mb-12">
-                <h2 class="text-sm font-black text-cyan-500 tracking-[10px] uppercase mb-4">New Arrivals</h2>
-                <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"></div>
+        <main class="max-w-[1500px] mx-auto p-10">
+            <div class="mb-20">
+                <p class="text-cyan-500 font-black tracking-[12px] uppercase text-[10px] mb-4">Curated Collection</p>
+                <h2 class="text-6xl font-black italic tracking-tighter mb-12">NEW ARCHIVE.</h2>
+                <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"></div>
             </div>
         </main>
-    </div>
 
-    <div id="cartSidebar" class="sidebar p-10 flex flex-col">
-        <div class="flex justify-between items-center mb-12">
-            <h2 class="text-3xl font-black tracking-tighter italic">YOUR BAG</h2>
-            <button onclick="toggleCart()" class="text-3xl">&times;</button>
-        </div>
-        <div id="cartItems" class="flex-1 space-y-6 overflow-y-auto pr-2"></div>
-        <div class="pt-8 border-t border-white/10 mt-6">
-            <div class="flex justify-between text-3xl font-black mb-8 italic">
-                <span>TOTAL</span><span id="cartTotal" class="text-cyan-400">$0</span>
+        <footer class="mt-20 border-t border-white/5 bg-white/[0.02] backdrop-blur-xl py-20 px-10">
+            <div class="max-w-[1500px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-20">
+                <div>
+                    <h2 class="text-4xl font-black italic tracking-tighter">OASIS.</h2>
+                    <p class="text-gray-500 text-xs mt-4 font-bold tracking-[4px] uppercase">The Sentient Marketplace</p>
+                </div>
+                <div class="flex gap-10 text-xs font-bold tracking-widest text-gray-400">
+                    <a href="#" class="hover:text-cyan-400 transition">INSTAGRAM</a>
+                    <a href="#" class="hover:text-cyan-400 transition">TWITTER</a>
+                    <a href="#" class="hover:text-cyan-400 transition">DISCORD</a>
+                </div>
+                <div class="md:text-right text-[10px] text-gray-600 font-black tracking-[5px]">
+                    © 2026 OASIS PROTOCOL. <br>DESIGNED FOR THE FUTURE.
+                </div>
             </div>
-            <button onclick="processPayment()" class="w-full bg-cyan-500 text-black py-6 rounded-3xl font-black text-[11px] tracking-[5px] hover:bg-white transition-all">CHECKOUT VIA STRIPE</button>
+        </footer>
+    </div>
+
+    <div id="cartSidebar" class="sidebar p-12 flex flex-col">
+        <div class="flex justify-between items-center mb-16">
+            <h2 class="text-4xl font-black italic tracking-tighter">BAG.</h2>
+            <button onclick="toggleCart()" class="text-4xl font-light hover:text-cyan-500">&times;</button>
+        </div>
+        <div id="cartItems" class="flex-1 space-y-8 overflow-y-auto custom-scroll"></div>
+        <div class="pt-10 border-t border-white/10 mt-10">
+            <div class="flex justify-between text-4xl font-black italic mb-10">
+                <span class="text-gray-500">TOTAL</span><span id="cartTotal">$0</span>
+            </div>
+            <button onclick="processPayment()" class="w-full bg-cyan-500 text-black py-6 rounded-full font-black text-[12px] tracking-[6px] hover:bg-white hover:scale-[1.02] transition-all">CHECKOUT VIA STRIPE</button>
         </div>
     </div>
 
-    <div id="historySidebar" class="sidebar p-10 overflow-y-auto">
-        <div class="flex justify-between items-center mb-12">
-            <h2 class="text-3xl font-black tracking-tighter italic">HISTORY</h2>
-            <button onclick="toggleHistory()" class="text-3xl">&times;</button>
+    <div id="historySidebar" class="sidebar p-12 overflow-y-auto custom-scroll">
+        <div class="flex justify-between items-center mb-16">
+            <h2 class="text-4xl font-black italic tracking-tighter">HISTORY.</h2>
+            <button onclick="toggleHistory()" class="text-4xl font-light hover:text-cyan-500">&times;</button>
         </div>
         <div id="historyItems" class="space-y-6"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>
