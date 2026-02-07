@@ -23,8 +23,9 @@ body{
  color:#fff;
  font-family:'Montserrat',sans-serif;
  overflow-x:hidden;
+ transition: background 0.3s, color 0.3s;
 }
-.font-serif{font-family:'Bodoni Moda',serif}
+.font-serif{font-family:'Bodoni Moda',serif;}
 
 /* LIGHT THEME */
 body.light {
@@ -38,6 +39,8 @@ body.light .sidebar { background:#fff; border-left:1px solid #ccc; color:#111; }
 body.light .modal-box { background:#f9f9f9; border:1px solid #ccc; color:#111; }
 body.light .btn { background:#b11226; color:white; }
 body.light .circle { background:#b11226; color:white; }
+body.light .close-btn { color:#111; }
+body.light .close-btn:hover { color:#b11226; }
 
 /* SPLASH */
 #splash{
@@ -143,7 +146,7 @@ nav{
  object-fit:cover;
  transition:.6s;
 }
-.product:hover img{transform:scale(1.1)}
+.product:hover img{transform:scale(1.1);}
 .hot{
  position:absolute;
  top:10px;left:10px;
@@ -164,7 +167,7 @@ nav{
  cursor:pointer;
  background:black;
 }
-.like.liked{color:red}
+.like.liked{color:red;}
 
 /* SIDEBAR */
 .sidebar{
@@ -179,7 +182,7 @@ nav{
  z-index:4000;
  overflow-y:auto;
 }
-.sidebar.active{transform:translateX(0)}
+.sidebar.active{transform:translateX(0);}
 .btn{
  background:#b11226;
  padding:14px;
@@ -190,7 +193,9 @@ nav{
  margin-top:20px;
  color:white;
  cursor:pointer;
+ transition: background 0.3s;
 }
+.btn:hover{opacity:0.85;}
 
 /* MODAL */
 .modal{
@@ -201,8 +206,9 @@ nav{
  align-items:center;
  justify-content:center;
  z-index:6000;
+ transition: background 0.3s;
 }
-.modal.hidden{display:none}
+.modal.hidden{display:none;}
 .modal-box{
  background:#0b0b0b;
  border:1px solid red;
@@ -210,6 +216,8 @@ nav{
  width:320px;
  text-align:center;
  animation:pop .4s ease;
+ position:relative;
+ transition: background 0.3s, color 0.3s;
 }
 @keyframes pop{
  from{transform:scale(.8);opacity:0}
@@ -224,11 +232,26 @@ nav{
  color:white;
 }
 
+/* CLOSE BUTTON */
+.close-btn{
+ position:absolute;
+ top:12px;
+ right:12px;
+ font-size:22px;
+ cursor:pointer;
+ color:#b11226;
+ transition: color 0.3s;
+}
+.close-btn:hover{color:#fff;}
+
 /* FLOAT */
 .float{
  position:fixed;
  bottom:20px;left:20px;
  z-index:5000;
+ display:flex;
+ flex-direction:column;
+ gap:12px;
 }
 .circle{
  width:48px;height:48px;
@@ -238,6 +261,7 @@ nav{
  align-items:center;
  justify-content:center;
  cursor:pointer;
+ transition: background 0.3s;
 }
 
 /* LIVE POPUP */
@@ -311,8 +335,8 @@ nav{
 
 <!-- QUICK VIEW MODAL -->
 <div id="preview" class="modal hidden">
- <div class="modal-box relative">
-  <span onclick="closePreview()" style="position:absolute;top:12px;right:12px;font-size:20px;cursor:pointer;color:#b11226;">&times;</span>
+ <div class="modal-box">
+  <span id="closePreviewBtn" onclick="closePreview()" class="close-btn">&times;</span>
   <img id="pimg" class="mb-4">
   <h3 id="pname"></h3>
   <p id="pprice"></p>
@@ -321,9 +345,9 @@ nav{
 </div>
 
 <!-- FLOAT BUTTONS -->
-<div class="float" style="left:20px;">
+<div class="float">
  <div class="circle" id="themeToggle" title="Toggle Light/Dark">🌓</div>
- <div class="circle mt-4" onclick="toggleLogin()">👤</div>
+ <div class="circle" onclick="toggleLogin()">👤</div>
 </div>
 
 <!-- LIVE POPUP -->
@@ -337,12 +361,12 @@ nav{
 const themeToggle = document.getElementById('themeToggle');
 if(localStorage.getItem('theme')==='light') document.body.classList.add('light');
 themeToggle.onclick = () => {
-  document.body.classList.toggle('light');
-  if(document.body.classList.contains('light')){
-    localStorage.setItem('theme','light');
-  } else {
-    localStorage.setItem('theme','dark');
-  }
+ document.body.classList.toggle('light');
+ if(document.body.classList.contains('light')){
+   localStorage.setItem('theme','light');
+ } else {
+   localStorage.setItem('theme','dark');
+ }
 };
 
 // ===== PRODUCTS & CART =====
