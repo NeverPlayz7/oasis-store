@@ -16,19 +16,18 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-/* --- GLOBAL --- */
 *{box-sizing:border-box;}
 body{
  margin:0;
- background:#000;
- color:#fff;
+ background:#111;
+ color:#eee;
  font-family:'Montserrat',sans-serif;
  overflow-x:hidden;
  transition: background 0.5s, color 0.5s;
 }
 .font-serif{font-family:'Bodoni Moda',serif;}
 
-/* --- LIGHT THEME --- */
+/* LIGHT THEME */
 body.light {
  background:#fff;
  color:#111;
@@ -43,10 +42,10 @@ body.light .circle { background:#b11226; color:white; }
 body.light .close-btn { color:#111; }
 body.light .close-btn:hover { color:#b11226; }
 
-/* --- SPLASH --- */
+/* SPLASH */
 #splash{
  position:fixed;inset:0;
- background:black;
+ background:#111;
  display:flex;
  align-items:center;
  justify-content:center;
@@ -59,9 +58,9 @@ body.light .close-btn:hover { color:#b11226; }
 }
 @keyframes fade{to{opacity:0;visibility:hidden;}}
 
-/* --- TOP BAR --- */
+/* TOP BAR */
 .top{
- background:#b11226;
+ background: linear-gradient(90deg,#b11226,#ff3a5b);
  text-align:center;
  padding:8px;
  font-size:11px;
@@ -72,7 +71,7 @@ body.light .close-btn:hover { color:#b11226; }
  transition: background 0.5s, color 0.5s;
 }
 
-/* --- NAV --- */
+/* NAV */
 nav{
  position:fixed;
  top:32px;
@@ -81,13 +80,16 @@ nav{
  display:flex;
  justify-content:space-between;
  align-items:center;
- padding:0 40px;
- background:rgba(0,0,0,.85);
+ padding:0 20px;
+ background: rgba(17,17,17,0.9);
+ border-bottom:1px solid #b11226;
  backdrop-filter:blur(10px);
- border-bottom:1px solid #300;
  z-index:999;
  transition: background 0.5s, border-color 0.5s;
 }
+nav .text-3xl{font-size:2rem;}
+
+/* BADGE */
 .badge{
  position:absolute;
  top:-6px;right:-6px;
@@ -97,15 +99,28 @@ nav{
  border-radius:4px;
 }
 
-/* --- HERO --- */
+/* HERO */
 .hero{
  padding-top:160px;
  text-align:center;
 }
-.hero h1{
- font-size:clamp(3rem,8vw,6rem);
- font-family:'Bodoni Moda';
+.gradient-text{
+ font-family:'Bodoni Moda',serif;
  font-style:italic;
+ font-weight:700;
+ background: linear-gradient(90deg,#ff3a5b,#b11226,#ffb3b3,#ff3a5b);
+ background-size: 300% 100%;
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+ animation: gradientMove 3s linear infinite;
+}
+@keyframes gradientMove{
+ 0%{background-position:0% 50%}
+ 50%{background-position:100% 50%}
+ 100%{background-position:0% 50%}
+}
+.hero h1{
+ font-size:clamp(3rem,8vw,5rem);
  animation:reveal 1.6s ease;
 }
 @keyframes reveal{
@@ -113,7 +128,7 @@ nav{
  to{opacity:1;transform:translateY(0)}
 }
 .timer{
- border:1px solid red;
+ border:1px solid #b11226;
  display:inline-block;
  padding:8px 20px;
  font-size:11px;
@@ -121,12 +136,12 @@ nav{
  margin-top:10px;
 }
 
-/* --- PRODUCT GRID --- */
+/* PRODUCT GRID */
 .grid{
  display:grid;
- grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
- gap:26px;
- padding:60px 26px 100px;
+ grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+ gap:20px;
+ padding:60px 15px 100px;
  max-width:1600px;
  margin:auto;
 }
@@ -136,15 +151,16 @@ nav{
  transition:.4s;
  border-radius:6px;
  overflow:hidden;
+ border:1px solid #222;
 }
 .product:hover{
- transform:translateY(-6px);
- box-shadow:0 0 40px rgba(255,0,0,.4);
+ transform:translateY(-4px);
+ box-shadow:0 0 25px rgba(255,58,91,0.7);
+ border:1px solid #ff3a5b;
 }
 .img{
  aspect-ratio:3/4;
  overflow:hidden;
- border:1px solid #300;
  cursor:pointer;
 }
 .img img{
@@ -152,7 +168,7 @@ nav{
  object-fit:cover;
  transition:.6s;
 }
-.product:hover img{transform:scale(1.1);}
+.product:hover img{transform:scale(1.05);}
 .hot{
  position:absolute;
  top:10px;left:10px;
@@ -167,45 +183,49 @@ nav{
  top:10px;right:10px;
  width:32px;height:32px;
  border-radius:50%;
- border:1px solid red;
+ border:1px solid #ff3a5b;
  display:flex;
  align-items:center;
  justify-content:center;
  cursor:pointer;
- background:black;
+ background:#111;
  transition: color 0.3s, background 0.3s;
 }
-.like.liked{color:red;}
+.like.liked{color:#ff3a5b;}
 
-/* --- SIDEBAR --- */
+/* SIDEBAR */
 .sidebar{
  position:fixed;
  top:0;right:0;
- width:360px;height:100vh;
- background:#000;
- border-left:1px solid red;
- padding:30px;
+ width:80%;
+ max-width:360px;
+ height:100vh;
+ background:#1a1a1a;
+ border-left:1px solid #b11226;
+ padding:20px;
  transform:translateX(100%);
- transition:.6s, background 0.5s, color 0.5s;
+ transition:.5s, background 0.5s, color 0.5s;
  z-index:4000;
  overflow-y:auto;
 }
 .sidebar.active{transform:translateX(0);}
+.sidebar::-webkit-scrollbar{width:6px;}
+.sidebar::-webkit-scrollbar-thumb{background:#b11226;border-radius:3px;}
 .btn{
- background:#b11226;
- padding:14px;
+ background: linear-gradient(45deg,#b11226,#ff3a5b);
+ padding:12px;
  width:100%;
- letter-spacing:3px;
+ letter-spacing:2px;
  font-weight:600;
  border:none;
- margin-top:20px;
+ margin-top:15px;
  color:white;
  cursor:pointer;
- transition: background 0.3s, opacity 0.3s;
+ transition: opacity 0.3s, transform 0.3s;
 }
-.btn:hover{opacity:0.85;}
+.btn:hover{opacity:0.85; transform:translateY(-2px);}
 
-/* --- MODAL --- */
+/* MODAL */
 .modal{
  position:fixed;inset:0;
  background:rgba(0,0,0,.8);
@@ -218,10 +238,11 @@ nav{
 }
 .modal.hidden{display:none;}
 .modal-box{
- background:#0b0b0b;
- border:1px solid red;
- padding:40px;
- width:320px;
+ background:#1b1b1b;
+ border:1px solid #b11226;
+ padding:30px;
+ width:90%;
+ max-width:350px;
  text-align:center;
  animation:pop .4s ease;
  position:relative;
@@ -236,55 +257,73 @@ nav{
  width:100%;
  margin:10px 0;
  padding:12px;
- background:black;
+ background:#111;
  border:1px solid #333;
  color:white;
  border-radius:4px;
 }
 
-/* --- CLOSE BUTTON --- */
+/* CLOSE BUTTON */
 .close-btn{
  position:absolute;
  top:12px;
  right:12px;
  font-size:22px;
  cursor:pointer;
- color:#b11226;
+ color:#ff3a5b;
  transition: color 0.3s;
 }
 .close-btn:hover{color:#fff;}
 
-/* --- FLOAT BUTTONS --- */
+/* FLOAT BUTTONS (DRAGGABLE) */
 .float{
  position:fixed;
- bottom:20px;left:20px;
+ bottom:15px;right:15px;
  z-index:5000;
  display:flex;
  flex-direction:column;
  gap:12px;
+ cursor:grab;
+ touch-action: none;
 }
+.float.dragging{cursor:grabbing;}
 .circle{
  width:48px;height:48px;
  border-radius:50%;
- background:#b11226;
+ background: linear-gradient(45deg,#b11226,#ff3a5b);
  display:flex;
  align-items:center;
  justify-content:center;
  cursor:pointer;
- transition: background 0.3s;
+ transition: background 0.3s, transform 0.3s;
 }
+.circle:hover{transform:scale(1.1);}
 
-/* --- LIVE POPUP --- */
+/* LIVE POPUP */
 #popup{
  position:fixed;
- bottom:90px;left:20px;
- background:black;
- border:1px solid red;
+ bottom:90px;right:15px;
+ background:#1b1b1b;
+ border:1px solid #b11226;
  padding:12px 16px;
  font-size:11px;
  display:none;
  z-index:6000;
  border-radius:5px;
+ max-width:220px;
+ word-wrap:break-word;
+ color:#eee;
+}
+
+/* Responsive adjustments */
+@media(max-width:768px){
+ .hero h1{font-size:2.8rem;}
+ .grid{gap:15px; padding:150px 10px 80px;}
+ nav{padding:0 10px;}
+}
+@media(max-width:480px){
+ .hero h1{font-size:2.2rem;}
+ .sidebar{width:90%;}
 }
 </style>
 </head>
@@ -298,7 +337,7 @@ nav{
 
 <!-- NAV -->
 <nav>
- <div class="text-3xl font-serif italic text-red-600">OASIS</div>
+ <div class="text-3xl gradient-text">OASIS</div>
  <div class="flex gap-6">
   <div id="wishBtn" class="relative cursor-pointer">
    <i class="fa-regular fa-heart"></i>
@@ -313,7 +352,7 @@ nav{
 
 <!-- HERO -->
 <section class="hero">
- <h1>OASIS STORE</h1>
+ <h1 class="gradient-text">OASIS STORE</h1>
  <div class="timer">FLASH SALE ENDS IN <span id="countdown"></span></div>
 </section>
 
@@ -322,9 +361,9 @@ nav{
 
 <!-- CART SIDEBAR -->
 <div class="sidebar" id="cart">
- <h2 class="font-serif italic text-3xl mb-6">Your Bag</h2>
+ <h2 class="font-serif italic text-2xl mb-4">Your Bag</h2>
  <div id="cartItems"></div>
- <div class="flex justify-between mt-6">
+ <div class="flex justify-between mt-4">
   <span>Total</span><span id="total">$0</span>
  </div>
  <button class="btn" onclick="checkout()">Checkout</button>
@@ -355,8 +394,8 @@ nav{
  </div>
 </div>
 
-<!-- FLOAT BUTTONS -->
-<div class="float">
+<!-- FLOAT BUTTONS (DRAGGABLE) -->
+<div class="float" id="floatButtons">
  <div class="circle" id="themeToggle" title="Toggle Light/Dark">🌓</div>
  <div class="circle" onclick="toggleLogin()">👤</div>
 </div>
@@ -367,17 +406,14 @@ nav{
 <!-- HOVER SOUND -->
 <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
 
+<!-- JS (Products, Cart, Theme etc.) -->
 <script>
 // --- THEME TOGGLE ---
 const themeToggle = document.getElementById('themeToggle');
 if(localStorage.getItem('theme')==='light') document.body.classList.add('light');
 themeToggle.onclick = () => {
  document.body.classList.toggle('light');
- if(document.body.classList.contains('light')){
-   localStorage.setItem('theme','light');
- } else {
-   localStorage.setItem('theme','dark');
- }
+ localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
 };
 
 // --- PRODUCTS & CART ---
@@ -439,14 +475,7 @@ function closePreview(){previewModal.classList.add("hidden");}
 
 /* TIMER */
 const end=Date.now()+3600000;
-setInterval(()=>{
- let d=end-Date.now();
- if(d<0){countdown.innerText="ENDED";return;}
- countdown.innerText=
- Math.floor(d/3600000)+"h "+
- Math.floor((d%3600000)/60000)+"m "+
- Math.floor((d%60000)/1000)+"s";
-},1000);
+setInterval(()=>{let d=end-Date.now();if(d<0){countdown.innerText="ENDED";return;} countdown.innerText=Math.floor(d/3600000)+"h "+Math.floor((d%3600000)/60000)+"m "+Math.floor((d%60000)/1000)+"s";},1000);
 
 /* LIVE POPUP */
 setInterval(()=>{popup.style.display="block";setTimeout(()=>popup.style.display="none",3000);},9000);
@@ -460,6 +489,43 @@ function placeOrder(method){
  cart=[];update();cartSidebar.classList.remove("active");
  confetti({particleCount:200,colors:["#b11226","#000"]});
  alert("Order Placed Successfully via "+method+"!");
+}
+
+/* DRAGGABLE FLOAT BUTTONS */
+const floatButtons = document.getElementById('floatButtons');
+let isDragging = false, startX, startY, origX, origY;
+floatButtons.addEventListener('mousedown', startDrag);
+floatButtons.addEventListener('touchstart', startDrag, {passive:false});
+function startDrag(e){
+ e.preventDefault();
+ isDragging = true;
+ floatButtons.classList.add('dragging');
+ const rect = floatButtons.getBoundingClientRect();
+ origX = rect.left; origY = rect.top;
+ startX = e.type==='touchstart'?e.touches[0].clientX:e.clientX;
+ startY = e.type==='touchstart'?e.touches[0].clientY:e.clientY;
+ document.addEventListener('mousemove', drag);
+ document.addEventListener('mouseup', stopDrag);
+ document.addEventListener('touchmove', drag, {passive:false});
+ document.addEventListener('touchend', stopDrag);
+}
+function drag(e){
+ if(!isDragging) return;
+ e.preventDefault();
+ const x = e.type==='touchmove'?e.touches[0].clientX:e.clientX;
+ const y = e.type==='touchmove'?e.touches[0].clientY:e.clientY;
+ let dx = x - startX, dy = y - startY;
+ floatButtons.style.right = 'auto';
+ floatButtons.style.left = (origX + dx) + 'px';
+ floatButtons.style.top = (origY + dy) + 'px';
+}
+function stopDrag(){
+ isDragging = false;
+ floatButtons.classList.remove('dragging');
+ document.removeEventListener('mousemove', drag);
+ document.removeEventListener('mouseup', stopDrag);
+ document.removeEventListener('touchmove', drag);
+ document.removeEventListener('touchend', stopDrag);
 }
 </script>
 
