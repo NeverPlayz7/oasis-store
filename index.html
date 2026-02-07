@@ -1,84 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OASIS | RED ARCHIVE</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OASIS | Red Archive</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+
+<style>
+body{font-family:'Montserrat',sans-serif;background:#000;color:#fff;overflow-x:hidden}
+.font-serif{font-family:'Bodoni Moda',serif}
+
+/* TOP BAR */
+.top-bar{background:#b11226;color:#fff;text-align:center;font-size:11px;letter-spacing:3px;padding:8px;position:fixed;top:0;width:100%;z-index:9999}
+
+/* NAV */
+.nav{background:rgba(0,0,0,.85);backdrop-filter:blur(10px);border-bottom:1px solid #300}
+
+/* SALE TEXT */
+.sale-wallpaper{position:fixed;inset:0;z-index:-1}
+.sale-text{position:absolute;top:50%;left:0;font-size:16vh;font-family:'Bodoni Moda';color:rgba(255,0,0,.08);white-space:nowrap;transform:translateY(-50%) rotate(-8deg);animation:marq 20s linear infinite}
+@keyframes marq{from{transform:translateY(-50%) rotate(-8deg) translateX(0)}to{transform:translateY(-50%) rotate(-8deg) translateX(-50%)}}
+
+/* PRODUCTS */
+.product-card{position:relative;text-align:center;transition:.4s}
+.product-card:hover{box-shadow:0 0 35px rgba(255,0,0,.4);transform:translateY(-6px)}
+.img-box{aspect-ratio:3/4;background:#111;overflow:hidden;border:1px solid #300}
+.img-box img{width:100%;height:100%;object-fit:cover;transition:.6s}
+.product-card:hover img{transform:scale(1.08)}
+
+.badge-hot{position:absolute;top:10px;left:10px;background:#b11226;font-size:9px;padding:4px 8px;letter-spacing:2px}
+.like-btn{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:#000;border:1px solid red;display:flex;align-items:center;justify-content:center}
+.like-btn.liked{color:red}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;right:0;width:380px;height:100vh;background:#000;border-left:1px solid red;padding:30px;transform:translateX(100%);transition:.6s;z-index:3000}
+.sidebar.active{transform:translateX(0)}
+
+.btn-main{background:#b11226;padding:14px;width:100%;letter-spacing:3px;font-weight:600;margin-top:20px}
+
+/* TIMER */
+.timer{border:1px solid red;padding:8px 20px;font-size:11px;letter-spacing:2px;margin-top:10px}
+</style>
 </head>
 
 <body>
 
-<div id="cursor"></div>
+<div class="top-bar">⚡ FLASH SALE LIVE — UP TO 70% OFF ⚡</div>
 
-<audio id="snd-cart" src="https://assets.mixkit.co/active_storage/sfx/607/607-preview.mp3"></audio>
-<audio id="snd-like" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<div class="sale-wallpaper"><div class="sale-text">RED ARCHIVE SALE — RED ARCHIVE SALE</div></div>
 
-<!-- AUTH -->
-<div id="authScreen" class="fixed inset-0 z-[5000] bg-black flex flex-col items-center justify-center text-center">
-<h1 class="text-7xl font-serif italic text-red-600 mb-2">Oasis.</h1>
-<p class="text-[9px] tracking-[6px] text-gray-400 mb-14 uppercase">Red Archive Access</p>
-<button id="loginBtn" class="border border-red-600 px-16 py-4 rounded-full text-[10px] tracking-[4px] font-bold uppercase text-white hover:bg-red-600 transition">
-Enter Store
-</button>
-</div>
-
-<div id="mainApp" class="hidden opacity-0">
-
-<!-- SALE BACKGROUND -->
-<div class="sale-wallpaper">
-<div class="sale-text">RED ARCHIVE SALE — RED ARCHIVE SALE</div>
-</div>
-
-<!-- NAV -->
-<nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md h-20 flex justify-between items-center px-10 border-b border-red-900">
+<nav class="nav fixed top-[32px] w-full h-20 flex items-center justify-between px-10 z-50">
 <div class="text-3xl font-serif italic text-red-600">Oasis.</div>
-<div class="flex items-center gap-6 text-white">
-<div id="wishBtn" class="relative cursor-pointer"><i class="fa-regular fa-heart"></i><span id="wishCount" class="badge">0</span></div>
-<div id="cartBtn" class="relative cursor-pointer"><i class="fa-solid fa-bag-shopping"></i><span id="cartCount" class="badge">0</span></div>
-<img id="userImg" class="w-9 h-9 rounded-full border border-red-600 cursor-pointer" onclick="logout()">
+<div class="flex gap-6">
+<div id="wishBtn" class="relative cursor-pointer"><i class="fa-regular fa-heart"></i><span id="wishCount" class="absolute -top-2 -right-2 bg-red-600 text-xs px-1 rounded">0</span></div>
+<div id="cartBtn" class="relative cursor-pointer"><i class="fa-solid fa-bag-shopping"></i><span id="cartCount" class="absolute -top-2 -right-2 bg-red-600 text-xs px-1 rounded">0</span></div>
 </div>
 </nav>
 
-<!-- HEADER -->
-<header class="h-[45vh] flex flex-col justify-center items-center pt-20">
-<h2 class="text-6xl md:text-8xl font-serif italic text-white mb-4">The Red Archive</h2>
-
-<select id="sortPrice" class="bg-black text-white px-6 py-2 rounded-full text-[10px] tracking-[2px] uppercase border border-red-600">
-<option value="default">Sort Default</option>
-<option value="low">Low → High</option>
-<option value="high">High → Low</option>
-</select>
+<header class="h-[45vh] flex flex-col items-center justify-center pt-24">
+<h1 class="text-6xl md:text-8xl font-serif italic">The Red Archive</h1>
+<div class="timer">Sale Ends In: <span id="countdown"></span></div>
 </header>
 
-<!-- PRODUCTS -->
 <main class="max-w-[1600px] mx-auto px-6 pb-20">
-<div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+<div id="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
 </main>
-</div>
-
-<!-- WISHLIST -->
-<div id="wishlistSidebar" class="sidebar">
-<h3>Wishlist</h3>
-<div id="wishItems"></div>
-</div>
 
 <!-- CART -->
-<div id="cartSidebar" class="sidebar">
-<h3>Shopping Bag</h3>
-<div id="cartItems"></div>
-<div class="total">
-<span>Total</span>
-<span id="cartTotal">$0</span>
-</div>
-<button id="checkoutBtn">Checkout</button>
+<div id="cart" class="sidebar">
+<h2 class="text-3xl font-serif italic mb-6">Shopping Bag</h2>
+<div id="cartItems" class="space-y-4"></div>
+<div class="flex justify-between mt-6"><span>Total</span><span id="total">$0</span></div>
+<button class="btn-main" id="checkout">Checkout</button>
 </div>
 
-<script type="module" src="script.js"></script>
+<script>
+const products=[
+{id:1,name:"Noir Jacket",price:299,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"},
+{id:2,name:"Red Luxe Hoodie",price:189,img:"https://images.unsplash.com/photo-1552374196-c4e7ffc6e126"},
+{id:3,name:"Shadow Sneakers",price:249,img:"https://images.unsplash.com/photo-1549298916-b41d501d3772"},
+{id:4,name:"Crimson Watch",price:399,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"},
+{id:5,name:"Black Cap",price:59,img:"https://images.unsplash.com/photo-1528701800489-20be3c9c1f49"},
+{id:6,name:"Red Earbuds",price:129,img:"https://images.unsplash.com/photo-1590658268037-6bf12165a8df"}
+];
+let cart=[],wish=[];
+
+const grid=document.getElementById('grid');
+function render(){
+ grid.innerHTML=products.map(p=>`
+ <div class="product-card">
+ <span class="badge-hot">HOT</span>
+ <div class="img-box" onclick="add(${p.id})"><img src="${p.img}"></div>
+ <button class="like-btn ${wish.includes(p.id)?'liked':''}" onclick="like(${p.id})"><i class="fa-heart ${wish.includes(p.id)?'fa-solid':'fa-regular'}"></i></button>
+ <h4 class="text-xs uppercase tracking-widest mt-3">${p.name}</h4>
+ <b class="font-serif italic">$${p.price}</b>
+ </div>`).join('');
+}
+render();
+
+function add(id){cart.push(products.find(p=>p.id===id));update();}
+function like(id){wish.includes(id)?wish=wish.filter(x=>x!==id):wish.push(id);update();render();}
+
+function update(){
+ cartCount.innerText=cart.length;wishCount.innerText=wish.length;
+ cartItems.innerHTML=cart.map(i=>`<div class='flex justify-between'><span>${i.name}</span><span>$${i.price}</span></div>`).join('');
+ total.innerText='$'+cart.reduce((a,b)=>a+b.price,0);
+}
+
+cartBtn.onclick=()=>cart.classList.add('active');
+checkout.onclick=()=>{confetti({particleCount:120,colors:['#b11226']});alert('Order Placed');cart=[];update();cart.classList.remove('active')}
+
+/* TIMER */
+const end=Date.now()+3600000;
+setInterval(()=>{
+ let d=end-Date.now();if(d<0)return countdown.innerText='ENDED';
+ let h=Math.floor(d/3600000),m=Math.floor((d%3600000)/60000),s=Math.floor((d%60000)/1000);
+ countdown.innerText=`${h}h ${m}m ${s}s`;
+},1000);
+</script>
+
 </body>
 </html>
