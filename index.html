@@ -16,6 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
+/* --- GLOBAL --- */
 *{box-sizing:border-box;}
 body{
  margin:0;
@@ -23,11 +24,11 @@ body{
  color:#fff;
  font-family:'Montserrat',sans-serif;
  overflow-x:hidden;
- transition: background 0.3s, color 0.3s;
+ transition: background 0.5s, color 0.5s;
 }
 .font-serif{font-family:'Bodoni Moda',serif;}
 
-/* LIGHT THEME */
+/* --- LIGHT THEME --- */
 body.light {
  background:#fff;
  color:#111;
@@ -42,7 +43,7 @@ body.light .circle { background:#b11226; color:white; }
 body.light .close-btn { color:#111; }
 body.light .close-btn:hover { color:#b11226; }
 
-/* SPLASH */
+/* --- SPLASH --- */
 #splash{
  position:fixed;inset:0;
  background:black;
@@ -54,10 +55,11 @@ body.light .close-btn:hover { color:#b11226; }
  letter-spacing:6px;
  z-index:9999;
  animation:fade 1.2s forwards 1s;
+ color:#fff;
 }
-@keyframes fade{to{opacity:0;visibility:hidden}}
+@keyframes fade{to{opacity:0;visibility:hidden;}}
 
-/* TOP BAR */
+/* --- TOP BAR --- */
 .top{
  background:#b11226;
  text-align:center;
@@ -67,9 +69,10 @@ body.light .close-btn:hover { color:#b11226; }
  position:fixed;
  top:0;width:100%;
  z-index:1000;
+ transition: background 0.5s, color 0.5s;
 }
 
-/* NAV */
+/* --- NAV --- */
 nav{
  position:fixed;
  top:32px;
@@ -83,6 +86,7 @@ nav{
  backdrop-filter:blur(10px);
  border-bottom:1px solid #300;
  z-index:999;
+ transition: background 0.5s, border-color 0.5s;
 }
 .badge{
  position:absolute;
@@ -93,7 +97,7 @@ nav{
  border-radius:4px;
 }
 
-/* HERO */
+/* --- HERO --- */
 .hero{
  padding-top:160px;
  text-align:center;
@@ -117,7 +121,7 @@ nav{
  margin-top:10px;
 }
 
-/* GRID */
+/* --- PRODUCT GRID --- */
 .grid{
  display:grid;
  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
@@ -130,6 +134,8 @@ nav{
  position:relative;
  text-align:center;
  transition:.4s;
+ border-radius:6px;
+ overflow:hidden;
 }
 .product:hover{
  transform:translateY(-6px);
@@ -154,6 +160,7 @@ nav{
  font-size:9px;
  padding:4px 8px;
  letter-spacing:2px;
+ border-radius:3px;
 }
 .like{
  position:absolute;
@@ -166,10 +173,11 @@ nav{
  justify-content:center;
  cursor:pointer;
  background:black;
+ transition: color 0.3s, background 0.3s;
 }
 .like.liked{color:red;}
 
-/* SIDEBAR */
+/* --- SIDEBAR --- */
 .sidebar{
  position:fixed;
  top:0;right:0;
@@ -178,7 +186,7 @@ nav{
  border-left:1px solid red;
  padding:30px;
  transform:translateX(100%);
- transition:.6s;
+ transition:.6s, background 0.5s, color 0.5s;
  z-index:4000;
  overflow-y:auto;
 }
@@ -193,11 +201,11 @@ nav{
  margin-top:20px;
  color:white;
  cursor:pointer;
- transition: background 0.3s;
+ transition: background 0.3s, opacity 0.3s;
 }
 .btn:hover{opacity:0.85;}
 
-/* MODAL */
+/* --- MODAL --- */
 .modal{
  position:fixed;inset:0;
  background:rgba(0,0,0,.8);
@@ -206,7 +214,7 @@ nav{
  align-items:center;
  justify-content:center;
  z-index:6000;
- transition: background 0.3s;
+ transition: background 0.5s;
 }
 .modal.hidden{display:none;}
 .modal-box{
@@ -217,7 +225,8 @@ nav{
  text-align:center;
  animation:pop .4s ease;
  position:relative;
- transition: background 0.3s, color 0.3s;
+ border-radius:8px;
+ transition: background 0.5s, color 0.5s;
 }
 @keyframes pop{
  from{transform:scale(.8);opacity:0}
@@ -230,9 +239,10 @@ nav{
  background:black;
  border:1px solid #333;
  color:white;
+ border-radius:4px;
 }
 
-/* CLOSE BUTTON */
+/* --- CLOSE BUTTON --- */
 .close-btn{
  position:absolute;
  top:12px;
@@ -244,7 +254,7 @@ nav{
 }
 .close-btn:hover{color:#fff;}
 
-/* FLOAT */
+/* --- FLOAT BUTTONS --- */
 .float{
  position:fixed;
  bottom:20px;left:20px;
@@ -264,7 +274,7 @@ nav{
  transition: background 0.3s;
 }
 
-/* LIVE POPUP */
+/* --- LIVE POPUP --- */
 #popup{
  position:fixed;
  bottom:90px;left:20px;
@@ -274,6 +284,7 @@ nav{
  font-size:11px;
  display:none;
  z-index:6000;
+ border-radius:5px;
 }
 </style>
 </head>
@@ -357,7 +368,7 @@ nav{
 <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
 
 <script>
-// ===== THEME TOGGLE =====
+// --- THEME TOGGLE ---
 const themeToggle = document.getElementById('themeToggle');
 if(localStorage.getItem('theme')==='light') document.body.classList.add('light');
 themeToggle.onclick = () => {
@@ -369,7 +380,7 @@ themeToggle.onclick = () => {
  }
 };
 
-// ===== PRODUCTS & CART =====
+// --- PRODUCTS & CART ---
 const products=[
 {id:1,name:"Noir Jacket",price:299,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"},
 {id:2,name:"Red Luxe Hoodie",price:189,img:"https://images.unsplash.com/photo-1552374196-c4e7ffc6e126"},
@@ -378,7 +389,6 @@ const products=[
 {id:5,name:"Black Cap",price:59,img:"https://images.unsplash.com/photo-1528701800489-20be3c9c1f49"},
 {id:6,name:"Red Earbuds",price:129,img:"https://images.unsplash.com/photo-1590658268037-6bf12165a8df"}
 ];
-
 let cart=[],wish=[],current=null;
 const grid=document.getElementById("grid");
 const hoverSound=document.getElementById("hoverSound");
@@ -395,7 +405,7 @@ const pname=document.getElementById("pname");
 const pprice=document.getElementById("pprice");
 const countdown=document.getElementById("countdown");
 const popup=document.getElementById("popup");
-let orders = [];
+let orders=[];
 
 function render(){
  grid.innerHTML=products.map(p=>`
