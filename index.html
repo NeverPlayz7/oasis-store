@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;}
 body{
  margin:0;
  background:#000;
@@ -25,6 +25,19 @@ body{
  overflow-x:hidden;
 }
 .font-serif{font-family:'Bodoni Moda',serif}
+
+/* LIGHT THEME */
+body.light {
+ background:#fff;
+ color:#111;
+}
+body.light .top { background:#f1f1f1; color:#111; }
+body.light nav { background: rgba(255,255,255,0.85); border-bottom:1px solid #ccc; }
+body.light .product:hover { box-shadow: 0 0 40px rgba(0,0,0,.2); }
+body.light .sidebar { background:#fff; border-left:1px solid #ccc; color:#111; }
+body.light .modal-box { background:#f9f9f9; border:1px solid #ccc; color:#111; }
+body.light .btn { background:#b11226; color:white; }
+body.light .circle { background:#b11226; color:white; }
 
 /* SPLASH */
 #splash{
@@ -164,6 +177,7 @@ nav{
  transform:translateX(100%);
  transition:.6s;
  z-index:4000;
+ overflow-y:auto;
 }
 .sidebar.active{transform:translateX(0)}
 .btn{
@@ -241,9 +255,13 @@ nav{
 </head>
 <body>
 
+<!-- SPLASH -->
 <div id="splash">OASIS</div>
+
+<!-- TOP -->
 <div class="top">WORLDWIDE SHIPPING — LUXURY REDEFINED</div>
 
+<!-- NAV -->
 <nav>
  <div class="text-3xl font-serif italic text-red-600">OASIS</div>
  <div class="flex gap-6">
@@ -258,14 +276,16 @@ nav{
  </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
  <h1>OASIS STORE</h1>
  <div class="timer">FLASH SALE ENDS IN <span id="countdown"></span></div>
 </section>
 
+<!-- PRODUCT GRID -->
 <div class="grid" id="grid"></div>
 
-<!-- CART -->
+<!-- CART SIDEBAR -->
 <div class="sidebar" id="cart">
  <h2 class="font-serif italic text-3xl mb-6">Your Bag</h2>
  <div id="cartItems"></div>
@@ -279,7 +299,7 @@ nav{
  class="btn mt-2 block text-center">Order on WhatsApp</a>
 </div>
 
-<!-- LOGIN -->
+<!-- LOGIN MODAL -->
 <div id="login" class="modal hidden">
  <div class="modal-box">
   <h2 class="font-serif italic text-2xl mb-4">Member Access</h2>
@@ -289,9 +309,10 @@ nav{
  </div>
 </div>
 
-<!-- QUICK VIEW -->
+<!-- QUICK VIEW MODAL -->
 <div id="preview" class="modal hidden">
- <div class="modal-box">
+ <div class="modal-box relative">
+  <span onclick="closePreview()" style="position:absolute;top:12px;right:12px;font-size:20px;cursor:pointer;color:#b11226;">&times;</span>
   <img id="pimg" class="mb-4">
   <h3 id="pname"></h3>
   <p id="pprice"></p>
@@ -299,16 +320,32 @@ nav{
  </div>
 </div>
 
-<!-- FLOAT -->
-<div class="float">
- <div class="circle" onclick="toggleLogin()">👤</div>
+<!-- FLOAT BUTTONS -->
+<div class="float" style="left:20px;">
+ <div class="circle" id="themeToggle" title="Toggle Light/Dark">🌓</div>
+ <div class="circle mt-4" onclick="toggleLogin()">👤</div>
 </div>
 
+<!-- LIVE POPUP -->
 <div id="popup">Someone in Paris bought <b>Red Luxe Hoodie</b></div>
 
+<!-- HOVER SOUND -->
 <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
 
 <script>
+// ===== THEME TOGGLE =====
+const themeToggle = document.getElementById('themeToggle');
+if(localStorage.getItem('theme')==='light') document.body.classList.add('light');
+themeToggle.onclick = () => {
+  document.body.classList.toggle('light');
+  if(document.body.classList.contains('light')){
+    localStorage.setItem('theme','light');
+  } else {
+    localStorage.setItem('theme','dark');
+  }
+};
+
+// ===== PRODUCTS & CART =====
 const products=[
 {id:1,name:"Noir Jacket",price:299,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"},
 {id:2,name:"Red Luxe Hoodie",price:189,img:"https://images.unsplash.com/photo-1552374196-c4e7ffc6e126"},
@@ -334,7 +371,6 @@ const pname=document.getElementById("pname");
 const pprice=document.getElementById("pprice");
 const countdown=document.getElementById("countdown");
 const popup=document.getElementById("popup");
-
 let orders = [];
 
 function render(){
@@ -353,8 +389,8 @@ function render(){
 }
 render();
 
-function add(id){cart.push(products.find(p=>p.id===id));update()}
-function like(id){wish.includes(id)?wish=wish.filter(x=>x!==id):wish.push(id);render();update()}
+function add(id){cart.push(products.find(p=>p.id===id));update();}
+function like(id){wish.includes(id)?wish=wish.filter(x=>x!==id):wish.push(id);render();update();}
 function update(){
  cartCount.innerText=cart.length;
  wishCount.innerText=wish.length;
@@ -362,20 +398,10 @@ function update(){
  total.innerText="$"+cart.reduce((a,b)=>a+b.price,0);
 }
 cartBtn.onclick=()=>cartSidebar.classList.add("active");
-
-function checkout(){
- confetti({particleCount:160,colors:["#b11226"]});
- alert("Order Confirmed — Welcome to OASIS");
- cart=[];update();cartSidebar.classList.remove("active");
-}
-
-function toggleLogin(){login.classList.toggle("hidden")}
-
-function preview(img,name,price){
- current=products.find(p=>p.name===name).id;
- pimg.src=img;pname.innerText=name;pprice.innerText=price;
- previewModal.classList.remove("hidden");
-}
+function checkout(){confetti({particleCount:160,colors:["#b11226"]}); alert("Order Confirmed — Welcome to OASIS"); cart=[];update();cartSidebar.classList.remove("active");}
+function toggleLogin(){login.classList.toggle("hidden");}
+function preview(img,name,price){current=products.find(p=>p.name===name).id;pimg.src=img;pname.innerText=name;pprice.innerText=price;previewModal.classList.remove("hidden");}
+function closePreview(){previewModal.classList.add("hidden");}
 
 /* TIMER */
 const end=Date.now()+3600000;
@@ -389,30 +415,15 @@ setInterval(()=>{
 },1000);
 
 /* LIVE POPUP */
-setInterval(()=>{
- popup.style.display="block";
- setTimeout(()=>popup.style.display="none",3000);
-},9000);
+setInterval(()=>{popup.style.display="block";setTimeout(()=>popup.style.display="none",3000);},9000);
 
 /* PLACE ORDER */
 function placeOrder(method){
- if(cart.length === 0) return alert("Cart empty");
-
- const order = {
-   id: Date.now(),
-   items: cart,
-   total: cart.reduce((a,b)=>a+b.price,0),
-   payment: method,
-   time: new Date().toLocaleString()
- };
-
+ if(cart.length===0) return alert("Cart empty");
+ const order={id:Date.now(),items:cart,total:cart.reduce((a,b)=>a+b.price,0),payment:method,time:new Date().toLocaleString()};
  orders.push(order);
- console.log("NEW ORDER:", order);
-
- cart = [];
- update();
- cartSidebar.classList.remove("active");
-
+ console.log("NEW ORDER:",order);
+ cart=[];update();cartSidebar.classList.remove("active");
  confetti({particleCount:200,colors:["#b11226","#000"]});
  alert("Order Placed Successfully via "+method+"!");
 }
