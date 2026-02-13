@@ -27,6 +27,7 @@ opacity:0;transition:1s}
 .card{
 background:white;border-radius:16px;
 transition:0.4s;overflow:hidden;
+color: black; /* Text card ke andar black rahega */
 }
 .card:hover{
 transform:translateY(-8px);
@@ -48,32 +49,31 @@ border-radius:50%;color:white;font-size:20px}
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="bg-black text-white p-4 flex justify-between items-center">
 <h1 class="text-2xl font-bold">OASIS</h1>
 <div class="flex gap-4 items-center">
-<input id="search" placeholder="Search..." class="px-3 py-1 rounded text-black">
+<input id="search" placeholder="Search products..." class="px-3 py-1 rounded text-black">
 <button onclick="toggleDark()"><i class="fa fa-moon"></i></button>
 </div>
 </nav>
 
-<!-- ADVANCED SLIDER -->
 <section class="slider">
 <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30')"></div>
 <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1549298916-b41d501d3772')"></div>
 <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1520975916090-3105956dac38')"></div>
 </section>
 
-<!-- FLASH SALE -->
-<section class="bg-gray-100 py-6 text-center">
+<section class="bg-gray-100 py-6 text-center dark:bg-slate-800">
 <h2 class="text-2xl font-bold mb-3">🔥 Flash Sale Ends In:</h2>
 <div id="timer" class="flex justify-center gap-4 text-xl"></div>
 </section>
 
-<!-- PRODUCTS -->
-<section class="max-w-6xl mx-auto py-10 grid grid-cols-2 md:grid-cols-4 gap-6" id="products"></section>
+<section class="max-w-6xl mx-auto py-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="products">
+        <p class="text-center col-span-full">Loading premium products...</p>
+    </div>
+</section>
 
-<!-- FLOATING CONTACT -->
 <div class="floating">
 <a href="https://wa.me/923000000000" class="whatsapp" target="_blank">
 <i class="fa-brands fa-whatsapp"></i>
@@ -84,64 +84,77 @@ border-radius:50%;color:white;font-size:20px}
 </div>
 
 <script>
-/* SLIDER */
-let slides=document.querySelectorAll(".slide");
-let index=0;
-setInterval(()=>{
-slides[index].classList.remove("active");
-index=(index+1)%slides.length;
-slides[index].classList.add("active");
-},4000);
+/* CONFIGURATION */
+const REPO_NAME = "NeverPlayz7/oasis-frontend";
+const DATA_URL = `https://raw.githubusercontent.com/${REPO_NAME}/main/data.json`;
 
-/* FLASH TIMER */
-let end=new Date().getTime()+86400000;
-setInterval(()=>{
-let now=new Date().getTime();
-let distance=end-now;
-let h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-let m=Math.floor((distance%(1000*60*60))/(1000*60));
-let s=Math.floor((distance%(1000*60))/1000);
-document.getElementById("timer").innerHTML=
-`<div class="timer-box">${h}h</div>
-<div class="timer-box">${m}m</div>
-<div class="timer-box">${s}s</div>`;
-},1000);
+let allProducts = [];
 
-/* PRODUCTS */
-const products=[
-{name:"Luxury Watch",price:120,rating:5,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"},
-{name:"Sneakers",price:80,rating:4,img:"https://images.unsplash.com/photo-1549298916-b41d501d3772"},
-{name:"Jacket",price:150,rating:5,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"},
-{name:"Perfume",price:60,rating:4,img:"https://images.unsplash.com/photo-1585386959984-a4155224a1ad"}
-];
-
-let wishlist=[];
-
-function renderProducts(list=products){
-document.getElementById("products").innerHTML=list.map((p,i)=>`
-<div class="card p-4 relative">
-<img src="${p.img}" class="h-40 w-full object-cover rounded">
-<i onclick="toggleWish(${i})"
-class="fa-heart fa ${wishlist.includes(i)?'fa-solid text-red-500':'fa-regular'} absolute top-3 right-3 cursor-pointer"></i>
-<h3 class="mt-3 font-semibold">${p.name}</h3>
-<p>$${p.price}</p>
-<div>${"★".repeat(p.rating)}${"☆".repeat(5-p.rating)}</div>
-<button class="bg-black text-white px-3 py-1 rounded mt-2">Add to Cart</button>
-</div>
-`).join("");
-}
-renderProducts();
-
-function toggleWish(i){
-wishlist.includes(i)?wishlist.splice(wishlist.indexOf(i),1):wishlist.push(i);
-renderProducts();
+/* FETCH PRODUCTS FROM GITHUB */
+async function fetchProducts() {
+    try {
+        // Cache busting to get fresh data
+        const response = await fetch(DATA_URL + '?nocache=' + new Date().getTime());
+        allProducts = await response.json();
+        renderProducts(allProducts);
+    } catch (error) {
+        console.error("Error loading products:", error);
+        document.getElementById("products").innerHTML = "<p class='col-span-full text-red-500 text-center'>Failed to load products. Check data.json</p>";
+    }
 }
 
-document.getElementById("search").addEventListener("input",e=>{
-renderProducts(products.filter(p=>p.name.toLowerCase().includes(e.target.value.toLowerCase())));
+/* RENDER PRODUCTS */
+function renderProducts(list) {
+    const container = document.getElementById("products");
+    if (list.length === 0) {
+        container.innerHTML = "<p class='col-span-full text-center'>No products found.</p>";
+        return;
+    }
+
+    container.innerHTML = list.map((p) => `
+    <div class="card p-4 relative border border-gray-100">
+        <img src="${p.image}" class="h-40 w-full object-cover rounded" onerror="this.src='https://placehold.co/400x400?text=No+Image'">
+        <h3 class="mt-3 font-semibold text-lg">${p.name}</h3>
+        <p class="text-green-600 font-bold">Rs. ${p.price}</p>
+        <button class="bg-black text-white w-full py-2 rounded mt-3 hover:bg-gray-800 transition">Add to Cart</button>
+    </div>
+    `).join("");
+}
+
+/* SEARCH FUNCTION */
+document.getElementById("search").addEventListener("input", e => {
+    const term = e.target.value.toLowerCase();
+    const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+    renderProducts(filtered);
 });
 
+/* SLIDER LOGIC */
+let slides = document.querySelectorAll(".slide");
+let slideIndex = 0;
+setInterval(() => {
+    slides[slideIndex].classList.remove("active");
+    slideIndex = (slideIndex + 1) % slides.length;
+    slides[slideIndex].classList.add("active");
+}, 4000);
+
+/* FLASH TIMER */
+let end = new Date().getTime() + 86400000;
+setInterval(() => {
+    let now = new Date().getTime();
+    let distance = end - now;
+    let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let s = Math.floor((distance % (1000 * 60)) / 1000);
+    document.getElementById("timer").innerHTML =
+    `<div class="timer-box">${h}h</div>
+    <div class="timer-box">${m}m</div>
+    <div class="timer-box">${s}s</div>`;
+}, 1000);
+
 function toggleDark(){document.body.classList.toggle("dark");}
+
+// Initial Load
+fetchProducts();
 </script>
 
 </body>
