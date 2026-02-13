@@ -1,20 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Oasis Admin</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oasis Control Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen flex">
 
-<h1>Oasis Admin Dashboard</h1>
+    <div class="w-64 bg-black text-white p-8 hidden md:block">
+        <h1 class="text-3xl font-black mb-12 italic">OASIS</h1>
+        <nav class="space-y-6">
+            <button onclick="showTab('add')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-plus mr-2"></i> Add Item</button>
+            <button onclick="showTab('orders')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-shopping-bag mr-2"></i> Orders</button>
+            <button onclick="showTab('stock')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-layer-group mr-2"></i> Stock</button>
+        </nav>
+    </div>
 
-<input id="name" placeholder="Product Name">
-<input id="price" placeholder="Price">
-<input id="img" placeholder="Image URL">
-<button onclick="addProduct()">Add Product</button>
+    <div class="flex-1 p-6 md:p-12">
+        <div id="msg" class="mb-6 p-4 rounded hidden"></div>
 
-<div id="list"></div>
+        <div id="add" class="tab border p-8 rounded-3xl bg-white shadow-sm max-w-xl">
+            <h2 class="text-2xl font-bold mb-6">New Product</h2>
+            <input type="text" id="name" placeholder="Name" class="w-full border p-4 mb-4 rounded-xl outline-none">
+            <input type="number" id="price" placeholder="Price" class="w-full border p-4 mb-4 rounded-xl outline-none">
+            <input type="text" id="image" placeholder="Image URL" class="w-full border p-4 mb-6 rounded-xl outline-none">
+            <button onclick="saveToGitHub('data.json')" class="bg-black text-white w-full py-4 rounded-2xl font-bold">Publish Product</button>
+        </div>
 
-<script src="admin.js"></script>
+        <div id="orders" class="tab hidden">
+            <h2 class="text-2xl font-bold mb-6">Recent Orders</h2>
+            <div id="orderBox" class="grid gap-4"></div>
+        </div>
+
+        <div id="stock" class="tab hidden">
+            <h2 class="text-2xl font-bold mb-6">All Stock</h2>
+            <div id="stockBox" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </div>
+
+<script>
+    const TOKEN = "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";
+    const REPO = "NeverPlayz7/oasis-frontend";
+
+    function showTab(id) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        if(id === 'orders') fetchOrders();
+        if(id === 'stock') fetchStock();
+    }
+
+    async function saveToGitHub(file) {
+        const name = document.getElementById('name').value;
+        const price = document.getElementById('price').value;
+        const image = document.getElementById('image').value;
+
+        if(!name || !price || !image) return alert("Fill all!");
+
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
+            headers: { "Authorization": `token ${TOKEN}` }
+        });
+        const data = await res.json();
+        const content = JSON.parse(atob(data.content));
+
+        content.push({ name, price, image });
+
+        const update = await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
+            method: "PUT",
+            headers: { "Authorization": `token ${TOKEN}` },
+            body: JSON.stringify({
+                message: "Added " + name,
+                content: btoa(JSON.stringify(content, null, 2)),
+                sha: data.sha
+            })
+        });
+
+        if(update.ok) alert("✅ Published!");
+    }
+
+    async function fetchOrders() {
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
+        const data = await res.json();
+        document.getElementById('orderBox').innerHTML = data.reverse().map(o => `
+            <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                <p class="font-bold text-lg">${o.customerName} ordered ${o.productName}</p>
+                <p class="text-green-600 font-bold">Price: Rs. ${o.totalPrice}</p>
+                <p class="text-sm text-gray-500">Phone: ${o.phone} | Date: ${o.date}</p>
+            </div>
+        `).join('') || "No orders.";
+    }
+
+    async function fetchStock() {
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+        const data = await res.json();
+        document.getElementById('stockBox').innerHTML = data.map(p => `
+            <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                <img src="${p.image}" class="w-12 h-12 rounded object-cover">
+                <p class="font-bold flex-1">${p.name}</p>
+                <p class="text-sm">Rs. ${p.price}</p>
+            </div>
+        `).join('');
+    }
+</script>
 </body>
 </html>
