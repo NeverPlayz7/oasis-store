@@ -4,58 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OASIS - Premium Store</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
-body{font-family:sans-serif;transition:0.4s}
-.dark{background:#0f172a;color:white}
-
-/* Slider */
-.slider{position:relative;height:400px;overflow:hidden}
-.slide{
-position:absolute;width:100%;height:100%;
-background-size:cover;background-position:center;
-opacity:0;transition:1s}
-.slide.active{opacity:1}
-
-/* Flash Sale */
-<section class="bg-gray-100 py-6 text-center">
-    <h2 class="text-2xl font-bold mb-3 text-black">🔥 Flash Sale Ends In:</h2>
-    <div id="timer" class="flex justify-center gap-4 text-xl"></div>
-</section>
-
-/* Card */
-.card{
-background:white;border-radius:16px;
-transition:0.4s;overflow:hidden;
-color: black; /* Text card ke andar black rahega */
-}
-.card:hover{
-transform:translateY(-8px);
-box-shadow:0 15px 30px rgba(0,0,0,0.2);
-}
-
-/* Floating */
-.floating{
-position:fixed;right:20px;bottom:20px;
-display:flex;flex-direction:column;gap:10px;
-z-index:9999}
-.floating a{
-width:50px;height:50px;
-display:flex;align-items:center;justify-content:center;
-border-radius:50%;color:white;font-size:20px}
-.whatsapp{background:#25D366}
-.instagram{background:#E1306C}
+    body{font-family:sans-serif;transition:0.4s}
+    .dark{background:#0f172a;color:white}
+    .slider{position:relative;height:400px;overflow:hidden}
+    .slide{position:absolute;width:100%;height:100%;background-size:cover;background-position:center;opacity:0;transition:1s}
+    .slide.active{opacity:1}
+    .timer-box{background:#ff0055;color:white;padding:4px 8px;border-radius:6px}
+    .card{background:white;border-radius:16px;transition:0.4s;overflow:hidden;color:black;border:1px solid #eee}
+    .card:hover{transform:translateY(-8px);box-shadow:0 15px 30px rgba(0,0,0,0.1)}
+    #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; padding:20px; }
 </style>
 </head>
 <body>
 
-<nav class="bg-black text-white p-4 flex justify-between items-center">
-<h1 class="text-2xl font-bold">OASIS</h1>
+<nav class="bg-black text-white p-4 flex justify-between items-center shadow-lg">
+<h1 class="text-2xl font-bold tracking-tighter">OASIS</h1>
 <div class="flex gap-4 items-center">
-<input id="search" placeholder="Search products..." class="px-3 py-1 rounded text-black">
+<input id="search" placeholder="Search..." class="px-3 py-1 rounded text-black outline-none w-32 md:w-auto">
 <button onclick="toggleDark()"><i class="fa fa-moon"></i></button>
 </div>
 </nav>
@@ -63,102 +31,133 @@ border-radius:50%;color:white;font-size:20px}
 <section class="slider">
 <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30')"></div>
 <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1549298916-b41d501d3772')"></div>
-<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1520975916090-3105956dac38')"></div>
 </section>
 
-<section class="bg-gray-100 py-6 text-center dark:bg-slate-800">
-<h2 class="text-2xl font-bold mb-3">🔥 Flash Sale Ends In:</h2>
-<div id="timer" class="flex justify-center gap-4 text-xl"></div>
+<section class="bg-white border-b py-8 text-center">
+<h2 class="text-2xl font-bold mb-4 text-black flex items-center justify-center gap-2">
+    <span class="text-orange-500">🔥</span> Flash Sale Ends In:
+</h2>
+<div id="timer" class="flex justify-center gap-4 text-xl font-mono"></div>
 </section>
 
-<section class="max-w-6xl mx-auto py-10">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="products">
-        <p class="text-center col-span-full">Loading premium products...</p>
+<section class="max-w-6xl mx-auto py-10 grid grid-cols-2 md:grid-cols-4 gap-6 px-4" id="products">
+    <p class="col-span-full text-center text-gray-400">Loading products...</p>
+</section>
+
+<div id="orderModal">
+    <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-black shadow-2xl">
+        <h2 class="text-2xl font-bold mb-2">Checkout 🛒</h2>
+        <p id="selectedItem" class="mb-6 text-sm text-gray-500 border-b pb-2"></p>
+        <div class="space-y-4">
+            <input type="text" id="custName" placeholder="Your Full Name" class="w-full border p-3 rounded-lg outline-none focus:border-black">
+            <input type="text" id="custPhone" placeholder="WhatsApp Number" class="w-full border p-3 rounded-lg outline-none focus:border-black">
+            <button id="confirmBtn" onclick="placeOrder()" class="bg-black text-white w-full py-4 rounded-xl font-bold hover:bg-gray-800 transition">Place Order Now</button>
+            <button onclick="closeModal()" class="text-gray-400 w-full text-sm">Cancel</button>
+        </div>
     </div>
-</section>
-
-<div class="floating">
-<a href="https://wa.me/923000000000" class="whatsapp" target="_blank">
-<i class="fa-brands fa-whatsapp"></i>
-</a>
-<a href="https://instagram.com/yourusername" class="instagram" target="_blank">
-<i class="fa-brands fa-instagram"></i>
-</a>
 </div>
 
 <script>
-/* CONFIGURATION */
-const REPO_NAME = "NeverPlayz7/oasis-frontend";
-const DATA_URL = `https://raw.githubusercontent.com/${REPO_NAME}/main/data.json`;
+const REPO = "NeverPlayz7/oasis-frontend";
+const GITHUB_TOKEN = "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"; 
 
 let allProducts = [];
+let selectedProduct = null;
 
-/* FETCH PRODUCTS FROM GITHUB */
-async function fetchProducts() {
+async function loadProducts() {
     try {
-        // Cache busting to get fresh data
-        const response = await fetch(DATA_URL + '?nocache=' + new Date().getTime());
-        allProducts = await response.json();
-        renderProducts(allProducts);
-    } catch (error) {
-        console.error("Error loading products:", error);
-        document.getElementById("products").innerHTML = "<p class='col-span-full text-red-500 text-center'>Failed to load products. Check data.json</p>";
-    }
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+        allProducts = await res.json();
+        render(allProducts);
+    } catch(e) { console.log("Error loading products"); }
 }
 
-/* RENDER PRODUCTS */
-function renderProducts(list) {
+function render(list) {
     const container = document.getElementById("products");
-    if (list.length === 0) {
-        container.innerHTML = "<p class='col-span-full text-center'>No products found.</p>";
-        return;
-    }
-
-    container.innerHTML = list.map((p) => `
-    <div class="card p-4 relative border border-gray-100">
-        <img src="${p.image}" class="h-40 w-full object-cover rounded" onerror="this.src='https://placehold.co/400x400?text=No+Image'">
-        <h3 class="mt-3 font-semibold text-lg">${p.name}</h3>
-        <p class="text-green-600 font-bold">Rs. ${p.price}</p>
-        <button class="bg-black text-white w-full py-2 rounded mt-3 hover:bg-gray-800 transition">Add to Cart</button>
-    </div>
+    if(list.length === 0) { container.innerHTML = "<p class='col-span-full text-center'>No products yet.</p>"; return; }
+    container.innerHTML = list.map(p => `
+        <div class="card p-4 flex flex-col justify-between">
+            <img src="${p.image}" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://placehold.co/400x400?text=No+Image'">
+            <div>
+                <h3 class="mt-4 font-bold text-gray-800">${p.name}</h3>
+                <p class="text-green-600 font-black text-xl mt-1">Rs. ${p.price}</p>
+                <button onclick="openModal('${p.name}', '${p.price}')" class="bg-black text-white w-full py-3 rounded-xl mt-4 font-semibold hover:bg-gray-800 transition">Buy Now</button>
+            </div>
+        </div>
     `).join("");
 }
 
-/* SEARCH FUNCTION */
-document.getElementById("search").addEventListener("input", e => {
-    const term = e.target.value.toLowerCase();
-    const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
-    renderProducts(filtered);
-});
+function openModal(name, price) {
+    selectedProduct = { name, price };
+    document.getElementById('selectedItem').innerText = name + " (Rs. " + price + ")";
+    document.getElementById('orderModal').style.display = 'flex';
+}
 
-/* SLIDER LOGIC */
-let slides = document.querySelectorAll(".slide");
-let slideIndex = 0;
-setInterval(() => {
-    slides[slideIndex].classList.remove("active");
-    slideIndex = (slideIndex + 1) % slides.length;
-    slides[slideIndex].classList.add("active");
-}, 4000);
+function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
 
-/* FLASH TIMER */
-let end = new Date().getTime() + 86400000;
-setInterval(() => {
-    let now = new Date().getTime();
-    let distance = end - now;
-    let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    let s = Math.floor((distance % (1000 * 60)) / 1000);
-    document.getElementById("timer").innerHTML =
-    `<div class="timer-box">${h}h</div>
-    <div class="timer-box">${m}m</div>
-    <div class="timer-box">${s}s</div>`;
-}, 1000);
+async function placeOrder() {
+    const name = document.getElementById('custName').value;
+    const phone = document.getElementById('custPhone').value;
+    const btn = document.getElementById('confirmBtn');
+
+    if(!name || !phone) return alert("Please enter name and phone!");
+
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+
+    try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/orders.json`, {
+            headers: { "Authorization": `token ${GITHUB_TOKEN}` }
+        });
+        const fileData = await res.json();
+        const orders = JSON.parse(atob(fileData.content));
+
+        const newOrder = {
+            id: Math.floor(1000 + Math.random() * 9000),
+            customerName: name,
+            phone: phone,
+            productName: selectedProduct.name,
+            totalPrice: selectedProduct.price,
+            date: new Date().toLocaleString()
+        };
+
+        orders.push(newOrder);
+
+        const update = await fetch(`https://api.github.com/repos/${REPO}/contents/orders.json`, {
+            method: "PUT",
+            headers: { "Authorization": `token ${GITHUB_TOKEN}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+                message: `Order #${newOrder.id} by ${name}`,
+                content: btoa(JSON.stringify(orders, null, 2)),
+                sha: fileData.sha
+            })
+        });
+
+        if(update.ok) {
+            alert("✅ Order Placed! We will contact you on WhatsApp.");
+            closeModal();
+            document.getElementById('custName').value = "";
+            document.getElementById('custPhone').value = "";
+        }
+    } catch (e) { alert("Server busy, try again!"); }
+    btn.disabled = false;
+    btn.innerText = "Place Order Now";
+}
+
+// Timer Logic
+let end=new Date().getTime()+86400000;
+setInterval(()=>{
+    let now=new Date().getTime();
+    let d=end-now;
+    let h=Math.floor(d/(1000*60*60));
+    let m=Math.floor((d%(1000*60*60))/(1000*60));
+    let s=Math.floor((d%(1000*60))/1000);
+    document.getElementById("timer").innerHTML=
+    `<div class="timer-box">${h}h</div><div class="timer-box">${m}m</div><div class="timer-box">${s}s</div>`;
+},1000);
 
 function toggleDark(){document.body.classList.toggle("dark");}
-
-// Initial Load
-fetchProducts();
+loadProducts();
 </script>
-
 </body>
 </html>
