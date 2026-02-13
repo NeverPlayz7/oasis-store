@@ -3,217 +3,222 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OASIS | Premium Store</title>
+<title>OASIS - Ultimate Marketplace</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-body{
- font-family:'Poppins',sans-serif;
- background:#f8f9fb;
+body{font-family:Poppins,sans-serif;transition:0.4s}
+.dark{background:#0f172a;color:white}
+.gradient{
+background:linear-gradient(90deg,#ff0080,#ff8c00,#40e0d0);
+background-size:300%;
+animation:move 8s infinite linear;
+}
+@keyframes move{
+0%{background-position:0%}
+100%{background-position:300%}
 }
 
-/* Gradient Logo */
-.gradient-text{
- background: linear-gradient(90deg,#ff416c,#ff4b2b,#ff416c);
- background-size:200% auto;
- -webkit-background-clip:text;
- -webkit-text-fill-color:transparent;
- animation:shine 4s linear infinite;
- font-weight:700;
+/* 3D Product Card */
+.card{
+background:white;
+border-radius:20px;
+transition:0.4s;
+transform-style:preserve-3d;
 }
-@keyframes shine{
- to{background-position:200% center;}
-}
-
-/* Navbar shadow */
-.nav-shadow{
- box-shadow:0 2px 20px rgba(0,0,0,0.05);
+.card:hover{
+transform:rotateY(10deg) rotateX(6deg) scale(1.05);
+box-shadow:0 20px 40px rgba(0,0,0,0.2);
 }
 
-/* Product Card */
-.product-card{
- background:white;
- border-radius:16px;
- overflow:hidden;
- transition:0.3s;
-}
-.product-card:hover{
- transform:translateY(-6px);
- box-shadow:0 10px 30px rgba(0,0,0,0.1);
-}
-
-/* Add to cart button */
-.btn-main{
- background:linear-gradient(90deg,#ff416c,#ff4b2b);
- color:white;
- padding:8px 18px;
- border-radius:30px;
- font-size:14px;
- transition:0.3s;
-}
-.btn-main:hover{
- opacity:0.85;
-}
-
-/* Badge */
-.badge{
- position:absolute;
- top:10px;
- left:10px;
- background:#ff416c;
- color:white;
- padding:4px 10px;
- font-size:10px;
- border-radius:20px;
-}
-
-/* Cart Sidebar */
+/* Sidebar */
 .sidebar{
- position:fixed;
- top:0;
- right:-100%;
- width:350px;
- height:100%;
- background:white;
- box-shadow:-5px 0 25px rgba(0,0,0,0.1);
- transition:0.4s;
- z-index:9999;
- display:flex;
- flex-direction:column;
+position:fixed;
+right:-100%;
+top:0;
+height:100%;
+width:400px;
+background:white;
+transition:0.4s;
+z-index:9999;
+overflow:auto;
 }
-.sidebar.active{
- right:0;
-}
+.sidebar.active{right:0}
 .overlay{
- position:fixed;
- inset:0;
- background:rgba(0,0,0,0.4);
- display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+display:none;
 }
-.overlay.active{
- display:block;
-}
+.overlay.active{display:block}
 
-/* Mobile */
-@media(max-width:768px){
- .sidebar{
-  width:100%;
- }
+/* Loading */
+#loader{
+position:fixed;
+inset:0;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:99999;
+color:white;
+font-size:30px;
+animation:fade 2s forwards 2s;
 }
+@keyframes fade{to{opacity:0;visibility:hidden}}
 </style>
 </head>
 <body>
 
+<div id="loader" class="gradient">Loading OASIS...</div>
+
 <!-- NAVBAR -->
-<nav class="bg-white sticky top-0 z-50 nav-shadow">
-<div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+<nav class="gradient p-4 text-white sticky top-0 z-50">
+<div class="max-w-7xl mx-auto flex justify-between items-center">
 
-<h1 class="text-2xl gradient-text">OASIS</h1>
+<h1 class="text-2xl font-bold">OASIS</h1>
 
-<div class="flex items-center gap-6 text-gray-600">
-<i class="fa-regular fa-heart cursor-pointer"></i>
-<div class="relative cursor-pointer" onclick="openCart()">
-<i class="fa-solid fa-bag-shopping text-lg"></i>
-<span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">0</span>
+<div class="hidden md:flex gap-6 items-center">
+
+<!-- Mega Menu -->
+<div class="group relative">
+<span class="cursor-pointer">Categories</span>
+<div class="absolute hidden group-hover:grid grid-cols-3 gap-6 bg-white text-black p-6 top-8 left-0 w-[600px] rounded-xl shadow-xl">
+<div>
+<h4 class="font-bold mb-2">Fashion</h4>
+<p>Men</p><p>Women</p><p>Shoes</p>
+</div>
+<div>
+<h4 class="font-bold mb-2">Electronics</h4>
+<p>Mobiles</p><p>Laptops</p><p>Accessories</p>
+</div>
+<div>
+<h4 class="font-bold mb-2">Beauty</h4>
+<p>Skincare</p><p>Makeup</p><p>Perfumes</p>
 </div>
 </div>
+</div>
 
+<!-- Search -->
+<div class="bg-white rounded-full px-4 py-1 flex items-center">
+<input id="search" placeholder="Search products..." class="outline-none text-black px-2">
+<i class="fa fa-search text-black"></i>
+</div>
+
+<button onclick="toggleDark()" class="ml-4">
+<i class="fa fa-moon"></i>
+</button>
+
+<button onclick="openLogin()">Login</button>
+<button onclick="openCart()"><i class="fa fa-shopping-bag"></i></button>
+
+</div>
 </div>
 </nav>
 
 <!-- HERO -->
-<section class="bg-gradient-to-r from-pink-500 to-red-500 text-white text-center py-20">
-<h2 class="text-4xl md:text-6xl font-bold mb-4">Welcome to OASIS</h2>
-<p class="opacity-90">Premium Marketplace Experience</p>
+<section class="gradient text-white text-center py-20">
+<h2 class="text-5xl font-bold mb-4">Premium Spicy Marketplace</h2>
+<p>Experience Shopping Like Never Before</p>
+</section>
+
+<!-- FILTER -->
+<section class="max-w-7xl mx-auto py-6 px-4 flex gap-4 flex-wrap">
+<select id="priceFilter" class="border px-3 py-2 rounded">
+<option value="">All Prices</option>
+<option value="50">Below $50</option>
+<option value="100">Below $100</option>
+</select>
 </section>
 
 <!-- PRODUCTS -->
-<section class="max-w-7xl mx-auto px-4 py-16">
-<h3 class="text-2xl font-semibold mb-8">Trending Products</h3>
-
-<div id="products" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+<section class="max-w-7xl mx-auto px-4 py-10">
+<div id="products" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
 </section>
 
-<!-- CART SIDEBAR -->
+<!-- CART -->
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
-
 <div class="sidebar p-6" id="cartSidebar">
-<div class="flex justify-between items-center mb-6">
-<h2 class="text-xl font-semibold">Your Cart</h2>
-<i class="fa-solid fa-xmark text-xl cursor-pointer" onclick="closeCart()"></i>
+<h2 class="text-xl font-bold mb-4">Checkout</h2>
+<div id="cartItems"></div>
+<hr class="my-4">
+<form class="space-y-3">
+<input placeholder="Full Name" class="border w-full p-2 rounded">
+<input placeholder="Address" class="border w-full p-2 rounded">
+<input placeholder="Card Number" class="border w-full p-2 rounded">
+<button class="gradient text-white w-full py-2 rounded">Pay Now</button>
+</form>
 </div>
 
-<div id="cartItems" class="flex-1 overflow-y-auto"></div>
-
-<div class="mt-4">
-<div class="flex justify-between font-semibold mb-4">
-<span>Total</span>
-<span id="total">$0</span>
-</div>
-<button class="btn-main w-full py-3">Checkout</button>
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="hidden fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+<div class="bg-white p-8 rounded-xl w-96">
+<h2 class="text-xl font-bold mb-4">Login</h2>
+<input placeholder="Email" class="border w-full p-2 mb-3 rounded">
+<input placeholder="Password" type="password" class="border w-full p-2 mb-3 rounded">
+<button class="gradient text-white w-full py-2 rounded">Login</button>
+<button onclick="closeLogin()" class="mt-4 text-red-500">Close</button>
 </div>
 </div>
 
 <script>
 const products=[
-{id:1,name:"Luxury Jacket",price:199,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"},
-{id:2,name:"Premium Hoodie",price:149,img:"https://images.unsplash.com/photo-1552374196-c4e7ffc6e126"},
-{id:3,name:"Elite Sneakers",price:229,img:"https://images.unsplash.com/photo-1549298916-b41d501d3772"},
-{id:4,name:"Smart Watch",price:299,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"}
+{name:"Luxury Watch",price:120,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"},
+{name:"Sneakers",price:80,img:"https://images.unsplash.com/photo-1549298916-b41d501d3772"},
+{name:"Perfume",price:60,img:"https://images.unsplash.com/photo-1585386959984-a4155224a1ad"},
+{name:"Jacket",price:200,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"}
 ];
 
 let cart=[];
-const productsContainer=document.getElementById("products");
-const cartSidebar=document.getElementById("cartSidebar");
-const overlay=document.getElementById("overlay");
-const cartCount=document.getElementById("cartCount");
-const cartItems=document.getElementById("cartItems");
-const total=document.getElementById("total");
+const container=document.getElementById("products");
 
-function renderProducts(){
-productsContainer.innerHTML=products.map(p=>`
-<div class="product-card relative">
-<span class="badge">NEW</span>
-<img src="${p.img}" class="h-48 w-full object-cover">
-<div class="p-4">
-<h4 class="font-semibold">${p.name}</h4>
-<p class="text-gray-500 mb-3">$${p.price}</p>
-<button onclick="addToCart(${p.id})" class="btn-main">Add to Cart</button>
-</div>
+function renderProducts(list=products){
+container.innerHTML=list.map(p=>`
+<div class="card p-4">
+<img src="${p.img}" class="h-40 w-full object-cover rounded">
+<h3 class="font-semibold mt-3">${p.name}</h3>
+<p>$${p.price}</p>
+<button onclick='addToCart(${JSON.stringify(p)})' class="gradient text-white px-4 py-1 rounded mt-2">Add</button>
 </div>
 `).join("");
 }
 renderProducts();
 
-function addToCart(id){
-const product=products.find(p=>p.id===id);
-cart.push(product);
-updateCart();
-}
-
-function updateCart(){
-cartCount.innerText=cart.length;
-cartItems.innerHTML=cart.map(item=>`
-<div class="flex justify-between py-2 border-b">
-<span>${item.name}</span>
-<span>$${item.price}</span>
-</div>
-`).join("");
-total.innerText="$"+cart.reduce((a,b)=>a+b.price,0);
+function addToCart(p){
+cart.push(p);
+document.getElementById("cartItems").innerHTML+=`
+<div class="flex justify-between py-2">
+<span>${p.name}</span><span>$${p.price}</span>
+</div>`;
 }
 
 function openCart(){
-cartSidebar.classList.add("active");
-overlay.classList.add("active");
+document.getElementById("cartSidebar").classList.add("active");
+document.getElementById("overlay").classList.add("active");
+}
+function closeCart(){
+document.getElementById("cartSidebar").classList.remove("active");
+document.getElementById("overlay").classList.remove("active");
 }
 
-function closeCart(){
-cartSidebar.classList.remove("active");
-overlay.classList.remove("active");
-}
+document.getElementById("search").addEventListener("input",e=>{
+const value=e.target.value.toLowerCase();
+renderProducts(products.filter(p=>p.name.toLowerCase().includes(value)));
+});
+
+document.getElementById("priceFilter").addEventListener("change",e=>{
+const val=e.target.value;
+if(!val) return renderProducts();
+renderProducts(products.filter(p=>p.price<=val));
+});
+
+function toggleDark(){document.body.classList.toggle("dark");}
+
+function openLogin(){document.getElementById("loginModal").classList.remove("hidden");}
+function closeLogin(){document.getElementById("loginModal").classList.add("hidden");}
 </script>
 
 </body>
