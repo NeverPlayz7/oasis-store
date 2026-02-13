@@ -13,15 +13,16 @@
     .slide{position:absolute;width:100%;height:100%;background-size:cover;background-position:center;opacity:0;transition:1s}
     .slide.active{opacity:1}
     .timer-box{background:#ff0055;color:white;padding:4px 8px;border-radius:6px}
+    /* Flash Sale White Background */
+    .flash-sale-section { background: white !important; color: black !important; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
     .card{background:white;border-radius:16px;transition:0.4s;overflow:hidden;color:black;border:1px solid #eee}
-    .card:hover{transform:translateY(-8px);box-shadow:0 15px 30px rgba(0,0,0,0.1)}
     #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; padding:20px; }
 </style>
 </head>
 <body>
 
 <nav class="bg-black text-white p-4 flex justify-between items-center shadow-lg">
-<h1 class="text-2xl font-bold tracking-tighter">OASIS</h1>
+<h1 class="text-2xl font-bold italic tracking-tighter">OASIS</h1>
 <div class="flex gap-4 items-center">
 <input id="search" placeholder="Search..." class="px-3 py-1 rounded text-black outline-none w-32 md:w-auto">
 <button onclick="toggleDark()"><i class="fa fa-moon"></i></button>
@@ -33,11 +34,11 @@
 <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1549298916-b41d501d3772')"></div>
 </section>
 
-<section class="bg-white border-b py-8 text-center">
-<h2 class="text-2xl font-bold mb-4 text-black flex items-center justify-center gap-2">
-    <span class="text-orange-500">🔥</span> Flash Sale Ends In:
+<section class="flash-sale-section py-8 text-center">
+<h2 class="text-2xl font-bold mb-4 flex items-center justify-center gap-2 text-black">
+    🔥 Flash Sale Ends In:
 </h2>
-<div id="timer" class="flex justify-center gap-4 text-xl font-mono"></div>
+<div id="timer" class="flex justify-center gap-4 text-xl font-bold"></div>
 </section>
 
 <section class="max-w-6xl mx-auto py-10 grid grid-cols-2 md:grid-cols-4 gap-6 px-4" id="products">
@@ -45,44 +46,40 @@
 </section>
 
 <div id="orderModal">
-    <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-black shadow-2xl">
+    <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-black">
         <h2 class="text-2xl font-bold mb-2">Checkout 🛒</h2>
-        <p id="selectedItem" class="mb-6 text-sm text-gray-500 border-b pb-2"></p>
+        <p id="selectedItem" class="mb-6 text-sm text-gray-500"></p>
         <div class="space-y-4">
-            <input type="text" id="custName" placeholder="Your Full Name" class="w-full border p-3 rounded-lg outline-none focus:border-black">
+            <input type="text" id="custName" placeholder="Your Name" class="w-full border p-3 rounded-lg outline-none focus:border-black">
             <input type="text" id="custPhone" placeholder="WhatsApp Number" class="w-full border p-3 rounded-lg outline-none focus:border-black">
-            <button id="confirmBtn" onclick="placeOrder()" class="bg-black text-white w-full py-4 rounded-xl font-bold hover:bg-gray-800 transition">Place Order Now</button>
-            <button onclick="closeModal()" class="text-gray-400 w-full text-sm">Cancel</button>
+            <button id="confirmBtn" onclick="placeOrder()" class="bg-black text-white w-full py-4 rounded-xl font-bold">Place Order Now</button>
+            <button onclick="closeModal()" class="text-gray-400 w-full text-sm mt-2">Cancel</button>
         </div>
     </div>
 </div>
 
 <script>
-const REPO = "NeverPlayz7/oasis-frontend";
-const GITHUB_TOKEN = "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"; 
+const REPO_NAME = "NeverPlayz7/oasis-store";
+const TOKEN = "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"; 
 
 let allProducts = [];
 let selectedProduct = null;
 
 async function loadProducts() {
     try {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO_NAME}/main/data.json?t=${Date.now()}`);
         allProducts = await res.json();
         render(allProducts);
-    } catch(e) { console.log("Error loading products"); }
+    } catch(e) { console.log("Data load error"); }
 }
 
 function render(list) {
-    const container = document.getElementById("products");
-    if(list.length === 0) { container.innerHTML = "<p class='col-span-full text-center'>No products yet.</p>"; return; }
-    container.innerHTML = list.map(p => `
-        <div class="card p-4 flex flex-col justify-between">
+    document.getElementById("products").innerHTML = list.map(p => `
+        <div class="card p-4">
             <img src="${p.image}" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://placehold.co/400x400?text=No+Image'">
-            <div>
-                <h3 class="mt-4 font-bold text-gray-800">${p.name}</h3>
-                <p class="text-green-600 font-black text-xl mt-1">Rs. ${p.price}</p>
-                <button onclick="openModal('${p.name}', '${p.price}')" class="bg-black text-white w-full py-3 rounded-xl mt-4 font-semibold hover:bg-gray-800 transition">Buy Now</button>
-            </div>
+            <h3 class="mt-4 font-bold text-gray-800">${p.name}</h3>
+            <p class="text-green-600 font-black text-xl">Rs. ${p.price}</p>
+            <button onclick="openModal('${p.name}', '${p.price}')" class="bg-black text-white w-full py-3 rounded-xl mt-4 font-semibold">Buy Now</button>
         </div>
     `).join("");
 }
@@ -100,64 +97,57 @@ async function placeOrder() {
     const phone = document.getElementById('custPhone').value;
     const btn = document.getElementById('confirmBtn');
 
-    if(!name || !phone) return alert("Please enter name and phone!");
+    if(!name || !phone) return alert("Fill details!");
 
-    btn.disabled = true;
     btn.innerText = "Processing...";
+    btn.disabled = true;
 
     try {
-        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/orders.json`, {
-            headers: { "Authorization": `token ${GITHUB_TOKEN}` }
+        const res = await fetch(`https://api.github.com/repos/${REPO_NAME}/contents/orders.json`, {
+            headers: { "Authorization": `token ${TOKEN}` }
         });
         const fileData = await res.json();
         const orders = JSON.parse(atob(fileData.content));
 
-        const newOrder = {
+        orders.push({
             id: Math.floor(1000 + Math.random() * 9000),
             customerName: name,
             phone: phone,
             productName: selectedProduct.name,
             totalPrice: selectedProduct.price,
             date: new Date().toLocaleString()
-        };
+        });
 
-        orders.push(newOrder);
-
-        const update = await fetch(`https://api.github.com/repos/${REPO}/contents/orders.json`, {
+        await fetch(`https://api.github.com/repos/${REPO_NAME}/contents/orders.json`, {
             method: "PUT",
-            headers: { "Authorization": `token ${GITHUB_TOKEN}`, "Content-Type": "application/json" },
+            headers: { "Authorization": `token ${TOKEN}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-                message: `Order #${newOrder.id} by ${name}`,
+                message: "New Order",
                 content: btoa(JSON.stringify(orders, null, 2)),
                 sha: fileData.sha
             })
         });
 
-        if(update.ok) {
-            alert("✅ Order Placed! We will contact you on WhatsApp.");
-            closeModal();
-            document.getElementById('custName').value = "";
-            document.getElementById('custPhone').value = "";
-        }
-    } catch (e) { alert("Server busy, try again!"); }
-    btn.disabled = false;
+        alert("✅ Order Placed!");
+        closeModal();
+    } catch (e) { alert("Server Error! Make sure orders.json exists."); }
     btn.innerText = "Place Order Now";
+    btn.disabled = false;
 }
 
-// Timer Logic
-let end=new Date().getTime()+86400000;
-setInterval(()=>{
-    let now=new Date().getTime();
-    let d=end-now;
-    let h=Math.floor(d/(1000*60*60));
-    let m=Math.floor((d%(1000*60*60))/(1000*60));
-    let s=Math.floor((d%(1000*60))/1000);
-    document.getElementById("timer").innerHTML=
-    `<div class="timer-box">${h}h</div><div class="timer-box">${m}m</div><div class="timer-box">${s}s</div>`;
-},1000);
+// Timer
+setInterval(() => {
+    let d = new Date().getTime();
+    let end = new Date().setHours(24,0,0,0);
+    let diff = end - d;
+    let h = Math.floor(diff/(1000*60*60));
+    let m = Math.floor((diff%(1000*60*60))/(1000*60));
+    let s = Math.floor((diff%(1000*60))/1000);
+    document.getElementById("timer").innerHTML = `<span class="timer-box">${h}h</span> <span class="timer-box">${m}m</span> <span class="timer-box">${s}s</span>`;
+}, 1000);
 
-function toggleDark(){document.body.classList.toggle("dark");}
 loadProducts();
+function toggleDark(){document.body.classList.toggle("dark");}
 </script>
 </body>
 </html>
