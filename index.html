@@ -3,222 +3,145 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OASIS - Ultimate Marketplace</title>
+<title>OASIS - Premium Store</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-body{font-family:Poppins,sans-serif;transition:0.4s}
+body{font-family:sans-serif;transition:0.4s}
 .dark{background:#0f172a;color:white}
-.gradient{
-background:linear-gradient(90deg,#ff0080,#ff8c00,#40e0d0);
-background-size:300%;
-animation:move 8s infinite linear;
-}
-@keyframes move{
-0%{background-position:0%}
-100%{background-position:300%}
-}
 
-/* 3D Product Card */
+/* Slider */
+.slider{position:relative;height:400px;overflow:hidden}
+.slide{
+position:absolute;width:100%;height:100%;
+background-size:cover;background-position:center;
+opacity:0;transition:1s}
+.slide.active{opacity:1}
+
+/* Flash Sale */
+.timer-box{background:#ff0055;color:white;padding:4px 8px;border-radius:6px}
+
+/* Card */
 .card{
-background:white;
-border-radius:20px;
-transition:0.4s;
-transform-style:preserve-3d;
+background:white;border-radius:16px;
+transition:0.4s;overflow:hidden;
 }
 .card:hover{
-transform:rotateY(10deg) rotateX(6deg) scale(1.05);
-box-shadow:0 20px 40px rgba(0,0,0,0.2);
+transform:translateY(-8px);
+box-shadow:0 15px 30px rgba(0,0,0,0.2);
 }
 
-/* Sidebar */
-.sidebar{
-position:fixed;
-right:-100%;
-top:0;
-height:100%;
-width:400px;
-background:white;
-transition:0.4s;
-z-index:9999;
-overflow:auto;
-}
-.sidebar.active{right:0}
-.overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.5);
-display:none;
-}
-.overlay.active{display:block}
-
-/* Loading */
-#loader{
-position:fixed;
-inset:0;
-background:black;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:99999;
-color:white;
-font-size:30px;
-animation:fade 2s forwards 2s;
-}
-@keyframes fade{to{opacity:0;visibility:hidden}}
+/* Floating */
+.floating{
+position:fixed;right:20px;bottom:20px;
+display:flex;flex-direction:column;gap:10px;
+z-index:9999}
+.floating a{
+width:50px;height:50px;
+display:flex;align-items:center;justify-content:center;
+border-radius:50%;color:white;font-size:20px}
+.whatsapp{background:#25D366}
+.instagram{background:#E1306C}
 </style>
 </head>
 <body>
 
-<div id="loader" class="gradient">Loading OASIS...</div>
-
 <!-- NAVBAR -->
-<nav class="gradient p-4 text-white sticky top-0 z-50">
-<div class="max-w-7xl mx-auto flex justify-between items-center">
-
+<nav class="bg-black text-white p-4 flex justify-between items-center">
 <h1 class="text-2xl font-bold">OASIS</h1>
-
-<div class="hidden md:flex gap-6 items-center">
-
-<!-- Mega Menu -->
-<div class="group relative">
-<span class="cursor-pointer">Categories</span>
-<div class="absolute hidden group-hover:grid grid-cols-3 gap-6 bg-white text-black p-6 top-8 left-0 w-[600px] rounded-xl shadow-xl">
-<div>
-<h4 class="font-bold mb-2">Fashion</h4>
-<p>Men</p><p>Women</p><p>Shoes</p>
-</div>
-<div>
-<h4 class="font-bold mb-2">Electronics</h4>
-<p>Mobiles</p><p>Laptops</p><p>Accessories</p>
-</div>
-<div>
-<h4 class="font-bold mb-2">Beauty</h4>
-<p>Skincare</p><p>Makeup</p><p>Perfumes</p>
-</div>
-</div>
-</div>
-
-<!-- Search -->
-<div class="bg-white rounded-full px-4 py-1 flex items-center">
-<input id="search" placeholder="Search products..." class="outline-none text-black px-2">
-<i class="fa fa-search text-black"></i>
-</div>
-
-<button onclick="toggleDark()" class="ml-4">
-<i class="fa fa-moon"></i>
-</button>
-
-<button onclick="openLogin()">Login</button>
-<button onclick="openCart()"><i class="fa fa-shopping-bag"></i></button>
-
-</div>
+<div class="flex gap-4 items-center">
+<input id="search" placeholder="Search..." class="px-3 py-1 rounded text-black">
+<button onclick="toggleDark()"><i class="fa fa-moon"></i></button>
 </div>
 </nav>
 
-<!-- HERO -->
-<section class="gradient text-white text-center py-20">
-<h2 class="text-5xl font-bold mb-4">Premium Spicy Marketplace</h2>
-<p>Experience Shopping Like Never Before</p>
+<!-- ADVANCED SLIDER -->
+<section class="slider">
+<div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30')"></div>
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1549298916-b41d501d3772')"></div>
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1520975916090-3105956dac38')"></div>
 </section>
 
-<!-- FILTER -->
-<section class="max-w-7xl mx-auto py-6 px-4 flex gap-4 flex-wrap">
-<select id="priceFilter" class="border px-3 py-2 rounded">
-<option value="">All Prices</option>
-<option value="50">Below $50</option>
-<option value="100">Below $100</option>
-</select>
+<!-- FLASH SALE -->
+<section class="bg-gray-100 py-6 text-center">
+<h2 class="text-2xl font-bold mb-3">🔥 Flash Sale Ends In:</h2>
+<div id="timer" class="flex justify-center gap-4 text-xl"></div>
 </section>
 
 <!-- PRODUCTS -->
-<section class="max-w-7xl mx-auto px-4 py-10">
-<div id="products" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
-</section>
+<section class="max-w-6xl mx-auto py-10 grid grid-cols-2 md:grid-cols-4 gap-6" id="products"></section>
 
-<!-- CART -->
-<div class="overlay" id="overlay" onclick="closeCart()"></div>
-<div class="sidebar p-6" id="cartSidebar">
-<h2 class="text-xl font-bold mb-4">Checkout</h2>
-<div id="cartItems"></div>
-<hr class="my-4">
-<form class="space-y-3">
-<input placeholder="Full Name" class="border w-full p-2 rounded">
-<input placeholder="Address" class="border w-full p-2 rounded">
-<input placeholder="Card Number" class="border w-full p-2 rounded">
-<button class="gradient text-white w-full py-2 rounded">Pay Now</button>
-</form>
-</div>
-
-<!-- LOGIN MODAL -->
-<div id="loginModal" class="hidden fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-<div class="bg-white p-8 rounded-xl w-96">
-<h2 class="text-xl font-bold mb-4">Login</h2>
-<input placeholder="Email" class="border w-full p-2 mb-3 rounded">
-<input placeholder="Password" type="password" class="border w-full p-2 mb-3 rounded">
-<button class="gradient text-white w-full py-2 rounded">Login</button>
-<button onclick="closeLogin()" class="mt-4 text-red-500">Close</button>
-</div>
+<!-- FLOATING CONTACT -->
+<div class="floating">
+<a href="https://wa.me/923000000000" class="whatsapp" target="_blank">
+<i class="fa-brands fa-whatsapp"></i>
+</a>
+<a href="https://instagram.com/yourusername" class="instagram" target="_blank">
+<i class="fa-brands fa-instagram"></i>
+</a>
 </div>
 
 <script>
+/* SLIDER */
+let slides=document.querySelectorAll(".slide");
+let index=0;
+setInterval(()=>{
+slides[index].classList.remove("active");
+index=(index+1)%slides.length;
+slides[index].classList.add("active");
+},4000);
+
+/* FLASH TIMER */
+let end=new Date().getTime()+86400000;
+setInterval(()=>{
+let now=new Date().getTime();
+let distance=end-now;
+let h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+let m=Math.floor((distance%(1000*60*60))/(1000*60));
+let s=Math.floor((distance%(1000*60))/1000);
+document.getElementById("timer").innerHTML=
+`<div class="timer-box">${h}h</div>
+<div class="timer-box">${m}m</div>
+<div class="timer-box">${s}s</div>`;
+},1000);
+
+/* PRODUCTS */
 const products=[
-{name:"Luxury Watch",price:120,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"},
-{name:"Sneakers",price:80,img:"https://images.unsplash.com/photo-1549298916-b41d501d3772"},
-{name:"Perfume",price:60,img:"https://images.unsplash.com/photo-1585386959984-a4155224a1ad"},
-{name:"Jacket",price:200,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"}
+{name:"Luxury Watch",price:120,rating:5,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"},
+{name:"Sneakers",price:80,rating:4,img:"https://images.unsplash.com/photo-1549298916-b41d501d3772"},
+{name:"Jacket",price:150,rating:5,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"},
+{name:"Perfume",price:60,rating:4,img:"https://images.unsplash.com/photo-1585386959984-a4155224a1ad"}
 ];
 
-let cart=[];
-const container=document.getElementById("products");
+let wishlist=[];
 
 function renderProducts(list=products){
-container.innerHTML=list.map(p=>`
-<div class="card p-4">
+document.getElementById("products").innerHTML=list.map((p,i)=>`
+<div class="card p-4 relative">
 <img src="${p.img}" class="h-40 w-full object-cover rounded">
-<h3 class="font-semibold mt-3">${p.name}</h3>
+<i onclick="toggleWish(${i})"
+class="fa-heart fa ${wishlist.includes(i)?'fa-solid text-red-500':'fa-regular'} absolute top-3 right-3 cursor-pointer"></i>
+<h3 class="mt-3 font-semibold">${p.name}</h3>
 <p>$${p.price}</p>
-<button onclick='addToCart(${JSON.stringify(p)})' class="gradient text-white px-4 py-1 rounded mt-2">Add</button>
+<div>${"★".repeat(p.rating)}${"☆".repeat(5-p.rating)}</div>
+<button class="bg-black text-white px-3 py-1 rounded mt-2">Add to Cart</button>
 </div>
 `).join("");
 }
 renderProducts();
 
-function addToCart(p){
-cart.push(p);
-document.getElementById("cartItems").innerHTML+=`
-<div class="flex justify-between py-2">
-<span>${p.name}</span><span>$${p.price}</span>
-</div>`;
-}
-
-function openCart(){
-document.getElementById("cartSidebar").classList.add("active");
-document.getElementById("overlay").classList.add("active");
-}
-function closeCart(){
-document.getElementById("cartSidebar").classList.remove("active");
-document.getElementById("overlay").classList.remove("active");
+function toggleWish(i){
+wishlist.includes(i)?wishlist.splice(wishlist.indexOf(i),1):wishlist.push(i);
+renderProducts();
 }
 
 document.getElementById("search").addEventListener("input",e=>{
-const value=e.target.value.toLowerCase();
-renderProducts(products.filter(p=>p.name.toLowerCase().includes(value)));
-});
-
-document.getElementById("priceFilter").addEventListener("change",e=>{
-const val=e.target.value;
-if(!val) return renderProducts();
-renderProducts(products.filter(p=>p.price<=val));
+renderProducts(products.filter(p=>p.name.toLowerCase().includes(e.target.value.toLowerCase())));
 });
 
 function toggleDark(){document.body.classList.toggle("dark");}
-
-function openLogin(){document.getElementById("loginModal").classList.remove("hidden");}
-function closeLogin(){document.getElementById("loginModal").classList.add("hidden");}
 </script>
 
 </body>
