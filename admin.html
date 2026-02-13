@@ -3,59 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oasis Control Center</title>
+    <title>Oasis Elite Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 min-h-screen flex">
+<body class="bg-slate-100 min-h-screen">
 
-    <div class="w-64 bg-black text-white p-8 hidden md:block">
-        <h1 class="text-3xl font-black mb-12 italic">OASIS</h1>
-        <nav class="space-y-6">
-            <button onclick="showTab('add')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-plus mr-2"></i> Add Item</button>
-            <button onclick="showTab('orders')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-shopping-bag mr-2"></i> Orders</button>
-            <button onclick="showTab('stock')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-layer-group mr-2"></i> Stock</button>
-        </nav>
+    <div id="login-screen" class="fixed inset-0 bg-black flex items-center justify-center z-[9999]">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center">
+            <h1 class="text-3xl font-black mb-6 italic">OASIS</h1>
+            <p class="text-gray-500 mb-6 text-sm">Enter your Admin Email to continue</p>
+            <input type="email" id="adminEmail" placeholder="email@example.com" class="w-full border p-4 rounded-xl mb-4 outline-none focus:ring-2 ring-black">
+            <button onclick="checkAccess()" class="bg-black text-white w-full py-4 rounded-xl font-bold">Login to Dashboard</button>
+            <p id="loginErr" class="text-red-500 mt-4 text-sm hidden">Access Denied: You are not an admin.</p>
+        </div>
     </div>
 
-    <div class="flex-1 p-6 md:p-12">
-        <div id="msg" class="mb-6 p-4 rounded hidden"></div>
-
-        <div id="add" class="tab border p-8 rounded-3xl bg-white shadow-sm max-w-xl">
-            <h2 class="text-2xl font-bold mb-6">New Product</h2>
-            <input type="text" id="name" placeholder="Name" class="w-full border p-4 mb-4 rounded-xl outline-none">
-            <input type="number" id="price" placeholder="Price" class="w-full border p-4 mb-4 rounded-xl outline-none">
-            <input type="text" id="image" placeholder="Image URL" class="w-full border p-4 mb-6 rounded-xl outline-none">
-            <button onclick="saveToGitHub('data.json')" class="bg-black text-white w-full py-4 rounded-2xl font-bold">Publish Product</button>
+    <div id="dashboard" class="hidden flex h-screen overflow-hidden">
+        <div class="w-64 bg-black text-white p-8 hidden md:block">
+            <h2 class="text-2xl font-black mb-10 italic">OASIS</h2>
+            <nav class="space-y-6">
+                <button onclick="showTab('add')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-plus mr-2"></i> Add Item</button>
+                <button onclick="showTab('orders')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-shopping-bag mr-2"></i> Orders</button>
+                <button onclick="showTab('admins')" class="block w-full text-left font-bold hover:text-blue-400"><i class="fa fa-user-shield mr-2"></i> Manage Admins</button>
+            </nav>
         </div>
 
-        <div id="orders" class="tab hidden">
-            <h2 class="text-2xl font-bold mb-6">Recent Orders</h2>
-            <div id="orderBox" class="grid gap-4"></div>
-        </div>
+        <div class="flex-1 p-6 md:p-12 overflow-y-auto">
+            <div id="add" class="tab border p-8 rounded-3xl bg-white shadow-sm max-w-xl">
+                <h2 class="text-2xl font-bold mb-6">New Product</h2>
+                <input type="text" id="p-name" placeholder="Name" class="w-full border p-4 mb-4 rounded-xl outline-none">
+                <input type="number" id="p-price" placeholder="Price" class="w-full border p-4 mb-4 rounded-xl outline-none">
+                <input type="text" id="p-image" placeholder="Image URL" class="w-full border p-4 mb-6 rounded-xl outline-none">
+                <button onclick="pushData('data.json')" class="bg-black text-white w-full py-4 rounded-2xl font-bold">Publish Item</button>
+            </div>
 
-        <div id="stock" class="tab hidden">
-            <h2 class="text-2xl font-bold mb-6">All Stock</h2>
-            <div id="stockBox" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <div id="orders" class="tab hidden space-y-4">
+                <h2 class="text-2xl font-bold mb-6">Recent Orders</h2>
+                <div id="orderBox" class="grid gap-4"></div>
+            </div>
+
+            <div id="admins" class="tab hidden">
+                <h2 class="text-2xl font-bold mb-6">Add New Admin</h2>
+                <div class="bg-white p-6 rounded-3xl border mb-6 max-w-md">
+                    <input type="email" id="newAdminEmail" placeholder="New Admin Email" class="w-full border p-3 rounded-xl mb-4 outline-none">
+                    <button onclick="pushAdmin()" class="bg-blue-600 text-white w-full py-3 rounded-xl font-bold">Authorize Email</button>
+                </div>
+                <div id="adminList" class="bg-white p-6 rounded-3xl border max-w-md space-y-2"></div>
+            </div>
         </div>
     </div>
 
 <script>
     const TOKEN = "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";
-    const REPO = "NeverPlayz7/oasis-frontend";
+    const REPO = "NeverPlayz7/oasis-store";
+
+    async function checkAccess() {
+        const input = document.getElementById('adminEmail').value.toLowerCase();
+        try {
+            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/admins.json?t=${Date.now()}`);
+            const adminList = await res.json();
+            if(adminList.includes(input)) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+            } else {
+                document.getElementById('loginErr').classList.remove('hidden');
+            }
+        } catch(e) { alert("Admin list not found in repo!"); }
+    }
 
     function showTab(id) {
         document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
         document.getElementById(id).classList.remove('hidden');
         if(id === 'orders') fetchOrders();
-        if(id === 'stock') fetchStock();
+        if(id === 'admins') fetchAdminList();
     }
 
-    async function saveToGitHub(file) {
-        const name = document.getElementById('name').value;
-        const price = document.getElementById('price').value;
-        const image = document.getElementById('image').value;
-
+    async function pushData(file) {
+        const name = document.getElementById('p-name').value;
+        const price = document.getElementById('p-price').value;
+        const image = document.getElementById('p-image').value;
         if(!name || !price || !image) return alert("Fill all!");
 
         const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
@@ -63,44 +90,52 @@
         });
         const data = await res.json();
         const content = JSON.parse(atob(data.content));
-
         content.push({ name, price, image });
 
-        const update = await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
+        await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
             method: "PUT",
             headers: { "Authorization": `token ${TOKEN}` },
-            body: JSON.stringify({
-                message: "Added " + name,
-                content: btoa(JSON.stringify(content, null, 2)),
-                sha: data.sha
-            })
+            body: JSON.stringify({ message: "Added item", content: btoa(JSON.stringify(content, null, 2)), sha: data.sha })
         });
+        alert("Published!");
+    }
 
-        if(update.ok) alert("✅ Published!");
+    async function pushAdmin() {
+        const email = document.getElementById('newAdminEmail').value.toLowerCase();
+        if(!email) return;
+
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/admins.json`, {
+            headers: { "Authorization": `token ${TOKEN}` }
+        });
+        const data = await res.json();
+        const list = JSON.parse(atob(data.content));
+        if(!list.includes(email)) list.push(email);
+
+        await fetch(`https://api.github.com/repos/${REPO}/contents/admins.json`, {
+            method: "PUT",
+            headers: { "Authorization": `token ${TOKEN}` },
+            body: JSON.stringify({ message: "New Admin", content: btoa(JSON.stringify(list, null, 2)), sha: data.sha })
+        });
+        alert("New Admin Authorized!");
+        fetchAdminList();
     }
 
     async function fetchOrders() {
         const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
         const data = await res.json();
         document.getElementById('orderBox').innerHTML = data.reverse().map(o => `
-            <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                <p class="font-bold text-lg">${o.customerName} ordered ${o.productName}</p>
-                <p class="text-green-600 font-bold">Price: Rs. ${o.totalPrice}</p>
-                <p class="text-sm text-gray-500">Phone: ${o.phone} | Date: ${o.date}</p>
+            <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                <p class="font-bold text-lg">${o.customerName} - ${o.productName}</p>
+                <p class="text-green-600 font-bold">Rs. ${o.totalPrice}</p>
+                <p class="text-sm text-gray-500">WA: ${o.phone} | ${o.date}</p>
             </div>
         `).join('') || "No orders.";
     }
 
-    async function fetchStock() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+    async function fetchAdminList() {
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/admins.json?t=${Date.now()}`);
         const data = await res.json();
-        document.getElementById('stockBox').innerHTML = data.map(p => `
-            <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
-                <img src="${p.image}" class="w-12 h-12 rounded object-cover">
-                <p class="font-bold flex-1">${p.name}</p>
-                <p class="text-sm">Rs. ${p.price}</p>
-            </div>
-        `).join('');
+        document.getElementById('adminList').innerHTML = data.map(a => `<p class="p-2 border-b text-sm font-semibold text-gray-700"><i class="fa fa-check text-green-500 mr-2"></i> ${a}</p>`).join('');
     }
 </script>
 </body>
