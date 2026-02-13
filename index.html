@@ -3,529 +3,216 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OASIS STORE | International Luxury</title>
+<title>OASIS | Premium Store</title>
 
-<!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital@1&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-
-<!-- Confetti -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-*{box-sizing:border-box;}
 body{
- margin:0;
- background:#111;
- color:#eee;
- font-family:'Montserrat',sans-serif;
- overflow-x:hidden;
- transition: background 0.5s, color 0.5s;
-}
-.font-serif{font-family:'Bodoni Moda',serif;}
-
-/* LIGHT THEME */
-body.light {
- background:#fff;
- color:#111;
-}
-body.light .top { background:#f1f1f1; color:#111; }
-body.light nav { background: rgba(255,255,255,0.85); border-bottom:1px solid #ccc; }
-body.light .product:hover { box-shadow: 0 0 40px rgba(0,0,0,.2); }
-body.light .sidebar { background:#fff; border-left:1px solid #ccc; color:#111; }
-body.light .modal-box { background:#f9f9f9; border:1px solid #ccc; color:#111; }
-body.light .btn { background:#b11226; color:white; }
-body.light .circle { background:#b11226; color:white; }
-body.light .close-btn { color:#111; }
-body.light .close-btn:hover { color:#b11226; }
-
-/* SPLASH */
-#splash{
- position:fixed;inset:0;
- background:#111;
- display:flex;
- align-items:center;
- justify-content:center;
- font-family:'Bodoni Moda';
- font-size:3rem;
- letter-spacing:6px;
- z-index:9999;
- animation:fade 1.2s forwards 1s;
- color:#fff;
-}
-@keyframes fade{to{opacity:0;visibility:hidden;}}
-
-/* TOP BAR */
-.top{
- background: linear-gradient(90deg,#b11226,#ff3a5b);
- text-align:center;
- padding:8px;
- font-size:11px;
- letter-spacing:3px;
- position:fixed;
- top:0;width:100%;
- z-index:1000;
- transition: background 0.5s, color 0.5s;
+ font-family:'Poppins',sans-serif;
+ background:#f8f9fb;
 }
 
-/* NAV */
-nav{
- position:fixed;
- top:32px;
- width:100%;
- height:80px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- padding:0 20px;
- background: rgba(17,17,17,0.9);
- border-bottom:1px solid #b11226;
- backdrop-filter:blur(10px);
- z-index:999;
- transition: background 0.5s, border-color 0.5s;
+/* Gradient Logo */
+.gradient-text{
+ background: linear-gradient(90deg,#ff416c,#ff4b2b,#ff416c);
+ background-size:200% auto;
+ -webkit-background-clip:text;
+ -webkit-text-fill-color:transparent;
+ animation:shine 4s linear infinite;
+ font-weight:700;
 }
-nav .text-3xl{font-size:2rem;}
+@keyframes shine{
+ to{background-position:200% center;}
+}
 
-/* BADGE */
+/* Navbar shadow */
+.nav-shadow{
+ box-shadow:0 2px 20px rgba(0,0,0,0.05);
+}
+
+/* Product Card */
+.product-card{
+ background:white;
+ border-radius:16px;
+ overflow:hidden;
+ transition:0.3s;
+}
+.product-card:hover{
+ transform:translateY(-6px);
+ box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Add to cart button */
+.btn-main{
+ background:linear-gradient(90deg,#ff416c,#ff4b2b);
+ color:white;
+ padding:8px 18px;
+ border-radius:30px;
+ font-size:14px;
+ transition:0.3s;
+}
+.btn-main:hover{
+ opacity:0.85;
+}
+
+/* Badge */
 .badge{
  position:absolute;
- top:-6px;right:-6px;
- background:#b11226;
+ top:10px;
+ left:10px;
+ background:#ff416c;
+ color:white;
+ padding:4px 10px;
  font-size:10px;
- padding:2px 6px;
- border-radius:4px;
+ border-radius:20px;
 }
 
-/* HERO */
-.hero{
- padding-top:160px;
- text-align:center;
-}
-.gradient-text{
- font-family:'Bodoni Moda',serif;
- font-style:italic;
- font-weight:700;
- background: linear-gradient(90deg,#ff3a5b,#b11226,#ffb3b3,#ff3a5b);
- background-size: 300% 100%;
- -webkit-background-clip: text;
- -webkit-text-fill-color: transparent;
- animation: gradientMove 3s linear infinite;
-}
-@keyframes gradientMove{
- 0%{background-position:0% 50%}
- 50%{background-position:100% 50%}
- 100%{background-position:0% 50%}
-}
-.hero h1{
- font-size:clamp(3rem,8vw,5rem);
- animation:reveal 1.6s ease;
-}
-@keyframes reveal{
- from{opacity:0;transform:translateY(30px)}
- to{opacity:1;transform:translateY(0)}
-}
-.timer{
- border:1px solid #b11226;
- display:inline-block;
- padding:8px 20px;
- font-size:11px;
- letter-spacing:2px;
- margin-top:10px;
-}
-
-/* PRODUCT GRID */
-.grid{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
- gap:20px;
- padding:60px 15px 100px;
- max-width:1600px;
- margin:auto;
-}
-.product{
- position:relative;
- text-align:center;
- transition:.4s;
- border-radius:6px;
- overflow:hidden;
- border:1px solid #222;
-}
-.product:hover{
- transform:translateY(-4px);
- box-shadow:0 0 25px rgba(255,58,91,0.7);
- border:1px solid #ff3a5b;
-}
-.img{
- aspect-ratio:3/4;
- overflow:hidden;
- cursor:pointer;
-}
-.img img{
- width:100%;height:100%;
- object-fit:cover;
- transition:.6s;
-}
-.product:hover img{transform:scale(1.05);}
-.hot{
- position:absolute;
- top:10px;left:10px;
- background:#b11226;
- font-size:9px;
- padding:4px 8px;
- letter-spacing:2px;
- border-radius:3px;
-}
-.like{
- position:absolute;
- top:10px;right:10px;
- width:32px;height:32px;
- border-radius:50%;
- border:1px solid #ff3a5b;
- display:flex;
- align-items:center;
- justify-content:center;
- cursor:pointer;
- background:#111;
- transition: color 0.3s, background 0.3s;
-}
-.like.liked{color:#ff3a5b;}
-
-/* SIDEBAR */
+/* Cart Sidebar */
 .sidebar{
  position:fixed;
- top:0;right:0;
- width:80%;
- max-width:360px;
- height:100vh;
- background:#1a1a1a;
- border-left:1px solid #b11226;
- padding:20px;
- transform:translateX(100%);
- transition:.5s, background 0.5s, color 0.5s;
- z-index:4000;
- overflow-y:auto;
-}
-.sidebar.active{transform:translateX(0);}
-.sidebar::-webkit-scrollbar{width:6px;}
-.sidebar::-webkit-scrollbar-thumb{background:#b11226;border-radius:3px;}
-.btn{
- background: linear-gradient(45deg,#b11226,#ff3a5b);
- padding:12px;
- width:100%;
- letter-spacing:2px;
- font-weight:600;
- border:none;
- margin-top:15px;
- color:white;
- cursor:pointer;
- transition: opacity 0.3s, transform 0.3s;
-}
-.btn:hover{opacity:0.85; transform:translateY(-2px);}
-
-/* MODAL */
-.modal{
- position:fixed;inset:0;
- background:rgba(0,0,0,.8);
- backdrop-filter:blur(10px);
- display:flex;
- align-items:center;
- justify-content:center;
- z-index:6000;
- transition: background 0.5s;
-}
-.modal.hidden{display:none;}
-.modal-box{
- background:#1b1b1b;
- border:1px solid #b11226;
- padding:30px;
- width:90%;
- max-width:350px;
- text-align:center;
- animation:pop .4s ease;
- position:relative;
- border-radius:8px;
- transition: background 0.5s, color 0.5s;
-}
-@keyframes pop{
- from{transform:scale(.8);opacity:0}
- to{transform:scale(1);opacity:1}
-}
-.modal-box input{
- width:100%;
- margin:10px 0;
- padding:12px;
- background:#111;
- border:1px solid #333;
- color:white;
- border-radius:4px;
-}
-
-/* CLOSE BUTTON */
-.close-btn{
- position:absolute;
- top:12px;
- right:12px;
- font-size:22px;
- cursor:pointer;
- color:#ff3a5b;
- transition: color 0.3s;
-}
-.close-btn:hover{color:#fff;}
-
-/* FLOAT BUTTONS (DRAGGABLE) */
-.float{
- position:fixed;
- bottom:15px;right:15px;
- z-index:5000;
+ top:0;
+ right:-100%;
+ width:350px;
+ height:100%;
+ background:white;
+ box-shadow:-5px 0 25px rgba(0,0,0,0.1);
+ transition:0.4s;
+ z-index:9999;
  display:flex;
  flex-direction:column;
- gap:12px;
- cursor:grab;
- touch-action: none;
 }
-.float.dragging{cursor:grabbing;}
-.circle{
- width:48px;height:48px;
- border-radius:50%;
- background: linear-gradient(45deg,#b11226,#ff3a5b);
- display:flex;
- align-items:center;
- justify-content:center;
- cursor:pointer;
- transition: background 0.3s, transform 0.3s;
+.sidebar.active{
+ right:0;
 }
-.circle:hover{transform:scale(1.1);}
-
-/* LIVE POPUP */
-#popup{
+.overlay{
  position:fixed;
- bottom:90px;right:15px;
- background:#1b1b1b;
- border:1px solid #b11226;
- padding:12px 16px;
- font-size:11px;
+ inset:0;
+ background:rgba(0,0,0,0.4);
  display:none;
- z-index:6000;
- border-radius:5px;
- max-width:220px;
- word-wrap:break-word;
- color:#eee;
+}
+.overlay.active{
+ display:block;
 }
 
-/* Responsive adjustments */
+/* Mobile */
 @media(max-width:768px){
- .hero h1{font-size:2.8rem;}
- .grid{gap:15px; padding:150px 10px 80px;}
- nav{padding:0 10px;}
-}
-@media(max-width:480px){
- .hero h1{font-size:2.2rem;}
- .sidebar{width:90%;}
+ .sidebar{
+  width:100%;
+ }
 }
 </style>
 </head>
 <body>
 
-<!-- SPLASH -->
-<div id="splash">OASIS</div>
+<!-- NAVBAR -->
+<nav class="bg-white sticky top-0 z-50 nav-shadow">
+<div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 
-<!-- TOP -->
-<div class="top">WORLDWIDE SHIPPING — LUXURY REDEFINED</div>
+<h1 class="text-2xl gradient-text">OASIS</h1>
 
-<!-- NAV -->
-<nav>
- <div class="text-3xl gradient-text">OASIS</div>
- <div class="flex gap-6">
-  <div id="wishBtn" class="relative cursor-pointer">
-   <i class="fa-regular fa-heart"></i>
-   <span id="wishCount" class="badge">0</span>
-  </div>
-  <div id="cartBtn" class="relative cursor-pointer">
-   <i class="fa-solid fa-bag-shopping"></i>
-   <span id="cartCount" class="badge">0</span>
-  </div>
- </div>
+<div class="flex items-center gap-6 text-gray-600">
+<i class="fa-regular fa-heart cursor-pointer"></i>
+<div class="relative cursor-pointer" onclick="openCart()">
+<i class="fa-solid fa-bag-shopping text-lg"></i>
+<span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">0</span>
+</div>
+</div>
+
+</div>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
- <h1 class="gradient-text">OASIS STORE</h1>
- <div class="timer">FLASH SALE ENDS IN <span id="countdown"></span></div>
+<section class="bg-gradient-to-r from-pink-500 to-red-500 text-white text-center py-20">
+<h2 class="text-4xl md:text-6xl font-bold mb-4">Welcome to OASIS</h2>
+<p class="opacity-90">Premium Marketplace Experience</p>
 </section>
 
-<!-- PRODUCT GRID -->
-<div class="grid" id="grid"></div>
+<!-- PRODUCTS -->
+<section class="max-w-7xl mx-auto px-4 py-16">
+<h3 class="text-2xl font-semibold mb-8">Trending Products</h3>
+
+<div id="products" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+</section>
 
 <!-- CART SIDEBAR -->
-<div class="sidebar" id="cart">
- <h2 class="font-serif italic text-2xl mb-4">Your Bag</h2>
- <div id="cartItems"></div>
- <div class="flex justify-between mt-4">
-  <span>Total</span><span id="total">$0</span>
- </div>
- <button class="btn" onclick="checkout()">Checkout</button>
- <button class="btn mt-2" onclick="placeOrder('COD')">Cash On Delivery</button>
- <button class="btn mt-2" onclick="placeOrder('Online')">Pay Online</button>
- <a href="https://wa.me/923XXXXXXXXX" target="_blank"
- class="btn mt-2 block text-center">Order on WhatsApp</a>
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<div class="sidebar p-6" id="cartSidebar">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-xl font-semibold">Your Cart</h2>
+<i class="fa-solid fa-xmark text-xl cursor-pointer" onclick="closeCart()"></i>
 </div>
 
-<!-- LOGIN MODAL -->
-<div id="login" class="modal hidden">
- <div class="modal-box">
-  <h2 class="font-serif italic text-2xl mb-4">Member Access</h2>
-  <input placeholder="Email">
-  <input type="password" placeholder="Password">
-  <button class="btn" onclick="toggleLogin()">Login</button>
- </div>
+<div id="cartItems" class="flex-1 overflow-y-auto"></div>
+
+<div class="mt-4">
+<div class="flex justify-between font-semibold mb-4">
+<span>Total</span>
+<span id="total">$0</span>
+</div>
+<button class="btn-main w-full py-3">Checkout</button>
+</div>
 </div>
 
-<!-- QUICK VIEW MODAL -->
-<div id="preview" class="modal hidden">
- <div class="modal-box">
-  <span id="closePreviewBtn" onclick="closePreview()" class="close-btn">&times;</span>
-  <img id="pimg" class="mb-4">
-  <h3 id="pname"></h3>
-  <p id="pprice"></p>
-  <button class="btn" onclick="add(current)">Add to Bag</button>
- </div>
-</div>
-
-<!-- FLOAT BUTTONS (DRAGGABLE) -->
-<div class="float" id="floatButtons">
- <div class="circle" id="themeToggle" title="Toggle Light/Dark">🌓</div>
- <div class="circle" onclick="toggleLogin()">👤</div>
-</div>
-
-<!-- LIVE POPUP -->
-<div id="popup">Someone in Paris bought <b>Red Luxe Hoodie</b></div>
-
-<!-- HOVER SOUND -->
-<audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
-
-<!-- JS (Products, Cart, Theme etc.) -->
 <script>
-// --- THEME TOGGLE ---
-const themeToggle = document.getElementById('themeToggle');
-if(localStorage.getItem('theme')==='light') document.body.classList.add('light');
-themeToggle.onclick = () => {
- document.body.classList.toggle('light');
- localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-};
-
-// --- PRODUCTS & CART ---
 const products=[
-{id:1,name:"Noir Jacket",price:299,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"},
-{id:2,name:"Red Luxe Hoodie",price:189,img:"https://images.unsplash.com/photo-1552374196-c4e7ffc6e126"},
-{id:3,name:"Shadow Sneakers",price:249,img:"https://images.unsplash.com/photo-1549298916-b41d501d3772"},
-{id:4,name:"Crimson Watch",price:399,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"},
-{id:5,name:"Black Cap",price:59,img:"https://images.unsplash.com/photo-1528701800489-20be3c9c1f49"},
-{id:6,name:"Red Earbuds",price:129,img:"https://images.unsplash.com/photo-1590658268037-6bf12165a8df"}
+{id:1,name:"Luxury Jacket",price:199,img:"https://images.unsplash.com/photo-1520975916090-3105956dac38"},
+{id:2,name:"Premium Hoodie",price:149,img:"https://images.unsplash.com/photo-1552374196-c4e7ffc6e126"},
+{id:3,name:"Elite Sneakers",price:229,img:"https://images.unsplash.com/photo-1549298916-b41d501d3772"},
+{id:4,name:"Smart Watch",price:299,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"}
 ];
-let cart=[],wish=[],current=null;
-const grid=document.getElementById("grid");
-const hoverSound=document.getElementById("hoverSound");
-const cartBtn=document.getElementById("cartBtn");
-const cartSidebar=document.getElementById("cart");
+
+let cart=[];
+const productsContainer=document.getElementById("products");
+const cartSidebar=document.getElementById("cartSidebar");
+const overlay=document.getElementById("overlay");
 const cartCount=document.getElementById("cartCount");
-const wishCount=document.getElementById("wishCount");
 const cartItems=document.getElementById("cartItems");
 const total=document.getElementById("total");
-const login=document.getElementById("login");
-const previewModal=document.getElementById("preview");
-const pimg=document.getElementById("pimg");
-const pname=document.getElementById("pname");
-const pprice=document.getElementById("pprice");
-const countdown=document.getElementById("countdown");
-const popup=document.getElementById("popup");
-let orders=[];
 
-function render(){
- grid.innerHTML=products.map(p=>`
- <div class="product">
-  <span class="hot">NEW</span>
-  <div class="img" onclick="preview('${p.img}','${p.name}','$${p.price}')" onmouseenter="hoverSound.play()">
-   <img src="${p.img}">
-  </div>
-  <div class="like ${wish.includes(p.id)?'liked':''}" onclick="like(${p.id})">
-   <i class="fa-heart ${wish.includes(p.id)?'fa-solid':'fa-regular'}"></i>
-  </div>
-  <h4 class="text-xs uppercase tracking-widest mt-3">${p.name}</h4>
-  <b class="font-serif italic">$${p.price}</b>
- </div>`).join("");
+function renderProducts(){
+productsContainer.innerHTML=products.map(p=>`
+<div class="product-card relative">
+<span class="badge">NEW</span>
+<img src="${p.img}" class="h-48 w-full object-cover">
+<div class="p-4">
+<h4 class="font-semibold">${p.name}</h4>
+<p class="text-gray-500 mb-3">$${p.price}</p>
+<button onclick="addToCart(${p.id})" class="btn-main">Add to Cart</button>
+</div>
+</div>
+`).join("");
 }
-render();
+renderProducts();
 
-function add(id){cart.push(products.find(p=>p.id===id));update();}
-function like(id){wish.includes(id)?wish=wish.filter(x=>x!==id):wish.push(id);render();update();}
-function update(){
- cartCount.innerText=cart.length;
- wishCount.innerText=wish.length;
- cartItems.innerHTML=cart.map(i=>`<div class="flex justify-between py-2 border-b border-gray-800"><span>${i.name}</span><span>$${i.price}</span></div>`).join("");
- total.innerText="$"+cart.reduce((a,b)=>a+b.price,0);
-}
-cartBtn.onclick=()=>cartSidebar.classList.add("active");
-function checkout(){confetti({particleCount:160,colors:["#b11226"]}); alert("Order Confirmed — Welcome to OASIS"); cart=[];update();cartSidebar.classList.remove("active");}
-function toggleLogin(){login.classList.toggle("hidden");}
-function preview(img,name,price){current=products.find(p=>p.name===name).id;pimg.src=img;pname.innerText=name;pprice.innerText=price;previewModal.classList.remove("hidden");}
-function closePreview(){previewModal.classList.add("hidden");}
-
-/* TIMER */
-const end=Date.now()+3600000;
-setInterval(()=>{let d=end-Date.now();if(d<0){countdown.innerText="ENDED";return;} countdown.innerText=Math.floor(d/3600000)+"h "+Math.floor((d%3600000)/60000)+"m "+Math.floor((d%60000)/1000)+"s";},1000);
-
-/* LIVE POPUP */
-setInterval(()=>{popup.style.display="block";setTimeout(()=>popup.style.display="none",3000);},9000);
-
-/* PLACE ORDER */
-function placeOrder(method){
- if(cart.length===0) return alert("Cart empty");
- const order={id:Date.now(),items:cart,total:cart.reduce((a,b)=>a+b.price,0),payment:method,time:new Date().toLocaleString()};
- orders.push(order);
- console.log("NEW ORDER:",order);
- cart=[];update();cartSidebar.classList.remove("active");
- confetti({particleCount:200,colors:["#b11226","#000"]});
- alert("Order Placed Successfully via "+method+"!");
+function addToCart(id){
+const product=products.find(p=>p.id===id);
+cart.push(product);
+updateCart();
 }
 
-/* DRAGGABLE FLOAT BUTTONS */
-const floatButtons = document.getElementById('floatButtons');
-let isDragging = false, startX, startY, origX, origY;
-floatButtons.addEventListener('mousedown', startDrag);
-floatButtons.addEventListener('touchstart', startDrag, {passive:false});
-function startDrag(e){
- e.preventDefault();
- isDragging = true;
- floatButtons.classList.add('dragging');
- const rect = floatButtons.getBoundingClientRect();
- origX = rect.left; origY = rect.top;
- startX = e.type==='touchstart'?e.touches[0].clientX:e.clientX;
- startY = e.type==='touchstart'?e.touches[0].clientY:e.clientY;
- document.addEventListener('mousemove', drag);
- document.addEventListener('mouseup', stopDrag);
- document.addEventListener('touchmove', drag, {passive:false});
- document.addEventListener('touchend', stopDrag);
+function updateCart(){
+cartCount.innerText=cart.length;
+cartItems.innerHTML=cart.map(item=>`
+<div class="flex justify-between py-2 border-b">
+<span>${item.name}</span>
+<span>$${item.price}</span>
+</div>
+`).join("");
+total.innerText="$"+cart.reduce((a,b)=>a+b.price,0);
 }
-function drag(e){
- if(!isDragging) return;
- e.preventDefault();
- const x = e.type==='touchmove'?e.touches[0].clientX:e.clientX;
- const y = e.type==='touchmove'?e.touches[0].clientY:e.clientY;
- let dx = x - startX, dy = y - startY;
- floatButtons.style.right = 'auto';
- floatButtons.style.left = (origX + dx) + 'px';
- floatButtons.style.top = (origY + dy) + 'px';
+
+function openCart(){
+cartSidebar.classList.add("active");
+overlay.classList.add("active");
 }
-function stopDrag(){
- isDragging = false;
- floatButtons.classList.remove('dragging');
- document.removeEventListener('mousemove', drag);
- document.removeEventListener('mouseup', stopDrag);
- document.removeEventListener('touchmove', drag);
- document.removeEventListener('touchend', stopDrag);
+
+function closeCart(){
+cartSidebar.classList.remove("active");
+overlay.classList.remove("active");
 }
 </script>
 
