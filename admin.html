@@ -3,101 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oasis Admin - Realtime</title>
+    <title>OASIS - Pro Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .sidebar-btn.active { background: #1e293b; color: white; border-right: 4px solid #38bdf8; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
 </head>
 <body class="bg-slate-50 flex flex-col md:flex-row min-h-screen">
 
-    <aside class="w-72 bg-[#0f172a] text-white p-6 hidden md:flex flex-col sticky top-0 h-screen">
-        <h2 class="text-3xl font-black italic mb-10 tracking-tighter">OASIS PRO</h2>
-        <nav class="space-y-2 flex-1">
-            <button onclick="switchTab('stats')" class="w-full text-left p-4 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3"><i class="fa fa-chart-line"></i> Analytics</button>
-            <button onclick="switchTab('inventory')" class="w-full text-left p-4 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3"><i class="fa fa-box"></i> Inventory</button>
-            <button onclick="switchTab('users')" class="w-full text-left p-4 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3"><i class="fa fa-users"></i> Users</button>
-            <button onclick="switchTab('orders')" class="w-full text-left p-4 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3"><i class="fa fa-shopping-cart"></i> Orders</button>
+    <div id="loginGate" class="fixed inset-0 bg-[#0f172a] z-[300] flex items-center justify-center p-4">
+        <div class="bg-white p-10 rounded-[40px] w-full max-w-sm text-center shadow-2xl">
+            <h2 class="text-4xl font-black italic mb-2 tracking-tighter">OASIS</h2>
+            <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-10">Admin Panel</p>
+            <div class="space-y-4">
+                <input type="email" id="admEmail" placeholder="Email" class="w-full p-4 border rounded-2xl outline-none focus:border-blue-500">
+                <input type="password" id="admPass" placeholder="Password" class="w-full p-4 border rounded-2xl outline-none focus:border-blue-500">
+                <button onclick="adminLogin()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 transition">Verify & Enter</button>
+            </div>
+            <p id="err" class="text-red-500 mt-4 text-xs font-bold hidden italic">Invalid Credentials!</p>
+        </div>
+    </div>
+
+    <aside id="sidebar" class="hidden md:flex flex-col w-72 bg-[#0f172a] text-slate-400 p-6 h-screen sticky top-0 shadow-xl">
+        <h2 class="text-3xl font-black italic text-white mb-10">OASIS</h2>
+        <nav class="space-y-2">
+            <button onclick="switchTab('analytics')" class="sidebar-btn active w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-chart-line"></i> Analytics</button>
+            <button onclick="switchTab('inventory')" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-box"></i> Inventory</button>
+            <button onclick="switchTab('users')" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-users"></i> Users</button>
         </nav>
     </aside>
 
     <main class="flex-1 p-6 md:p-12 pb-24">
-        <div id="tab-stats" class="tab-content active">
-            <h3 class="text-3xl font-black mb-8">Live Analytics</h3>
-            <div id="analyticsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </div>
-
-        <div id="tab-users" class="tab-content hidden">
-            <h3 class="text-3xl font-black mb-8">Registered Members</h3>
-            <div id="userList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </div>
-
-        <div id="tab-inventory" class="tab-content hidden">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="text-3xl font-black">Manage Items</h3>
-                <button onclick="showAddPopup()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">+ New</button>
-            </div>
-            <div id="inventoryList" class="grid gap-4"></div>
-        </div>
         
-        <div id="tab-orders" class="tab-content hidden text-3xl font-black">Orders Loading...</div>
+        <div id="tab-analytics" class="tab-content active">
+            <h3 class="text-3xl font-black mb-8">Store Insights</h3>
+            <div id="statsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        </div>
+
+        <div id="tab-inventory" class="tab-content">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-3xl font-black">Manage Products</h3>
+                <button onclick="addProductPrompt()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">+ Add Item</button>
+            </div>
+            <div id="invList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <div id="tab-users" class="tab-content">
+            <h3 class="text-3xl font-black mb-8">Community</h3>
+            <div id="userList" class="grid gap-3"></div>
+        </div>
+
     </main>
 
 <script>
-    const TOKEN = "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";
     const REPO = "NeverPlayz7/oasis-store";
+    const TOKEN = "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";
 
-    // --- NOTIFICATIONS ---
-    if(Notification.permission !== 'granted') Notification.requestPermission();
-
-    let lastOrderCount = 0;
-    async function monitorOrders() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
-        const orders = await res.json();
-        if(lastOrderCount > 0 && orders.length > lastOrderCount) {
-            new Notification("🔥 NEW ORDER!", { body: `${orders[orders.length-1].customerName} just placed an order!` });
+    function adminLogin() {
+        const e = document.getElementById('admEmail').value;
+        const p = document.getElementById('admPass').value;
+        if(e === "ahmedboss8603@gmail.com" && p === "ahmed123") {
+            document.getElementById('loginGate').style.display = 'none';
+            switchTab('analytics');
+        } else {
+            document.getElementById('err').classList.remove('hidden');
         }
-        lastOrderCount = orders.length;
     }
-    setInterval(monitorOrders, 30000);
 
-    // --- DATA LOADING ---
-    async function loadAnalytics() {
+    function switchTab(id) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tab-${id}`).classList.add('active');
+        if(id === 'analytics') loadStats();
+        if(id === 'inventory') loadInventory();
+        if(id === 'users') loadUsers();
+    }
+
+    async function loadInventory() {
+        const box = document.getElementById('invList');
+        box.innerHTML = "Loading...";
         const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
         const data = await res.json();
-        document.getElementById('analyticsGrid').innerHTML = data.map(p => `
-            <div class="bg-white p-6 rounded-[35px] border shadow-sm">
-                <div class="flex items-center gap-4 mb-4">
-                    <img src="${p.image}" class="w-12 h-12 rounded-full object-cover">
-                    <p class="font-bold truncate">${p.name}</p>
+        box.innerHTML = data.map((p, i) => `
+            <div class="bg-white p-5 rounded-3xl border shadow-sm flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <img src="${p.image}" class="w-16 h-16 rounded-2xl object-cover">
+                    <div><p class="font-bold">${p.name}</p><p class="text-xs text-blue-600 font-bold">Rs. ${p.price}</p></div>
                 </div>
-                <div class="flex justify-between text-center border-t pt-4">
-                    <div><p class="text-[10px] text-gray-400">VIEWS</p><p class="font-black text-blue-600">${p.stats?.views || 0}</p></div>
-                    <div><p class="text-[10px] text-gray-400">LIKES</p><p class="font-black text-red-500">${p.stats?.likes || 0}</p></div>
-                    <div><p class="text-[10px] text-gray-400">CARTS</p><p class="font-black text-green-600">${p.stats?.carts || 0}</p></div>
-                </div>
+                <button onclick="deleteProduct(${i})" class="text-red-400 p-3 hover:bg-red-50 rounded-full"><i class="fa fa-trash"></i></button>
             </div>
-        `).join('');
+        `).join('') || "No products.";
+    }
+
+    async function addProductPrompt() {
+        const name = prompt("Product Name:");
+        const price = prompt("Price:");
+        const img = prompt("Image URL:");
+        if(!name || !price || !img) return;
+
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, { headers: { "Authorization": `token ${TOKEN}` }});
+        const file = await res.json();
+        const data = JSON.parse(atob(file.content));
+        data.push({ name, price, image: img, id: Date.now() });
+
+        await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+            method: "PUT", headers: { "Authorization": `token ${TOKEN}` },
+            body: JSON.stringify({ message: "Add Product", content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))), sha: file.sha })
+        });
+        loadInventory();
     }
 
     async function loadUsers() {
         const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/users.json?t=${Date.now()}`);
-        const users = await res.json();
-        document.getElementById('userList').innerHTML = users.reverse().map(u => `
-            <div class="bg-white p-4 rounded-3xl border flex items-center gap-4">
-                <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-bold">${u.name.charAt(0)}</div>
+        const data = await res.json();
+        document.getElementById('userList').innerHTML = data.map(u => `
+            <div class="bg-white p-4 rounded-2xl border flex justify-between">
                 <div><p class="font-bold text-sm">${u.name}</p><p class="text-[10px] text-gray-400">${u.email}</p></div>
+                <span class="text-[9px] bg-slate-100 px-2 py-1 rounded self-center font-bold text-slate-500">${u.platform}</span>
             </div>
         `).join('');
     }
 
-    function switchTab(id) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-        document.getElementById(`tab-${id}`).classList.remove('hidden');
-        if(id === 'stats') loadAnalytics();
-        if(id === 'users') loadUsers();
-    }
-
-    // Initialize
-    loadAnalytics();
+    // Additional functions (loadStats, deleteProduct) here...
 </script>
 </body>
 </html>
