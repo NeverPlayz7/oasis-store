@@ -7,60 +7,59 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .side-btn.active { background: #1e293b; color: white; border-left: 4px solid #38bdf8; }
+        .tab { display: none; }
+        .tab.active { display: block; }
+        .s-btn.active { background: #1e293b; color: white; border-left: 5px solid #0ea5e9; }
     </style>
 </head>
-<body class="bg-slate-50 flex h-screen overflow-hidden font-sans">
+<body class="bg-[#f8fafc] flex h-screen overflow-hidden">
 
-    <div id="gate" class="fixed inset-0 bg-slate-900 z-[200] flex items-center justify-center p-4">
-        <div class="bg-white p-10 rounded-[40px] max-w-sm w-full text-center shadow-2xl">
-            <h2 class="text-3xl font-black italic mb-6">OASIS ADMIN</h2>
-            <input type="password" id="pin" placeholder="Enter Admin Pin" class="w-full p-4 border rounded-2xl mb-4 text-center outline-none focus:border-blue-500">
-            <button onclick="if(document.getElementById('pin').value==='ahmed123')document.getElementById('gate').remove()" class="w-full bg-black text-white py-4 rounded-2xl font-bold hover:scale-95 transition">VERIFY ACCESS</button>
+    <div id="gate" class="fixed inset-0 bg-slate-900 z-[200] flex items-center justify-center p-6 backdrop-blur-md">
+        <div class="bg-white p-12 rounded-[50px] max-w-sm w-full text-center shadow-2xl">
+            <h2 class="text-4xl font-black italic mb-8">ADMIN</h2>
+            <input type="password" id="pin" placeholder="Enter PIN" class="w-full p-5 border-2 rounded-3xl mb-5 text-center text-2xl font-bold outline-none focus:border-blue-500 transition">
+            <button onclick="if(document.getElementById('pin').value==='ahmed123')document.getElementById('gate').remove()" class="w-full bg-black text-white py-5 rounded-3xl font-black hover:bg-slate-800 active:scale-95 transition shadow-xl">ACCESS DASHBOARD</button>
         </div>
     </div>
 
-    <aside class="w-64 bg-[#0f172a] text-slate-400 p-6 flex flex-col">
-        <h2 class="text-white text-2xl font-black italic mb-10">OASIS PRO</h2>
-        <nav class="space-y-2 flex-1">
-            <button onclick="setTab('inv')" id="b-inv" class="side-btn active w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-box"></i> Inventory</button>
-            <button onclick="setTab('ord')" id="b-ord" class="side-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-shopping-cart"></i> Orders</button>
-            <button onclick="setTab('usr')" id="b-usr" class="side-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-users"></i> Users</button>
-            <button onclick="setTab('ana')" id="b-ana" class="side-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-chart-pie"></i> Analytics</button>
+    <aside class="w-72 bg-[#0f172a] text-slate-400 p-8 flex flex-col">
+        <h2 class="text-white text-3xl font-black italic mb-12 tracking-tighter">OASIS PRO</h2>
+        <nav class="space-y-3 flex-1">
+            <button onclick="setTab('inv')" id="m-inv" class="s-btn active w-full text-left p-4 rounded-2xl font-bold flex items-center gap-4 transition-all"><i class="fa fa-boxes"></i> Inventory</button>
+            <button onclick="setTab('ord')" id="m-ord" class="s-btn w-full text-left p-4 rounded-2xl font-bold flex items-center gap-4 transition-all"><i class="fa fa-shopping-cart"></i> Orders</button>
+            <button onclick="setTab('usr')" id="m-usr" class="s-btn w-full text-left p-4 rounded-2xl font-bold flex items-center gap-4 transition-all"><i class="fa fa-users"></i> Customers</button>
         </nav>
-        <p class="text-[9px] uppercase font-bold text-slate-600 tracking-widest">Master Admin: Ahmed Boss</p>
+        <div class="bg-slate-800/50 p-4 rounded-2xl">
+            <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Status</p>
+            <p class="text-xs text-green-400 font-bold flex items-center gap-2"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Connected to GitHub</p>
+        </div>
     </aside>
 
-    <main class="flex-1 p-10 overflow-y-auto">
-        <div id="tab-inv" class="tab-content active">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="text-3xl font-black italic">Store Inventory</h3>
-                <button onclick="document.getElementById('addBox').classList.toggle('hidden')" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold text-xs uppercase">+ Add Item</button>
+    <main class="flex-1 p-12 overflow-y-auto">
+        <div id="t-inv" class="tab active">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="text-4xl font-black italic">Inventory</h3>
+                <button onclick="document.getElementById('addBox').classList.toggle('hidden')" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-black shadow-lg hover:bg-blue-700 active:scale-95 transition">+ Add Product</button>
             </div>
-            <div id="addBox" class="hidden bg-white p-8 rounded-[35px] border shadow-sm mb-8 grid gap-4 max-w-xl">
-                <input id="p_n" type="text" placeholder="Product Name" class="p-4 bg-slate-50 rounded-xl outline-none border focus:border-blue-400">
-                <input id="p_p" type="number" placeholder="Price (Rs)" class="p-4 bg-slate-50 rounded-xl outline-none border focus:border-blue-400">
-                <input id="p_i" type="text" placeholder="Image URL (Link)" class="p-4 bg-slate-50 rounded-xl outline-none border focus:border-blue-400">
-                <button onclick="addItem()" id="up" class="bg-black text-white py-4 rounded-xl font-bold hover:bg-slate-800">UPLOAD TO STORE</button>
+
+            <div id="addBox" class="hidden bg-white p-8 rounded-[40px] border shadow-sm mb-10 max-w-2xl grid grid-cols-2 gap-4">
+                <input id="p_n" type="text" placeholder="Product Name" class="col-span-2 p-4 bg-slate-50 rounded-2xl outline-none border focus:border-blue-400">
+                <input id="p_p" type="number" placeholder="Price (Rs)" class="p-4 bg-slate-50 rounded-2xl outline-none border focus:border-blue-400">
+                <input id="p_i" type="text" placeholder="Image URL" class="p-4 bg-slate-50 rounded-2xl outline-none border focus:border-blue-400">
+                <button onclick="addItem()" id="upBtn" class="col-span-2 bg-black text-white py-5 rounded-2xl font-black shadow-xl hover:bg-slate-800">UPLOAD TO LIVE STORE</button>
             </div>
-            <div id="invList" class="grid gap-3 max-w-2xl"></div>
+
+            <div id="invList" class="grid grid-cols-1 gap-4 max-w-4xl"></div>
         </div>
 
-        <div id="tab-ord" class="tab-content">
-            <h3 class="text-3xl font-black mb-8 italic">Customer Orders</h3>
-            <div id="ordList" class="grid gap-4 max-w-3xl"></div>
+        <div id="t-ord" class="tab">
+            <h3 class="text-4xl font-black mb-10 italic">Customer Orders</h3>
+            <div id="ordList" class="grid gap-6 max-w-4xl"></div>
         </div>
 
-        <div id="tab-usr" class="tab-content">
-            <h3 class="text-3xl font-black mb-8 italic">Registered Members</h3>
-            <div id="uList" class="grid grid-cols-2 gap-4"></div>
-        </div>
-
-        <div id="tab-ana" class="tab-content">
-            <h3 class="text-3xl font-black mb-8 italic">Business Insights</h3>
-            <div id="stats" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+        <div id="t-usr" class="tab">
+            <h3 class="text-4xl font-black mb-10 italic">Members</h3>
+            <div id="uList" class="grid grid-cols-3 gap-6"></div>
         </div>
     </main>
 
@@ -69,23 +68,25 @@
     const REPO = "NeverPlayz7/oasis-store";
 
     function setTab(id) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-'+id).classList.add('active');
-        document.getElementById('b-'+id).classList.add('active');
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('t-'+id).classList.add('active');
+        document.getElementById('m-'+id).classList.add('active');
         if(id === 'inv') loadInv();
         if(id === 'ord') loadOrd();
         if(id === 'usr') loadUsr();
-        if(id === 'ana') loadStats();
     }
 
     async function addItem() {
         const name = document.getElementById('p_n').value;
         const price = document.getElementById('p_p').value;
         const image = document.getElementById('p_i').value;
-        if(!name || !price || !image) return alert("All fields are required!");
+        if(!name || !price || !image) return alert("Fill all fields!");
 
-        document.getElementById('up').innerText = "Uploading...";
+        const btn = document.getElementById('upBtn');
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
         try {
             const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {headers:{"Authorization":`token ${TOKEN}`}});
             const file = await res.json();
@@ -94,58 +95,42 @@
 
             await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
                 method:"PUT", headers:{"Authorization":`token ${TOKEN}`},
-                body: JSON.stringify({message:"Add item", content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))), sha: file.sha})
+                body: JSON.stringify({message:"Add Item", content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))), sha: file.sha})
             });
-            alert("Product Added!");
+            alert("Item Uploaded Successfully!");
             location.reload();
-        } catch(e) { alert("Error adding product!"); }
+        } catch(e) { alert("Error connecting to GitHub!"); btn.disabled = false; }
     }
 
     async function loadInv() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-        const data = await res.json();
+        const r = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+        const data = await r.json();
         document.getElementById('invList').innerHTML = data.map((p,i) => `
-            <div class="bg-white p-4 rounded-2xl border flex items-center justify-between shadow-sm">
-                <div class="flex items-center gap-4"><img src="${p.image}" class="w-12 h-12 rounded-xl object-cover"><p class="font-bold text-sm">${p.name}</p></div>
-                <button onclick="del(${i})" class="text-red-400 p-2 hover:bg-red-50 rounded-full"><i class="fa fa-trash"></i></button>
+            <div class="bg-white p-5 rounded-3xl border flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-5"><img src="${p.image}" class="w-16 h-16 rounded-2xl object-cover shadow-md"><p class="font-black">${p.name}</p></div>
+                <button onclick="del(${i})" class="text-red-400 hover:text-red-600 p-3"><i class="fa fa-trash-alt text-xl"></i></button>
             </div>
-        `).join('') || "No products in store.";
+        `).join('') || "No products found.";
     }
 
     async function loadOrd() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
-        const data = await res.json();
+        const r = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
+        const data = await r.json();
         document.getElementById('ordList').innerHTML = data.map(o => `
-            <div class="bg-white p-6 rounded-[30px] border shadow-sm">
-                <div class="flex justify-between items-start mb-4">
-                    <div><h4 class="font-black text-lg">${o.user}</h4><p class="text-[10px] text-slate-400 uppercase">${o.date}</p></div>
-                    <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[10px] font-bold">NEW</span>
+            <div class="bg-white p-8 rounded-[40px] border shadow-sm">
+                <div class="flex justify-between items-start mb-6">
+                    <div><h4 class="font-black text-2xl tracking-tighter uppercase">${o.user}</h4><p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">${o.date}</p></div>
+                    <span class="bg-green-100 text-green-600 px-4 py-1 rounded-full text-[10px] font-black italic">NEW ORDER</span>
                 </div>
-                <div class="text-xs text-slate-500 font-bold">${o.items.map(i => i.n).join(', ')}</div>
+                <div class="space-y-2 border-t pt-4">${o.items.map(i => `<div class="flex justify-between text-xs font-bold"><span>${i.n}</span><span>Rs. ${i.p}</span></div>`).join('')}</div>
             </div>
-        `).join('') || "No orders found.";
+        `).join('') || "No orders yet.";
     }
 
     async function loadUsr() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/users.json?t=${Date.now()}`);
-        const data = await res.json();
-        document.getElementById('uList').innerHTML = data.map(u => `
-            <div class="bg-white p-4 rounded-2xl border flex items-center gap-3">
-                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xs">${u.name[0]}</div>
-                <div><p class="font-bold text-xs">${u.name}</p><p class="text-[9px] text-slate-400">Joined: ${u.joined || 'N/A'}</p></div>
-            </div>
-        `).join('') || "No users yet.";
-    }
-
-    async function loadStats() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-        const data = await res.json();
-        document.getElementById('stats').innerHTML = `
-            <div class="bg-white p-6 rounded-[30px] border shadow-sm text-center">
-                <p class="text-slate-400 font-bold text-[10px] uppercase">Total Products</p>
-                <p class="text-4xl font-black mt-2">${data.length}</p>
-            </div>
-        `;
+        const r = await fetch(`https://raw.githubusercontent.com/${REPO}/main/users.json?t=${Date.now()}`);
+        const data = await r.json();
+        document.getElementById('uList').innerHTML = data.map(u => `<div class="bg-white p-6 rounded-3xl border font-black text-center shadow-sm uppercase italic text-xs tracking-wider border-b-4 border-b-blue-500">${u.name}</div>`).join('') || "No users yet.";
     }
 
     setTab('inv');
