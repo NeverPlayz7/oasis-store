@@ -3,74 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Oasis Admin - Mobile Fixed</title>
+    <title>Oasis Admin - Pro Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* Mobile Bottom Nav Shadow */
-        .mobile-nav { shadow: 0 -4px 10px rgba(0,0,0,0.1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .sidebar-btn.active { background: #1e293b; border-left: 4px solid #38bdf8; color: white; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen pb-24 md:pb-0">
+<body class="bg-slate-50 min-h-screen flex flex-col md:flex-row">
 
-    <div id="loginGate" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-[100] p-4">
-        <div class="bg-white p-8 rounded-[30px] w-full max-w-sm text-center shadow-2xl">
-            <h2 class="text-3xl font-black italic mb-6">OASIS</h2>
+    <div id="loginGate" class="fixed inset-0 bg-[#0f172a] flex items-center justify-center z-[100] p-4">
+        <div class="bg-white p-10 rounded-[40px] w-full max-w-sm text-center shadow-2xl">
+            <h2 class="text-4xl font-black italic mb-2 tracking-tighter">OASIS</h2>
+            <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-8">Secure Access</p>
             <div class="space-y-4">
-                <input type="email" id="admEmail" placeholder="Admin Email" class="w-full p-4 border rounded-2xl outline-none focus:ring-2 focus:ring-black">
-                <input type="password" id="admPass" placeholder="Password" class="w-full p-4 border rounded-2xl outline-none focus:ring-2 focus:ring-black">
-                <button onclick="checkLogin()" class="w-full bg-black text-white py-4 rounded-2xl font-bold active:scale-95 transition">Login</button>
+                <input type="email" id="admEmail" placeholder="Email" class="w-full p-4 border-2 rounded-2xl outline-none focus:border-blue-500">
+                <input type="password" id="admPass" placeholder="Password" class="w-full p-4 border-2 rounded-2xl outline-none focus:border-blue-500">
+                <button onclick="checkLogin()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold active:scale-95 transition shadow-lg">Login</button>
             </div>
-            <p id="loginErr" class="text-red-500 mt-4 text-sm font-bold hidden text-center">Invalid Credentials!</p>
+            <p id="loginErr" class="text-red-500 mt-4 text-sm font-bold hidden italic">Email or Password Incorrect!</p>
         </div>
     </div>
 
-    <aside class="hidden md:flex flex-col w-64 bg-slate-900 text-white p-6 h-screen sticky top-0">
-        <h2 class="text-2xl font-black italic mb-10 text-center">OASIS</h2>
-        <nav class="space-y-4">
-            <button onclick="switchTab('add')" class="w-full text-left p-3 rounded-xl hover:bg-slate-800 flex items-center gap-3"><i class="fa fa-plus"></i> Add Product</button>
-            <button onclick="switchTab('logs')" class="w-full text-left p-3 rounded-xl hover:bg-slate-800 flex items-center gap-3"><i class="fa fa-history"></i> Activities</button>
-            <button onclick="switchTab('orders')" class="w-full text-left p-3 rounded-xl hover:bg-slate-800 flex items-center gap-3"><i class="fa fa-shopping-cart"></i> Orders</button>
+    <aside id="pcSidebar" class="hidden md:flex flex-col w-72 bg-[#0f172a] text-slate-300 p-6 h-screen sticky top-0 shadow-2xl">
+        <h2 class="text-3xl font-black italic mb-10 text-white tracking-tighter">OASIS</h2>
+        <nav class="space-y-2 flex-1">
+            <button onclick="switchTab('stats')" id="btn-stats" class="sidebar-btn active w-full text-left p-4 rounded-xl font-bold flex items-center gap-3 transition">
+                <i class="fa fa-chart-pie"></i> Overview
+            </button>
+            <button onclick="switchTab('add')" id="btn-add" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3 transition">
+                <i class="fa fa-plus-circle"></i> Add Product
+            </button>
+            <button onclick="switchTab('manage')" id="btn-manage" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3 transition">
+                <i class="fa fa-tasks"></i> Manage Store
+            </button>
+            <button onclick="switchTab('logs')" id="btn-logs" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3 transition">
+                <i class="fa fa-history"></i> Activity Group
+            </button>
         </nav>
+        <div class="pt-4 border-t border-slate-700 text-[10px] font-bold uppercase text-slate-500" id="userTag"></div>
     </aside>
 
-    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-4 z-50 mobile-nav">
-        <button onclick="switchTab('add')" class="flex flex-col items-center text-slate-400 focus:text-black">
-            <i class="fa fa-plus-circle text-xl"></i><span class="text-[10px] font-bold">Add</span>
-        </button>
-        <button onclick="switchTab('logs')" class="flex flex-col items-center text-slate-400 focus:text-black">
-            <i class="fa fa-history text-xl"></i><span class="text-[10px] font-bold">Logs</span>
-        </button>
-        <button onclick="switchTab('orders')" class="flex flex-col items-center text-slate-400 focus:text-black">
-            <i class="fa fa-shopping-bag text-xl"></i><span class="text-[10px] font-bold">Orders</span>
-        </button>
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-4 z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+        <button onclick="switchTab('stats')" class="flex flex-col items-center text-slate-400 focus:text-blue-600"><i class="fa fa-chart-bar"></i><span class="text-[9px] font-bold">Home</span></button>
+        <button onclick="switchTab('add')" class="flex flex-col items-center text-slate-400 focus:text-blue-600"><i class="fa fa-plus-square"></i><span class="text-[9px] font-bold">Add</span></button>
+        <button onclick="switchTab('manage')" class="flex flex-col items-center text-slate-400 focus:text-blue-600"><i class="fa fa-box"></i><span class="text-[9px] font-bold">Items</span></button>
+        <button onclick="switchTab('logs')" class="flex flex-col items-center text-slate-400 focus:text-blue-600"><i class="fa fa-history"></i><span class="text-[9px] font-bold">Logs</span></button>
     </div>
 
-    <main class="flex-1 p-4 md:p-12 max-w-4xl mx-auto">
+    <main class="flex-1 p-6 md:p-12 pb-24 md:pb-12 overflow-y-auto">
         
-        <div id="tab-add" class="tab-content active">
-            <h3 class="text-2xl font-black mb-6">New Product</h3>
-            <div class="bg-white p-6 rounded-[25px] shadow-sm space-y-4 border">
-                <input type="text" id="p-name" placeholder="Item Name" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
-                <input type="number" id="p-price" placeholder="Price (PKR)" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
-                <input type="text" id="p-img" placeholder="Image URL (Clear link)" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
-                <button id="pubBtn" onclick="handleUpload()" class="w-full bg-green-600 text-white py-4 rounded-xl font-black text-lg shadow-md active:bg-green-700">Update Store</button>
-                <p id="status" class="text-center font-bold text-sm min-h-[20px]"></p>
+        <div id="tab-stats" class="tab-content active">
+            <h3 class="text-3xl font-black mb-8 text-slate-800">Store Overview</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="bg-blue-600 p-6 rounded-[30px] text-white shadow-lg shadow-blue-200">
+                    <p class="text-xs font-bold uppercase opacity-80">Total Items</p>
+                    <h4 id="stat-items" class="text-4xl font-black mt-2">0</h4>
+                </div>
+                <div class="bg-emerald-600 p-6 rounded-[30px] text-white shadow-lg shadow-emerald-200">
+                    <p class="text-xs font-bold uppercase opacity-80">Recent Orders</p>
+                    <h4 id="stat-orders" class="text-4xl font-black mt-2">0</h4>
+                </div>
             </div>
+        </div>
+
+        <div id="tab-add" class="tab-content max-w-xl">
+            <h3 class="text-3xl font-black mb-8">Publish Item</h3>
+            <div class="bg-white p-8 rounded-[35px] shadow-sm border space-y-4">
+                <input type="text" id="p-name" placeholder="Product Name" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-blue-500">
+                <input type="number" id="p-price" placeholder="Price (PKR)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-blue-500">
+                <input type="text" id="p-img" placeholder="Image URL" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-blue-500">
+                <button id="pubBtn" onclick="handleUpload()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl shadow-lg active:scale-95 transition">Post to Store</button>
+                <p id="status" class="text-center font-bold text-sm"></p>
+            </div>
+        </div>
+
+        <div id="tab-manage" class="tab-content">
+            <h3 class="text-3xl font-black mb-8">Inventory Management</h3>
+            <div id="inventoryList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
         <div id="tab-logs" class="tab-content">
-            <h3 class="text-2xl font-black mb-6">Activity Group</h3>
+            <h3 class="text-3xl font-black mb-8">Activity Group</h3>
             <div id="logBox" class="space-y-3"></div>
-        </div>
-
-        <div id="tab-orders" class="tab-content">
-            <h3 class="text-2xl font-black mb-6">Recent Orders</h3>
-            <div id="orderBox" class="space-y-3"></div>
         </div>
 
     </main>
@@ -78,16 +97,17 @@
 <script>
     const TOKEN = "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"; 
     const REPO = "NeverPlayz7/oasis-store";
-    let activeAdmin = "";
+    let adminEmail = "";
 
     function checkLogin() {
         const email = document.getElementById('admEmail').value.toLowerCase();
         const pass = document.getElementById('admPass').value;
-        // Direct matching as requested
         if(email === "ahmedboss8603@gmail.com" && pass === "ahmed123") {
-            activeAdmin = email;
-            document.getElementById('loginGate').style.display = 'none';
-            saveLog("Logged in via Mobile");
+            adminEmail = email;
+            document.getElementById('loginGate').classList.add('hidden');
+            document.getElementById('userTag').innerText = `Admin: ${email}`;
+            saveLog("Dashboard Accessed");
+            refreshStats();
         } else {
             document.getElementById('loginErr').classList.remove('hidden');
         }
@@ -96,8 +116,11 @@
     function switchTab(id) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.getElementById(`tab-${id}`).classList.add('active');
+        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`btn-${id}`)?.classList.add('active');
+        if(id === 'manage') loadInventory();
         if(id === 'logs') loadLogs();
-        if(id === 'orders') loadOrders();
+        if(id === 'stats') refreshStats();
     }
 
     async function handleUpload() {
@@ -106,41 +129,82 @@
         const img = document.getElementById('p-img').value;
         const status = document.getElementById('status');
 
-        if(!name || !price || !img) return alert("Fill all fields!");
+        if(!name || !price || !img) return alert("All fields are required!");
 
-        status.innerText = "⏳ Syncing...";
+        status.innerHTML = "<span class='text-blue-500'>⏳ Syncing Data...</span>";
         try {
             const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
                 headers: { "Authorization": `token ${TOKEN}` }
             });
             const file = await res.json();
-            // FIX: Mobile devices sometimes fail atob if content is empty or malformed
-            let content = [];
-            try { content = JSON.parse(atob(file.content)); } catch(e) { content = []; }
+            const products = JSON.parse(atob(file.content));
+            
+            products.push({ name, price, image: img, id: Date.now() });
 
-            content.push({ name, price, image: img, id: Date.now() });
-
-            const push = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+            await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
                 method: "PUT",
                 headers: { "Authorization": `token ${TOKEN}` },
-                body: JSON.stringify({
-                    message: `Mobile Upload: ${name}`,
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
-                    sha: file.sha
-                })
+                body: JSON.stringify({ message: `Add ${name}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))), sha: file.sha })
             });
 
-            if(push.ok) {
-                status.innerHTML = "<span class='text-green-600'>✅ Product Published!</span>";
-                saveLog(`Added Product: ${name}`);
-                document.getElementById('p-name').value = '';
-                document.getElementById('p-price').value = '';
-                document.getElementById('p-img').value = '';
-            } else { throw new Error(); }
-        } catch(e) { 
-            status.innerHTML = "<span class='text-red-500'>❌ Mobile Sync Error! Check Token.</span>";
-            console.error(e);
-        }
+            status.innerHTML = "<span class='text-green-600'>✅ Live on Store!</span>";
+            saveLog(`Added Product: ${name}`);
+            refreshStats();
+            document.getElementById('p-name').value = ''; document.getElementById('p-price').value = ''; document.getElementById('p-img').value = '';
+        } catch(e) { status.innerHTML = "<span class='text-red-500'>❌ Error! check Token.</span>"; }
+    }
+
+    async function loadInventory() {
+        const box = document.getElementById('inventoryList');
+        box.innerHTML = "Fetching Items...";
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+        const data = await res.json();
+        box.innerHTML = data.map((p, index) => `
+            <div class="bg-white p-4 rounded-3xl border flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-4">
+                    <img src="${p.image}" class="w-16 h-16 rounded-xl object-cover bg-slate-100">
+                    <div>
+                        <p class="font-bold text-slate-800 truncate w-32">${p.name}</p>
+                        <p class="text-blue-600 font-black text-sm">Rs. ${p.price}</p>
+                    </div>
+                </div>
+                <button onclick="deleteProduct(${index})" class="text-red-500 p-3 hover:bg-red-50 rounded-full transition"><i class="fa fa-trash"></i></button>
+            </div>
+        `).join('') || "Store is empty.";
+    }
+
+    async function deleteProduct(index) {
+        if(!confirm("Are you sure? This item will be removed forever.")) return;
+        try {
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+            const file = await res.json();
+            const data = JSON.parse(atob(file.content));
+            const deletedItem = data[index].name;
+            data.splice(index, 1);
+
+            await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                method: "PUT",
+                headers: { "Authorization": `token ${TOKEN}` },
+                body: JSON.stringify({ message: `Delete ${deletedItem}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))), sha: file.sha })
+            });
+            saveLog(`Deleted Item: ${deletedItem}`);
+            loadInventory();
+            refreshStats();
+        } catch(e) { alert("Delete failed!"); }
+    }
+
+    async function refreshStats() {
+        try {
+            const pRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+            const pData = await pRes.json();
+            document.getElementById('stat-items').innerText = pData.length;
+
+            const oRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
+            const oData = await oRes.json();
+            document.getElementById('stat-orders').innerText = oData.length;
+        } catch(e) {}
     }
 
     async function saveLog(act) {
@@ -150,43 +214,25 @@
             });
             const file = await res.json();
             const logs = JSON.parse(atob(file.content));
-            logs.push({ admin: activeAdmin, task: act, time: new Date().toLocaleString() });
+            logs.push({ admin: adminEmail, task: act, time: new Date().toLocaleString() });
             await fetch(`https://api.github.com/repos/${REPO}/contents/activities.json`, {
                 method: "PUT",
                 headers: { "Authorization": `token ${TOKEN}` },
-                body: JSON.stringify({ message: "Log update", content: btoa(JSON.stringify(logs, null, 2)), sha: file.sha })
+                body: JSON.stringify({ message: "Log update", content: btoa(unescape(encodeURIComponent(JSON.stringify(logs, null, 2)))), sha: file.sha })
             });
         } catch(e) {}
     }
 
     async function loadLogs() {
         const box = document.getElementById('logBox');
-        box.innerHTML = "Loading...";
-        try {
-            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/activities.json?t=${Date.now()}`);
-            const data = await res.json();
-            box.innerHTML = data.reverse().slice(0, 15).map(l => `
-                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-slate-800">
-                    <p class="font-bold text-sm">${l.admin}</p>
-                    <p class="text-xs text-blue-500">${l.task}</p>
-                    <p class="text-[9px] text-gray-400 mt-1">${l.time}</p>
-                </div>
-            `).join('');
-        } catch(e) { box.innerHTML = "No logs found."; }
-    }
-
-    async function loadOrders() {
-        const box = document.getElementById('orderBox');
-        try {
-            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
-            const data = await res.json();
-            box.innerHTML = data.reverse().map(o => `
-                <div class="bg-white p-4 rounded-2xl shadow-sm border">
-                    <p class="font-bold">${o.customerName} ordered ${o.productName}</p>
-                    <p class="text-green-600 font-bold">Rs. ${o.totalPrice}</p>
-                </div>
-            `).join('');
-        } catch(e) { box.innerHTML = "No orders yet."; }
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/activities.json?t=${Date.now()}`);
+        const data = await res.json();
+        box.innerHTML = data.reverse().slice(0, 10).map(l => `
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-slate-900">
+                <p class="font-bold text-sm text-slate-800">${l.admin} - <span class="text-blue-500">${l.task}</span></p>
+                <p class="text-[10px] text-slate-400 mt-1">${l.time}</p>
+            </div>
+        `).join('');
     }
 </script>
 </body>
