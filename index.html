@@ -3,90 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OASIS STORE</title>
+    <title>OASIS - Luxury Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body class="bg-white text-slate-900">
-
+<body class="bg-white">
     <nav class="p-5 flex justify-between items-center border-b sticky top-0 bg-white z-50">
         <h1 class="text-3xl font-black italic tracking-tighter">OASIS</h1>
         <div class="flex gap-6 items-center">
-            <div class="relative cursor-pointer" onclick="document.getElementById('cartSide').classList.toggle('translate-x-0')">
+            <div class="relative cursor-pointer" onclick="toggleCart()">
                 <i class="fa fa-shopping-bag text-xl"></i>
                 <span id="cCount" class="absolute -top-2 -right-2 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
             </div>
-            <i class="fa fa-user-circle text-xl cursor-pointer" onclick="handleProfile()"></i>
+            <i class="fa fa-user-circle text-xl cursor-pointer" onclick="handleLogin()"></i>
         </div>
     </nav>
 
     <main class="p-6 max-w-7xl mx-auto">
         <div id="pGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            </div>
+            <p class="col-span-full text-center py-20 text-gray-400">Loading products...</p>
+        </div>
     </main>
 
-    <div id="cartSide" class="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-[100] transform translate-x-full transition-transform p-6 flex flex-col">
-        <h2 class="text-2xl font-black mb-6">YOUR BAG</h2>
+    <div id="cartSide" class="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-[100] transform translate-x-full transition-transform p-6 flex flex-col border-l">
+        <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-black">CART</h2><i class="fa fa-times cursor-pointer" onclick="toggleCart()"></i></div>
         <div id="cartItems" class="flex-1 overflow-y-auto space-y-4"></div>
         <div class="border-t pt-4">
-            <button onclick="checkout()" class="w-full bg-black text-white py-4 rounded-2xl font-bold">ORDER ON WHATSAPP</button>
+            <div class="flex justify-between font-black mb-4"><span>Total:</span><span id="cTotal">Rs. 0</span></div>
+            <button onclick="checkout()" class="w-full bg-black text-white py-4 rounded-2xl font-bold">WHATSAPP CHECKOUT</button>
         </div>
     </div>
 
-    <script>
-        const REPO = "NeverPlayz7/oasis-store";
-        let cart = [];
+<script>
+    const REPO = "NeverPlayz7/oasis-store";
+    const TOKEN = "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";
+    let cart = [];
 
-        async function loadStore() {
-            try {
-                const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-                const data = await res.json();
-                const grid = document.getElementById('pGrid');
-                grid.innerHTML = data.map(p => `
-                    <div class="border rounded-3xl p-2">
-                        <img src="${p.image}" class="w-full h-64 object-cover rounded-2xl">
-                        <div class="p-3">
-                            <h3 class="font-bold text-sm uppercase">${p.name}</h3>
-                            <p class="font-black text-lg">Rs. ${p.price}</p>
-                            <button onclick="addToCart('${p.name}', ${p.price}, '${p.image}')" class="w-full mt-3 bg-black text-white py-2 rounded-xl text-xs font-bold">ADD TO CART</button>
-                        </div>
+    async function loadStore() {
+        const grid = document.getElementById('pGrid');
+        try {
+            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+            const data = await res.json();
+            if(data.length === 0) { grid.innerHTML = "<p class='col-span-full text-center py-20'>Store is empty.</p>"; return; }
+            grid.innerHTML = data.map(p => `
+                <div class="group">
+                    <div class="overflow-hidden rounded-3xl bg-gray-100 border relative">
+                        <img src="${p.image}" class="w-full h-72 object-cover group-hover:scale-105 transition duration-500">
                     </div>
-                `).join('');
-            } catch(e) { console.log("Data Load Error"); }
-        }
-
-        function addToCart(n, p, i) {
-            cart.push({n, p, i});
-            document.getElementById('cCount').innerText = cart.length;
-            renderCart();
-        }
-
-        function renderCart() {
-            const box = document.getElementById('cartItems');
-            box.innerHTML = cart.map(item => `
-                <div class="flex items-center gap-3 border-b pb-2">
-                    <img src="${item.i}" class="w-12 h-12 rounded-lg object-cover">
-                    <p class="text-xs font-bold flex-1">${item.n}</p>
-                    <p class="text-xs font-black">Rs. ${item.p}</p>
+                    <div class="mt-4">
+                        <h3 class="font-bold text-xs uppercase text-gray-500">${p.name}</h3>
+                        <p class="font-black text-lg">Rs. ${p.price}</p>
+                        <button onclick="addToCart('${p.name}', ${p.price}, '${p.image}')" class="w-full mt-3 bg-black text-white py-2 rounded-xl text-xs font-bold active:scale-95 transition">ADD TO BAG</button>
+                    </div>
                 </div>
             `).join('');
-        }
+        } catch(e) { grid.innerHTML = "<p class='col-span-full text-center py-20'>Error connecting to server.</p>"; }
+    }
 
-        function checkout() {
-            let msg = "Order Details:\n";
-            cart.forEach(i => msg += `- ${i.n} (Rs. ${i.p})\n`);
-            window.open(`https://wa.me/923138974516?text=${encodeURIComponent(msg)}`);
-        }
+    async function handleLogin() {
+        const user = localStorage.getItem('oasis_user');
+        if(user) return alert("Hi " + user);
+        const name = prompt("Enter Name:");
+        const email = prompt("Enter Email:");
+        if(!name || !email) return;
 
-        function handleProfile() {
-            let name = prompt("Please enter your name to login:");
-            if(name) {
-                localStorage.setItem('oasis_user', name);
-                alert("Welcome " + name);
-            }
-        }
+        try {
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/users.json`, { headers: { "Authorization": `token ${TOKEN}` }});
+            const file = await res.json();
+            const users = JSON.parse(atob(file.content));
+            users.push({ name, email, date: new Date().toLocaleString() });
+            await fetch(`https://api.github.com/repos/${REPO}/contents/users.json`, {
+                method: "PUT", headers: { "Authorization": `token ${TOKEN}` },
+                body: JSON.stringify({ message: "New User", content: btoa(JSON.stringify(users, null, 2)), sha: file.sha })
+            });
+            localStorage.setItem('oasis_user', name);
+            alert("Login Successful!");
+        } catch(e) { alert("Login Error"); }
+    }
 
-        loadStore();
-    </script>
+    function addToCart(n, p, i) { cart.push({n, p, i}); updateUI(); }
+    function updateUI() {
+        document.getElementById('cCount').innerText = cart.length;
+        let total = 0;
+        document.getElementById('cartItems').innerHTML = cart.map((item, i) => {
+            total += parseInt(item.p);
+            return `<div class="flex items-center gap-3 border-b pb-2"><img src="${item.i}" class="w-10 h-10 rounded-lg object-cover border"><div class="flex-1 text-[10px] font-bold"><p class="truncate w-32">${item.n}</p><p class="text-gray-400">Rs. ${item.p}</p></div><i class="fa fa-trash text-red-300" onclick="cart.splice(${i},1);updateUI()"></i></div>`;
+        }).join('');
+        document.getElementById('cTotal').innerText = "Rs. " + total;
+    }
+    function toggleCart() { document.getElementById('cartSide').classList.toggle('translate-x-full'); }
+    function checkout() { window.open(`https://wa.me/923138974516?text=Order Request`); }
+    loadStore();
+</script>
 </body>
 </html>
