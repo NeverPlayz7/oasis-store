@@ -3,131 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OASIS - Pro Admin</title>
+    <title>Oasis Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        .sidebar-btn.active { background: #1e293b; color: white; border-right: 4px solid #38bdf8; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-    </style>
 </head>
-<body class="bg-slate-50 flex flex-col md:flex-row min-h-screen">
+<body class="bg-slate-100 p-6">
 
-    <div id="loginGate" class="fixed inset-0 bg-[#0f172a] z-[300] flex items-center justify-center p-4">
-        <div class="bg-white p-10 rounded-[40px] w-full max-w-sm text-center shadow-2xl">
-            <h2 class="text-4xl font-black italic mb-2 tracking-tighter">OASIS</h2>
-            <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-10">Admin Panel</p>
-            <div class="space-y-4">
-                <input type="email" id="admEmail" placeholder="Email" class="w-full p-4 border rounded-2xl outline-none focus:border-blue-500">
-                <input type="password" id="admPass" placeholder="Password" class="w-full p-4 border rounded-2xl outline-none focus:border-blue-500">
-                <button onclick="adminLogin()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 transition">Verify & Enter</button>
-            </div>
-            <p id="err" class="text-red-500 mt-4 text-xs font-bold hidden italic">Invalid Credentials!</p>
+    <div id="login" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl w-full max-w-sm text-center">
+            <h2 class="text-2xl font-black mb-6">ADMIN VERIFY</h2>
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 border rounded-xl mb-4">
+            <button onclick="check()" class="w-full bg-black text-white py-4 rounded-xl font-bold">LOGIN</button>
         </div>
     </div>
 
-    <aside id="sidebar" class="hidden md:flex flex-col w-72 bg-[#0f172a] text-slate-400 p-6 h-screen sticky top-0 shadow-xl">
-        <h2 class="text-3xl font-black italic text-white mb-10">OASIS</h2>
-        <nav class="space-y-2">
-            <button onclick="switchTab('analytics')" class="sidebar-btn active w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-chart-line"></i> Analytics</button>
-            <button onclick="switchTab('inventory')" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-box"></i> Inventory</button>
-            <button onclick="switchTab('users')" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3"><i class="fa fa-users"></i> Users</button>
-        </nav>
-    </aside>
-
-    <main class="flex-1 p-6 md:p-12 pb-24">
-        
-        <div id="tab-analytics" class="tab-content active">
-            <h3 class="text-3xl font-black mb-8">Store Insights</h3>
-            <div id="statsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-        </div>
-
-        <div id="tab-inventory" class="tab-content">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="text-3xl font-black">Manage Products</h3>
-                <button onclick="addProductPrompt()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">+ Add Item</button>
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white p-8 rounded-[40px] shadow-sm mb-8">
+            <h2 class="text-2xl font-black mb-6">ADD NEW PRODUCT</h2>
+            <div class="grid gap-4">
+                <input id="name" type="text" placeholder="Product Name" class="p-4 border rounded-2xl outline-none">
+                <input id="price" type="number" placeholder="Price (Rs)" class="p-4 border rounded-2xl outline-none">
+                <input id="img" type="text" placeholder="Image URL (Link)" class="p-4 border rounded-2xl outline-none">
+                <button onclick="addItem()" id="addBtn" class="bg-blue-600 text-white py-4 rounded-2xl font-black hover:bg-blue-700 transition">UPLOAD PRODUCT</button>
             </div>
-            <div id="invList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
-        <div id="tab-users" class="tab-content">
-            <h3 class="text-3xl font-black mb-8">Community</h3>
-            <div id="userList" class="grid gap-3"></div>
+        <div class="bg-white p-8 rounded-[40px] shadow-sm">
+            <h2 class="text-2xl font-black mb-6">CURRENT INVENTORY</h2>
+            <div id="list" class="space-y-4"></div>
         </div>
+    </div>
 
-    </main>
+    <script>
+        const TOKEN = "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";
+        const REPO = "NeverPlayz7/oasis-store";
 
-<script>
-    const REPO = "NeverPlayz7/oasis-store";
-    const TOKEN = "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";
-
-    function adminLogin() {
-        const e = document.getElementById('admEmail').value;
-        const p = document.getElementById('admPass').value;
-        if(e === "ahmedboss8603@gmail.com" && p === "ahmed123") {
-            document.getElementById('loginGate').style.display = 'none';
-            switchTab('analytics');
-        } else {
-            document.getElementById('err').classList.remove('hidden');
+        function check() {
+            if(document.getElementById('pass').value === "ahmed123") {
+                document.getElementById('login').style.display = 'none';
+                loadItems();
+            }
         }
-    }
 
-    function switchTab(id) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`tab-${id}`).classList.add('active');
-        if(id === 'analytics') loadStats();
-        if(id === 'inventory') loadInventory();
-        if(id === 'users') loadUsers();
-    }
-
-    async function loadInventory() {
-        const box = document.getElementById('invList');
-        box.innerHTML = "Loading...";
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-        const data = await res.json();
-        box.innerHTML = data.map((p, i) => `
-            <div class="bg-white p-5 rounded-3xl border shadow-sm flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <img src="${p.image}" class="w-16 h-16 rounded-2xl object-cover">
-                    <div><p class="font-bold">${p.name}</p><p class="text-xs text-blue-600 font-bold">Rs. ${p.price}</p></div>
+        async function loadItems() {
+            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+            const data = await res.json();
+            document.getElementById('list').innerHTML = data.map((p, i) => `
+                <div class="flex items-center justify-between border-b pb-4">
+                    <div class="flex items-center gap-4">
+                        <img src="${p.image}" class="w-12 h-12 rounded-xl object-cover">
+                        <div><p class="font-bold">${p.name}</p><p class="text-sm text-blue-600">Rs. ${p.price}</p></div>
+                    </div>
+                    <button onclick="deleteItem(${i})" class="text-red-500 font-bold">Delete</button>
                 </div>
-                <button onclick="deleteProduct(${i})" class="text-red-400 p-3 hover:bg-red-50 rounded-full"><i class="fa fa-trash"></i></button>
-            </div>
-        `).join('') || "No products.";
-    }
+            `).join('');
+        }
 
-    async function addProductPrompt() {
-        const name = prompt("Product Name:");
-        const price = prompt("Price:");
-        const img = prompt("Image URL:");
-        if(!name || !price || !img) return;
+        async function addItem() {
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
+            const image = document.getElementById('img').value;
+            if(!name || !price || !image) return alert("Fill all!");
 
-        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, { headers: { "Authorization": `token ${TOKEN}` }});
-        const file = await res.json();
-        const data = JSON.parse(atob(file.content));
-        data.push({ name, price, image: img, id: Date.now() });
+            document.getElementById('addBtn').innerText = "Uploading...";
+            
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+            const file = await res.json();
+            const data = JSON.parse(atob(file.content));
+            data.push({ name, price, image, id: Date.now() });
 
-        await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
-            method: "PUT", headers: { "Authorization": `token ${TOKEN}` },
-            body: JSON.stringify({ message: "Add Product", content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))), sha: file.sha })
-        });
-        loadInventory();
-    }
+            await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                method: "PUT",
+                headers: { "Authorization": `token ${TOKEN}` },
+                body: JSON.stringify({
+                    message: "Add Product",
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+                    sha: file.sha
+                })
+            });
 
-    async function loadUsers() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/users.json?t=${Date.now()}`);
-        const data = await res.json();
-        document.getElementById('userList').innerHTML = data.map(u => `
-            <div class="bg-white p-4 rounded-2xl border flex justify-between">
-                <div><p class="font-bold text-sm">${u.name}</p><p class="text-[10px] text-gray-400">${u.email}</p></div>
-                <span class="text-[9px] bg-slate-100 px-2 py-1 rounded self-center font-bold text-slate-500">${u.platform}</span>
-            </div>
-        `).join('');
-    }
+            location.reload();
+        }
 
-    // Additional functions (loadStats, deleteProduct) here...
-</script>
+        async function deleteItem(index) {
+            if(!confirm("Sure?")) return;
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+            const file = await res.json();
+            const data = JSON.parse(atob(file.content));
+            data.splice(index, 1);
+
+            await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                method: "PUT",
+                headers: { "Authorization": `token ${TOKEN}` },
+                body: JSON.stringify({
+                    message: "Delete Product",
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+                    sha: file.sha
+                })
+            });
+            loadItems();
+        }
+    </script>
 </body>
 </html>
