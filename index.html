@@ -1,159 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OASIS - Premium Store</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-    body{font-family:sans-serif; transition:0.4s}
-    .dark{background:#0f172a; color:white}
-    .slider{position:relative; height:400px; overflow:hidden}
-    .slide{position:absolute; width:100%; height:100%; background-size:cover; background-position:center; opacity:0; transition:1s}
-    .slide.active{opacity:1}
-    .timer-box{background:#ff0055; color:white; padding:4px 10px; border-radius:8px; font-weight:bold}
-    .card{background:white; border-radius:20px; transition:0.4s; overflow:hidden; color:black; border:1px solid #f0f0f0}
-    .card:hover{transform:translateY(-10px); box-shadow:0 20px 40px rgba(0,0,0,0.1)}
-    #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; padding:20px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OASIS - Premium Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; }
+        .product-card { border-radius: 12px; transition: 0.3s; position: relative; }
+        .product-card:hover { transform: translateY(-5px); }
+        .heart-icon { position: absolute; top: 15px; right: 15px; color: #ccc; cursor: pointer; }
+        .btn-buy { background: #000; color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn-buy:hover { background: #333; }
+        .flash-box { background: #FF0055; color: #fff; padding: 5px 10px; border-radius: 6px; font-weight: 800; }
+    </style>
 </head>
 <body>
 
-<nav class="bg-black text-white p-5 flex justify-between items-center shadow-xl">
-    <h1 class="text-3xl font-black italic tracking-tighter">OASIS</h1>
-    <div class="flex gap-4 items-center">
-        <input id="search" placeholder="Search products..." class="px-4 py-2 rounded-lg text-black outline-none hidden md:block">
-        <button onclick="toggleDark()" class="text-xl"><i class="fa fa-moon"></i></button>
+<nav class="p-6 flex justify-between items-center bg-white border-b">
+    <h1 class="text-3xl font-black italic italic tracking-tighter">OASIS</h1>
+    <div class="flex gap-6 items-center">
+        <div class="relative hidden md:block">
+            <input type="text" placeholder="Search..." class="bg-gray-100 px-4 py-2 rounded-full outline-none w-64 text-sm">
+        </div>
+        <i class="fa fa-moon cursor-pointer"></i>
     </div>
 </nav>
 
-<section class="slider">
-    <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30')"></div>
-    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1549298916-b41d501d3772')"></div>
-</section>
+<header class="w-full h-[450px] bg-cover bg-center flex items-end p-12" style="background-image: url('https://images.unsplash.com/photo-1549298916-b41d501d3772');">
+</header>
 
-<section class="bg-white border-b py-10 text-center">
-    <h2 class="text-2xl font-bold mb-4 text-black flex items-center justify-center gap-2">
-        <span class="text-orange-500">🔥</span> Flash Sale Ends In:
-    </h2>
-    <div id="timer" class="flex justify-center gap-3 text-2xl"></div>
-</section>
-
-<section class="max-w-7xl mx-auto py-12 px-4">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8" id="products">
-        <p class="col-span-full text-center text-gray-400 py-20 text-lg">Loading latest products...</p>
+<section class="py-10 text-center bg-white">
+    <div class="flex justify-center items-center gap-3 mb-4">
+        <span class="text-2xl">🔥</span>
+        <h2 class="text-xl font-bold">Flash Sale Ends In:</h2>
     </div>
+    <div id="timer" class="flex justify-center gap-2 text-lg font-bold"></div>
 </section>
 
-<div id="orderModal">
-    <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-black shadow-2xl">
-        <h2 class="text-2xl font-bold mb-2">Checkout 🛒</h2>
-        <p id="selectedItem" class="mb-6 text-gray-500 text-sm font-medium"></p>
-        <div class="space-y-4">
-            <input type="text" id="custName" placeholder="Enter Your Name" class="w-full border-2 p-4 rounded-xl outline-none focus:border-black transition">
-            <input type="text" id="custPhone" placeholder="WhatsApp Number" class="w-full border-2 p-4 rounded-xl outline-none focus:border-black transition">
-            <button id="confirmBtn" onclick="placeOrder()" class="bg-black text-white w-full py-4 rounded-2xl font-bold text-lg hover:scale-95 transition">Confirm Order</button>
-            <button onclick="closeModal()" class="text-gray-400 w-full text-sm mt-2 hover:text-red-500">Cancel</button>
+<main class="max-w-7xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8" id="productGrid">
         </div>
-    </div>
-</div>
+</main>
 
 <script>
-const REPO = "NeverPlayz7/oasis-store";
-const TOKEN = "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"; 
-
-let allProducts = [];
-let selectedProduct = null;
-
-async function loadProducts() {
-    try {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-        allProducts = await res.json();
-        render(allProducts);
-    } catch(e) { 
-        document.getElementById("products").innerHTML = "<p class='col-span-full text-center'>No products found.</p>";
+    const REPO = "NeverPlayz7/oasis-store";
+    
+    async function fetchProducts() {
+        try {
+            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+            const data = await res.json();
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = data.map(p => `
+                <div class="product-card">
+                    <i class="fa fa-heart heart-icon"></i>
+                    <img src="${p.image}" class="w-full h-64 object-cover rounded-xl bg-gray-50">
+                    <div class="mt-4">
+                        <h3 class="font-bold text-gray-800">${p.name}</h3>
+                        <p class="text-gray-900 font-extrabold text-lg">$${p.price}</p>
+                        <div class="flex text-xs text-black my-2">
+                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                        </div>
+                        <button class="btn-buy">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch(e) { console.log("Loading error"); }
     }
-}
 
-function render(list) {
-    const container = document.getElementById("products");
-    container.innerHTML = list.map(p => `
-        <div class="card p-4 flex flex-col justify-between">
-            <img src="${p.image}" class="h-48 w-full object-cover rounded-2xl" onerror="this.src='https://placehold.co/400x400?text=Oasis+Product'">
-            <div>
-                <h3 class="mt-4 font-bold text-gray-900">${p.name}</h3>
-                <p class="text-green-600 font-black text-xl mt-1">Rs. ${p.price}</p>
-                <button onclick="openModal('${p.name}', '${p.price}')" class="bg-black text-white w-full py-3 rounded-xl mt-4 font-bold hover:bg-gray-800 transition">Buy Now</button>
-            </div>
-        </div>
-    `).join("");
-}
+    // Timer Logic
+    setInterval(() => {
+        let now = new Date();
+        let h = 23 - now.getHours();
+        let m = 59 - now.getMinutes();
+        let s = 59 - now.getSeconds();
+        document.getElementById('timer').innerHTML = `
+            <span class="flash-box">${h}h</span>
+            <span class="flash-box">${m}m</span>
+            <span class="flash-box">${s}s</span>
+        `;
+    }, 1000);
 
-function openModal(name, price) {
-    selectedProduct = { name, price };
-    document.getElementById('selectedItem').innerText = `${name} - PKR ${price}`;
-    document.getElementById('orderModal').style.display = 'flex';
-}
-
-function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
-
-async function placeOrder() {
-    const name = document.getElementById('custName').value;
-    const phone = document.getElementById('custPhone').value;
-    const btn = document.getElementById('confirmBtn');
-
-    if(!name || !phone) return alert("Please provide your details.");
-
-    btn.innerText = "Processing...";
-    btn.disabled = true;
-
-    try {
-        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/orders.json`, {
-            headers: { "Authorization": `token ${TOKEN}` }
-        });
-        const fileData = await res.json();
-        const orders = JSON.parse(atob(fileData.content));
-
-        orders.push({
-            id: Math.floor(Math.random() * 99999),
-            customerName: name,
-            phone: phone,
-            productName: selectedProduct.name,
-            totalPrice: selectedProduct.price,
-            date: new Date().toLocaleString()
-        });
-
-        await fetch(`https://api.github.com/repos/${REPO}/contents/orders.json`, {
-            method: "PUT",
-            headers: { "Authorization": `token ${TOKEN}` },
-            body: JSON.stringify({
-                message: "New Order Added",
-                content: btoa(JSON.stringify(orders, null, 2)),
-                sha: fileData.sha
-            })
-        });
-
-        alert("✅ Order Placed Successfully!");
-        closeModal();
-    } catch (e) { alert("Server Error. Try again!"); }
-    btn.innerText = "Confirm Order";
-    btn.disabled = false;
-}
-
-// Timer Logic
-setInterval(() => {
-    let now = new Date().getTime();
-    let end = new Date().setHours(24,0,0,0);
-    let diff = end - now;
-    let h = Math.floor(diff/(1000*60*60));
-    let m = Math.floor((diff%(1000*60*60))/(1000*60));
-    let s = Math.floor((diff%(1000*60))/1000);
-    document.getElementById("timer").innerHTML = `<span class="timer-box">${h}h</span><span class="timer-box">${m}m</span><span class="timer-box">${s}s</span>`;
-}, 1000);
-
-function toggleDark(){ document.body.classList.toggle("dark"); }
-loadProducts();
+    fetchProducts();
 </script>
 </body>
 </html>
