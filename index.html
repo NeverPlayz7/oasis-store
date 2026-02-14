@@ -3,74 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OASIS - Premium Store</title>
+    <title>OASIS - Luxury Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; overflow-x: hidden; }
+        
+        /* Banner Slider Styling */
+        #hero-banner {
+            transition: background-image 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
         .product-card { border-radius: 12px; transition: 0.3s; position: relative; }
         .product-card:hover { transform: translateY(-5px); }
-        .heart-icon { position: absolute; top: 15px; right: 15px; color: #ccc; cursor: pointer; }
-        .btn-buy { background: #000; color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: bold; width: 100%; transition: 0.3s; }
+        .heart-icon { position: absolute; top: 15px; right: 15px; color: #ccc; cursor: pointer; z-index: 10; }
+        .btn-buy { background: #000; color: #fff; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; transition: 0.3s; margin-top: 10px; }
         .btn-buy:hover { background: #333; }
-        .flash-box { background: #FF0055; color: #fff; padding: 5px 10px; border-radius: 6px; font-weight: 800; }
+        .flash-box { background: #FF0055; color: #fff; padding: 6px 12px; border-radius: 6px; font-weight: 800; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<nav class="p-6 flex justify-between items-center bg-white border-b">
-    <h1 class="text-3xl font-black italic italic tracking-tighter">OASIS</h1>
+<nav class="p-5 flex justify-between items-center bg-white border-b sticky top-0 z-50">
+    <h1 class="text-3xl font-black italic tracking-tighter">OASIS</h1>
     <div class="flex gap-6 items-center">
         <div class="relative hidden md:block">
-            <input type="text" placeholder="Search..." class="bg-gray-100 px-4 py-2 rounded-full outline-none w-64 text-sm">
+            <input type="text" placeholder="Search products..." class="bg-gray-100 px-5 py-2 rounded-full outline-none w-64 text-sm border focus:border-black transition">
         </div>
-        <i class="fa fa-moon cursor-pointer"></i>
+        <i class="fa fa-shopping-bag text-xl cursor-pointer"></i>
+        <i class="fa fa-user-circle text-xl cursor-pointer"></i>
     </div>
 </nav>
 
-<header class="w-full h-[450px] bg-cover bg-center flex items-end p-12" style="background-image: url('https://images.unsplash.com/photo-1549298916-b41d501d3772');">
+<header id="hero-banner" class="w-full h-[300px] md:h-[500px] flex items-center justify-start p-12 relative">
+    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 hidden md:block">
+        <h2 class="text-white text-4xl font-black italic">NEW ARRIVALS</h2>
+        <p class="text-white/80 font-bold mt-2 text-lg">Premium Quality, Unmatched Style.</p>
+        <button class="mt-6 bg-white text-black px-8 py-3 rounded-full font-black hover:scale-105 transition">SHOP NOW</button>
+    </div>
 </header>
 
-<section class="py-10 text-center bg-white">
+<section class="py-8 text-center bg-gray-50 border-b">
     <div class="flex justify-center items-center gap-3 mb-4">
         <span class="text-2xl">🔥</span>
-        <h2 class="text-xl font-bold">Flash Sale Ends In:</h2>
+        <h2 class="text-xl font-bold uppercase tracking-widest">Flash Sale Ends In:</h2>
     </div>
-    <div id="timer" class="flex justify-center gap-2 text-lg font-bold"></div>
+    <div id="timer" class="flex justify-center gap-3 text-lg font-bold"></div>
 </section>
 
 <main class="max-w-7xl mx-auto px-6 py-12">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8" id="productGrid">
+    <h2 class="text-2xl font-black mb-10 border-l-4 border-black pl-4">EXPLORE PRODUCTS</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10" id="productGrid">
         </div>
 </main>
 
 <script>
     const REPO = "NeverPlayz7/oasis-store";
     
+    // 1. BANNER IMAGES LIST
+    const bannerImages = [
+        'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2012&auto=format&fit=crop', // Shoes
+        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1999&auto=format&fit=crop', // Watch
+        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop', // Headphones
+        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop'  // Sneakers
+    ];
+
+    let currentSlide = 0;
+    const heroBanner = document.getElementById('hero-banner');
+
+    // Function to change banner
+    function rotateBanner() {
+        heroBanner.style.backgroundImage = `url('${bannerImages[currentSlide]}')`;
+        currentSlide = (currentSlide + 1) % bannerImages.length;
+    }
+
+    // Start auto sliding (every 3 seconds)
+    rotateBanner(); 
+    setInterval(rotateBanner, 3000);
+
+    // 2. FETCH PRODUCTS
     async function fetchProducts() {
         try {
             const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
             const data = await res.json();
             const grid = document.getElementById('productGrid');
+            
             grid.innerHTML = data.map(p => `
                 <div class="product-card">
                     <i class="fa fa-heart heart-icon"></i>
-                    <img src="${p.image}" class="w-full h-64 object-cover rounded-xl bg-gray-50">
-                    <div class="mt-4">
-                        <h3 class="font-bold text-gray-800">${p.name}</h3>
-                        <p class="text-gray-900 font-extrabold text-lg">$${p.price}</p>
-                        <div class="flex text-xs text-black my-2">
+                    <img src="${p.image}" class="w-full h-72 object-cover rounded-2xl bg-gray-100 shadow-sm">
+                    <div class="mt-5">
+                        <h3 class="font-bold text-gray-800 text-sm truncate">${p.name}</h3>
+                        <p class="text-black font-extrabold text-xl mt-1">Rs. ${p.price}</p>
+                        <div class="flex text-[10px] text-yellow-500 my-2">
                             <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                            <span class="text-gray-400 ml-2">(45 reviews)</span>
                         </div>
-                        <button class="btn-buy">Add to Cart</button>
+                        <button class="btn-buy active:scale-95">Add to Cart</button>
                     </div>
                 </div>
             `).join('');
-        } catch(e) { console.log("Loading error"); }
+        } catch(e) { 
+            document.getElementById('productGrid').innerHTML = "<p class='text-center col-span-4 py-20 font-bold text-gray-400'>Adding new items soon...</p>";
+        }
     }
 
-    // Timer Logic
+    // 3. TIMER LOGIC
     setInterval(() => {
         let now = new Date();
         let h = 23 - now.getHours();
