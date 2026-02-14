@@ -1,153 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OASIS - Premium Store</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-    body{font-family:sans-serif;transition:0.4s}
-    .dark{background:#0f172a;color:white}
-    .slider{position:relative;height:400px;overflow:hidden}
-    .slide{position:absolute;width:100%;height:100%;background-size:cover;background-position:center;opacity:0;transition:1s}
-    .slide.active{opacity:1}
-    .timer-box{background:#ff0055;color:white;padding:4px 8px;border-radius:6px}
-    /* Flash Sale White Background */
-    .flash-sale-section { background: white !important; color: black !important; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
-    .card{background:white;border-radius:16px;transition:0.4s;overflow:hidden;color:black;border:1px solid #eee}
-    #orderModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; padding:20px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oasis Admin - Control Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen">
 
-<nav class="bg-black text-white p-4 flex justify-between items-center shadow-lg">
-<h1 class="text-2xl font-bold italic tracking-tighter">OASIS</h1>
-<div class="flex gap-4 items-center">
-<input id="search" placeholder="Search..." class="px-3 py-1 rounded text-black outline-none w-32 md:w-auto">
-<button onclick="toggleDark()"><i class="fa fa-moon"></i></button>
-</div>
-</nav>
-
-<section class="slider">
-<div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30')"></div>
-<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1549298916-b41d501d3772')"></div>
-</section>
-
-<section class="flash-sale-section py-8 text-center">
-<h2 class="text-2xl font-bold mb-4 flex items-center justify-center gap-2 text-black">
-    🔥 Flash Sale Ends In:
-</h2>
-<div id="timer" class="flex justify-center gap-4 text-xl font-bold"></div>
-</section>
-
-<section class="max-w-6xl mx-auto py-10 grid grid-cols-2 md:grid-cols-4 gap-6 px-4" id="products">
-    <p class="col-span-full text-center text-gray-400">Loading products...</p>
-</section>
-
-<div id="orderModal">
-    <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-black">
-        <h2 class="text-2xl font-bold mb-2">Checkout 🛒</h2>
-        <p id="selectedItem" class="mb-6 text-sm text-gray-500"></p>
-        <div class="space-y-4">
-            <input type="text" id="custName" placeholder="Your Name" class="w-full border p-3 rounded-lg outline-none focus:border-black">
-            <input type="text" id="custPhone" placeholder="WhatsApp Number" class="w-full border p-3 rounded-lg outline-none focus:border-black">
-            <button id="confirmBtn" onclick="placeOrder()" class="bg-black text-white w-full py-4 rounded-xl font-bold">Place Order Now</button>
-            <button onclick="closeModal()" class="text-gray-400 w-full text-sm mt-2">Cancel</button>
+    <div id="login-screen" class="fixed inset-0 bg-black flex items-center justify-center z-[9999]">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center">
+            <h1 class="text-3xl font-black mb-6 italic">OASIS</h1>
+            <p class="text-gray-500 mb-6 text-sm">Enter Admin Email (ahmedboss8603@gmail.com)</p>
+            <input type="email" id="adminEmail" placeholder="email@example.com" class="w-full border p-4 rounded-xl mb-4 outline-none">
+            <button onclick="checkAccess()" class="bg-black text-white w-full py-4 rounded-xl font-bold">Login to Dashboard</button>
+            <p id="loginErr" class="text-red-500 mt-4 text-sm hidden">Access Denied!</p>
         </div>
     </div>
-</div>
+
+    <div id="dashboard" class="hidden flex h-screen overflow-hidden">
+        <div class="w-64 bg-black text-white p-8 hidden md:block">
+            <h2 class="text-2xl font-black mb-10 italic">OASIS</h2>
+            <nav class="space-y-6">
+                <button onclick="showTab('add')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-plus mr-2"></i> Add Item</button>
+                <button onclick="showTab('orders')" class="block w-full text-left font-bold hover:text-green-400"><i class="fa fa-shopping-bag mr-2"></i> Orders</button>
+                <button onclick="showTab('admins')" class="block w-full text-left font-bold hover:text-blue-400"><i class="fa fa-user-shield mr-2"></i> Admins</button>
+            </nav>
+        </div>
+
+        <div class="flex-1 p-6 md:p-12 overflow-y-auto">
+            <div id="add" class="tab border p-8 rounded-3xl bg-white shadow-sm max-w-xl">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Publish New Product</h2>
+                <input type="text" id="pname" placeholder="Product Name" class="w-full border p-4 mb-4 rounded-xl outline-none">
+                <input type="number" id="pprice" placeholder="Price (PKR)" class="w-full border p-4 mb-4 rounded-xl outline-none">
+                <input type="text" id="pimage" placeholder="Image URL" class="w-full border p-4 mb-6 rounded-xl outline-none">
+                <button id="addBtn" onclick="pushData('data.json')" class="bg-green-600 text-white w-full py-4 rounded-2xl font-bold hover:bg-green-700 transition">Add Product to Oasis</button>
+                <p id="status" class="mt-4 text-center font-bold"></p>
+            </div>
+
+            <div id="orders" class="tab hidden space-y-4">
+                <h2 class="text-2xl font-bold mb-6">Customer Orders</h2>
+                <div id="orderBox" class="grid gap-4 text-gray-700"></div>
+            </div>
+
+            <div id="admins" class="tab hidden">
+                <h2 class="text-2xl font-bold mb-6">Authorized Admins</h2>
+                <div class="bg-white p-6 rounded-3xl border max-w-md">
+                    <input type="email" id="newAdminEmail" placeholder="New Admin Email" class="w-full border p-3 rounded-xl mb-4 outline-none">
+                    <button onclick="pushAdmin()" class="bg-blue-600 text-white w-full py-3 rounded-xl font-bold">Add Admin</button>
+                </div>
+                <div id="adminList" class="mt-6 space-y-2"></div>
+            </div>
+        </div>
+    </div>
 
 <script>
-const REPO_NAME = "NeverPlayz7/oasis-store";
-const TOKEN = "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"; 
+    const TOKEN = "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";
+    const REPO = "NeverPlayz7/oasis-store";
 
-let allProducts = [];
-let selectedProduct = null;
+    async function checkAccess() {
+        const input = document.getElementById('adminEmail').value.toLowerCase();
+        try {
+            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/admins.json?t=${Date.now()}`);
+            const admins = await res.json();
+            if(admins.includes(input)) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+            } else {
+                document.getElementById('loginErr').classList.remove('hidden');
+            }
+        } catch(e) { alert("Error: Make sure 'admins.json' exists in GitHub!"); }
+    }
 
-async function loadProducts() {
-    try {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO_NAME}/main/data.json?t=${Date.now()}`);
-        allProducts = await res.json();
-        render(allProducts);
-    } catch(e) { console.log("Data load error"); }
-}
+    function showTab(id) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        if(id === 'orders') fetchOrders();
+        if(id === 'admins') fetchAdminList();
+    }
 
-function render(list) {
-    document.getElementById("products").innerHTML = list.map(p => `
-        <div class="card p-4">
-            <img src="${p.image}" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://placehold.co/400x400?text=No+Image'">
-            <h3 class="mt-4 font-bold text-gray-800">${p.name}</h3>
-            <p class="text-green-600 font-black text-xl">Rs. ${p.price}</p>
-            <button onclick="openModal('${p.name}', '${p.price}')" class="bg-black text-white w-full py-3 rounded-xl mt-4 font-semibold">Buy Now</button>
-        </div>
-    `).join("");
-}
+    async function pushData(file) {
+        const name = document.getElementById('pname').value;
+        const price = document.getElementById('pprice').value;
+        const image = document.getElementById('pimage').value;
+        const status = document.getElementById('status');
+        if(!name || !price || !image) return alert("All fields required!");
 
-function openModal(name, price) {
-    selectedProduct = { name, price };
-    document.getElementById('selectedItem').innerText = name + " (Rs. " + price + ")";
-    document.getElementById('orderModal').style.display = 'flex';
-}
+        status.innerText = "⏳ Uploading...";
+        try {
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+            const data = await res.json();
+            const content = JSON.parse(atob(data.content));
+            content.push({ name, price, image });
 
-function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+            await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
+                method: "PUT",
+                headers: { "Authorization": `token ${TOKEN}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ message: "New Product", content: btoa(JSON.stringify(content, null, 2)), sha: data.sha })
+            });
+            status.innerHTML = "<span class='text-green-600'>✅ Product Added!</span>";
+        } catch (e) { status.innerHTML = "<span class='text-red-600'>❌ Error! check Token.</span>"; }
+    }
 
-async function placeOrder() {
-    const name = document.getElementById('custName').value;
-    const phone = document.getElementById('custPhone').value;
-    const btn = document.getElementById('confirmBtn');
+    async function fetchOrders() {
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
+        const data = await res.json();
+        document.getElementById('orderBox').innerHTML = data.reverse().map(o => `
+            <div class="bg-white p-6 rounded-2xl border-l-8 border-green-500 shadow-sm">
+                <p class="font-bold text-lg">${o.customerName} ordered ${o.productName}</p>
+                <p class="text-green-600 font-bold">Total: Rs. ${o.totalPrice}</p>
+                <p class="text-sm text-gray-500">Phone: ${o.phone} | ${o.date}</p>
+            </div>
+        `).join('') || "No orders found.";
+    }
 
-    if(!name || !phone) return alert("Fill details!");
-
-    btn.innerText = "Processing...";
-    btn.disabled = true;
-
-    try {
-        const res = await fetch(`https://api.github.com/repos/${REPO_NAME}/contents/orders.json`, {
-            headers: { "Authorization": `token ${TOKEN}` }
-        });
-        const fileData = await res.json();
-        const orders = JSON.parse(atob(fileData.content));
-
-        orders.push({
-            id: Math.floor(1000 + Math.random() * 9000),
-            customerName: name,
-            phone: phone,
-            productName: selectedProduct.name,
-            totalPrice: selectedProduct.price,
-            date: new Date().toLocaleString()
-        });
-
-        await fetch(`https://api.github.com/repos/${REPO_NAME}/contents/orders.json`, {
-            method: "PUT",
-            headers: { "Authorization": `token ${TOKEN}`, "Content-Type": "application/json" },
-            body: JSON.stringify({
-                message: "New Order",
-                content: btoa(JSON.stringify(orders, null, 2)),
-                sha: fileData.sha
-            })
-        });
-
-        alert("✅ Order Placed!");
-        closeModal();
-    } catch (e) { alert("Server Error! Make sure orders.json exists."); }
-    btn.innerText = "Place Order Now";
-    btn.disabled = false;
-}
-
-// Timer
-setInterval(() => {
-    let d = new Date().getTime();
-    let end = new Date().setHours(24,0,0,0);
-    let diff = end - d;
-    let h = Math.floor(diff/(1000*60*60));
-    let m = Math.floor((diff%(1000*60*60))/(1000*60));
-    let s = Math.floor((diff%(1000*60))/1000);
-    document.getElementById("timer").innerHTML = `<span class="timer-box">${h}h</span> <span class="timer-box">${m}m</span> <span class="timer-box">${s}s</span>`;
-}, 1000);
-
-loadProducts();
-function toggleDark(){document.body.classList.toggle("dark");}
+    async function fetchAdminList() {
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/admins.json?t=${Date.now()}`);
+        const data = await res.json();
+        document.getElementById('adminList').innerHTML = data.map(a => `<p class='p-3 bg-white border rounded-xl text-sm font-bold'><i class='fa fa-user mr-2 text-blue-500'></i>${a}</p>`).join('');
+    }
 </script>
 </body>
 </html>
