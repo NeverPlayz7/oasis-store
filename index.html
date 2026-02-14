@@ -8,118 +8,117 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .animate-fadeIn { animation: fadeIn 0.4s ease-out; }
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; }
+        .star-rating { color: #000; font-size: 10px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fadeIn { animation: fadeIn 0.5s ease-in; }
     </style>
 </head>
-<body class="bg-white text-slate-900">
+<body class="text-slate-900 overflow-x-hidden">
 
-    <nav class="p-5 flex justify-between items-center bg-white border-b sticky top-0 z-50">
-        <h1 class="text-3xl font-black italic tracking-tighter">OASIS</h1>
-        <div class="flex-1 max-w-md mx-10 hidden md:block relative">
-            <input type="text" id="srch" oninput="searchItems()" placeholder="Search luxury products..." class="w-full bg-slate-100 p-3 px-6 rounded-full text-[10px] outline-none border focus:border-black transition-all">
+    <nav class="bg-black p-4 flex justify-between items-center sticky top-0 z-[100]">
+        <h1 class="text-white text-3xl font-black italic tracking-tighter ml-4">OASIS</h1>
+        <div class="flex-1 max-w-md mx-10 relative hidden md:block">
+            <input type="text" id="srch" oninput="searchItems()" placeholder="Search products..." class="w-full bg-white p-2 px-6 rounded-md text-[11px] outline-none">
         </div>
-        <div class="flex gap-6 items-center">
-            <div class="relative cursor-pointer" onclick="toggleCart()">
+        <div class="flex gap-6 items-center mr-4">
+            <div class="relative cursor-pointer text-white" onclick="toggleCart()">
                 <i class="fa fa-shopping-bag text-xl"></i>
-                <span id="cCount" class="absolute -top-2 -right-2 bg-black text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                <span id="cCount" class="absolute -top-2 -right-2 bg-white text-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
             </div>
-            <i class="fa fa-user-circle text-xl cursor-pointer" onclick="toggleProfile()"></i>
+            <i class="fa fa-user-circle text-white text-xl cursor-pointer" onclick="toggleProfile()"></i>
         </div>
     </nav>
 
-    <section class="py-10 text-center bg-white border-b">
-        <p class="font-bold text-[10px] uppercase tracking-[0.3em] mb-4 text-gray-400">🔥 Flash Sale Ends In:</p>
-        <div class="flex justify-center gap-3 text-white font-black text-xl">
-            <span class="bg-[#ff1e6d] px-5 py-3 rounded-2xl min-w-[70px]" id="th">00h</span>
-            <span class="bg-[#ff1e6d] px-5 py-3 rounded-2xl min-w-[70px]" id="tm">00m</span>
-            <span class="bg-[#ff1e6d] px-5 py-3 rounded-2xl min-w-[70px]" id="ts">00s</span>
+    <div class="w-full bg-[#f3f4f6] flex justify-center py-4">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000" class="w-full max-h-[400px] object-contain px-10">
+    </div>
+
+    <section class="py-8 text-center border-b">
+        <div class="flex justify-center items-center gap-2 mb-4">
+            <span>🔥</span>
+            <p class="font-bold text-sm tracking-tight">Flash Sale Ends In:</p>
+        </div>
+        <div class="flex justify-center gap-2 text-white font-bold text-lg">
+            <span class="bg-[#ff006e] px-4 py-2 rounded-lg" id="th">23h</span>
+            <span class="bg-[#ff006e] px-4 py-2 rounded-lg" id="tm">03m</span>
+            <span class="bg-[#ff006e] px-4 py-2 rounded-lg" id="ts">51s</span>
         </div>
     </section>
 
-    <main class="max-w-7xl mx-auto px-6 py-12">
-        <div id="pGrid" class="grid grid-cols-2 md:grid-cols-4 gap-10"></div>
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        <div id="pGrid" class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12">
+            </div>
     </main>
 
-    <div id="loginModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center hidden p-4">
-        <div class="bg-white w-full max-w-md rounded-[40px] p-10 shadow-2xl relative animate-fadeIn">
-            <button onclick="closeLogin()" class="absolute top-6 right-6 text-gray-400 hover:text-black"><i class="fa fa-times text-xl"></i></button>
-            
-            <h2 class="text-3xl font-black italic text-center mb-2 tracking-tighter">OASIS</h2>
-            <p class="text-center text-gray-500 font-medium mb-8">Join the luxury community</p>
-
-            <div class="space-y-4">
-                <button onclick="socialLogin('Google')" class="w-full flex items-center justify-center gap-4 border-2 border-gray-100 py-4 rounded-2xl font-bold hover:bg-gray-50 transition active:scale-95">
-                    <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-6 h-6">
-                    Continue with Google
-                </button>
-                <button onclick="socialLogin('Facebook')" class="w-full flex items-center justify-center gap-4 bg-[#1877F2] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition active:scale-95">
-                    <i class="fab fa-facebook text-xl"></i>
-                    Continue with Facebook
-                </button>
-            </div>
-            <p class="text-[10px] text-gray-400 text-center mt-8 px-6">By continuing, you agree to Oasis Terms of Service and Privacy Policy.</p>
+    <div id="cartSide" class="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-[150] translate-x-full transition-transform duration-300 p-6 flex flex-col">
+        <div class="flex justify-between items-center mb-8 border-b pb-4">
+            <h2 class="text-xl font-black italic">YOUR BAG</h2>
+            <i class="fa fa-times cursor-pointer text-gray-400" onclick="toggleCart()"></i>
+        </div>
+        <div id="cartItems" class="flex-1 overflow-y-auto space-y-4"></div>
+        <div class="border-t pt-5 mt-4">
+            <div class="flex justify-between mb-4 font-black"><span>Total:</span><span id="totalP">Rs. 0</span></div>
+            <button onclick="placeOrder()" class="w-full bg-black text-white py-4 rounded-lg font-bold tracking-widest text-xs uppercase shadow-lg">Checkout on WhatsApp</button>
         </div>
     </div>
 
-    <div id="cartSide" class="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-[100] translate-x-full transition-transform duration-300 p-6 flex flex-col">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-black italic">BAG</h2>
-            <i class="fa fa-times cursor-pointer" onclick="toggleCart()"></i>
-        </div>
-        <div id="cartItems" class="flex-1 overflow-y-auto space-y-4"></div>
-        <div class="border-t pt-5">
-            <div class="flex justify-between mb-4 font-black"><span>Total:</span><span id="totalP">Rs. 0</span></div>
-            <button onclick="placeOrder()" class="w-full bg-black text-white py-4 rounded-2xl font-black shadow-xl">CHECKOUT</button>
+    <div id="loginModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center hidden">
+        <div class="bg-white w-full max-w-sm rounded-[30px] p-10 shadow-2xl relative animate-fadeIn">
+            <h2 class="text-3xl font-black italic text-center mb-8 tracking-tighter">OASIS</h2>
+            <div class="space-y-4">
+                <button onclick="socialLogin('Google')" class="w-full flex items-center justify-center gap-4 border py-3 rounded-xl font-bold hover:bg-slate-50 transition">
+                    <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-5 h-5"> Google
+                </button>
+                <button onclick="socialLogin('Facebook')" class="w-full flex items-center justify-center gap-4 bg-[#1877F2] text-white py-3 rounded-xl font-bold">
+                    <i class="fab fa-facebook text-lg"></i> Facebook
+                </button>
+            </div>
+            <button onclick="closeLogin()" class="w-full mt-4 text-[10px] text-gray-400 uppercase font-bold tracking-widest">Later</button>
         </div>
     </div>
 
 <script>
     const REPO = "NeverPlayz7/oasis-store";
-    const TOKEN = "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"; // Replace with your token
+    const TOKEN = "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"; 
     let allP = []; let cart = [];
 
-    // --- INITIALIZE & RENDER ---
+    // --- INIT & FETCH ---
     async function init() {
-        // Check Login Status
-        const user = localStorage.getItem('oasis_user');
-        if (!user) {
-            setTimeout(() => { document.getElementById('loginModal').classList.remove('hidden'); }, 2000);
+        if(!localStorage.getItem('oasis_user')) {
+            setTimeout(() => document.getElementById('loginModal').classList.remove('hidden'), 2000);
         }
-        
         try {
             const r = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-            allP = await r.json(); 
-            render(allP);
-        } catch(e) { console.error("Store error"); }
+            allP = await r.json(); render(allP);
+        } catch(e) { console.error("Error loading products"); }
     }
 
+    // --- RENDER (Exact Image Design) ---
     function render(data) {
         document.getElementById('pGrid').innerHTML = data.map(p => `
-            <div class="group cursor-pointer">
-                <div class="rounded-[40px] overflow-hidden bg-slate-100 aspect-square relative">
-                    <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <button onclick="add('${p.name}',${p.price},'${p.image}')" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-black font-bold px-6 py-2 rounded-full text-[10px] opacity-0 group-hover:opacity-100 transition-all shadow-lg">ADD TO BAG</button>
+            <div class="group animate-fadeIn">
+                <div class="rounded-xl overflow-hidden bg-[#f3f4f6] aspect-[4/3] relative mb-4">
+                    <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute top-2 right-2 text-red-500 text-xs"><i class="fa fa-heart"></i></div>
                 </div>
-                <div class="mt-4 text-center">
-                    <h3 class="font-bold text-[10px] uppercase text-slate-400 tracking-widest">${p.name}</h3>
-                    <p class="font-black text-lg italic">Rs. ${p.price}</p>
+                <div>
+                    <h3 class="font-bold text-sm mb-1">${p.name}</h3>
+                    <p class="font-black text-sm mb-1">Rs. ${p.price}</p>
+                    <div class="star-rating mb-3">
+                        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                    </div>
+                    <button onclick="add('${p.name}',${p.price},'${p.image}')" class="bg-black text-white text-[10px] font-bold py-2 px-6 rounded shadow-md hover:bg-slate-800 uppercase tracking-tighter">Add to Cart</button>
                 </div>
             </div>
         `).join('');
     }
 
-    // --- TIMER ---
-    setInterval(() => {
-        const d = new Date();
-        document.getElementById('th').innerText = (23-d.getHours())+"h";
-        document.getElementById('tm').innerText = (59-d.getMinutes())+"m";
-        document.getElementById('ts').innerText = (59-d.getSeconds())+"s";
-    }, 1000);
+    // --- SEARCH ---
+    function searchItems() {
+        const q = document.getElementById('srch').value.toLowerCase();
+        render(allP.filter(p => p.name.toLowerCase().includes(q)));
+    }
 
     // --- CART LOGIC ---
     function add(n,p,i) { cart.push({n,p,i}); updateUI(); toggleCart(true); }
@@ -128,7 +127,7 @@
         let total = 0;
         document.getElementById('cartItems').innerHTML = cart.map((c,i) => {
             total += parseInt(c.p);
-            return `<div class="flex items-center gap-3"><img src="${c.i}" class="w-12 h-12 rounded-xl object-cover"><div class="flex-1 font-bold text-[10px]"><p>${c.n}</p><p>Rs. ${c.p}</p></div><i class="fa fa-trash text-slate-200" onclick="cart.splice(${i},1);updateUI()"></i></div>`
+            return `<div class="flex items-center gap-4 border-b pb-2"><img src="${c.i}" class="w-12 h-12 rounded object-cover"><div class="flex-1 font-bold text-[10px]"><p>${c.n}</p><p>Rs. ${c.p}</p></div><i class="fa fa-trash text-gray-300 cursor-pointer" onclick="cart.splice(${i},1);updateUI()"></i></div>`
         }).join('');
         document.getElementById('totalP').innerText = "Rs. " + total;
     }
@@ -138,40 +137,30 @@
         else side.classList.toggle('translate-x-full');
     }
 
-    // --- LOGIN FUNCTIONS (YOUR LOGIC) ---
+    // --- LOGIN LOGIC ---
+    function socialLogin(p) { localStorage.setItem('oasis_user', p+'_User'); location.reload(); }
     function closeLogin() { document.getElementById('loginModal').classList.add('hidden'); }
-    
-    function socialLogin(platform) {
-        alert(`Connecting to ${platform}...`);
-        localStorage.setItem('oasis_user', platform + '_User');
-        setTimeout(() => {
-            closeLogin();
-            location.reload(); 
-        }, 1500);
-    }
-
     function toggleProfile() {
-        const user = localStorage.getItem('oasis_user');
-        if (user) {
-            if(confirm(`Logged in as ${user}\nDo you want to logout?`)) {
-                localStorage.removeItem('oasis_user');
-                location.reload();
-            }
-        } else {
-            document.getElementById('loginModal').classList.remove('hidden');
-        }
+        const u = localStorage.getItem('oasis_user');
+        if(u) { if(confirm("Logout from "+u+"?")) { localStorage.removeItem('oasis_user'); location.reload(); } }
+        else document.getElementById('loginModal').classList.remove('hidden');
     }
 
-    async function placeOrder() {
+    // --- WHATSAPP ORDER ---
+    function placeOrder() {
         if(cart.length === 0) return alert("Bag is empty");
-        const user = localStorage.getItem('oasis_user') || "Guest";
-        alert("Order placed for: " + user);
+        let msg = `*NEW ORDER - OASIS*\n\n`;
+        cart.forEach(x => msg += `• ${x.n} (Rs. ${x.p})\n`);
+        window.open(`https://wa.me/923138974516?text=${encodeURIComponent(msg)}`);
     }
 
-    function searchItems() {
-        const q = document.getElementById('srch').value.toLowerCase();
-        render(allP.filter(p => p.name.toLowerCase().includes(q)));
-    }
+    // --- TIMER ---
+    setInterval(() => {
+        const d = new Date();
+        document.getElementById('th').innerText = (23-d.getHours())+"h";
+        document.getElementById('tm').innerText = (59-d.getMinutes())+"m";
+        document.getElementById('ts').innerText = (59-d.getSeconds())+"s";
+    }, 1000);
 
     init();
 </script>
