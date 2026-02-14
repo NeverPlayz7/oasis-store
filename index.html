@@ -1,130 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OASIS - Luxury Store</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; overflow-x: hidden; }
-        
-        /* Banner Slider Styling */
-        #hero-banner {
-            transition: background-image 1s ease-in-out;
-            background-size: cover;
-            background-position: center;
-        }
+<nav class="p-5 flex justify-between items-center bg-white border-b sticky top-0 z-50 shadow-sm">
+    <h1 class="text-3xl font-black italic tracking-tighter cursor-pointer" onclick="location.reload()">OASIS</h1>
+    
+    <div class="relative hidden md:block">
+        <input type="text" id="searchInput" oninput="searchProducts()" placeholder="Search luxury items..." class="bg-gray-100 px-6 py-2 rounded-full outline-none w-80 text-sm border focus:border-black transition-all">
+        <i class="fa fa-search absolute right-4 top-3 text-gray-400"></i>
+    </div>
 
-        .product-card { border-radius: 12px; transition: 0.3s; position: relative; }
-        .product-card:hover { transform: translateY(-5px); }
-        .heart-icon { position: absolute; top: 15px; right: 15px; color: #ccc; cursor: pointer; z-index: 10; }
-        .btn-buy { background: #000; color: #fff; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; transition: 0.3s; margin-top: 10px; }
-        .btn-buy:hover { background: #333; }
-        .flash-box { background: #FF0055; color: #fff; padding: 6px 12px; border-radius: 6px; font-weight: 800; font-size: 14px; }
-    </style>
-</head>
-<body>
-
-<nav class="p-5 flex justify-between items-center bg-white border-b sticky top-0 z-50">
-    <h1 class="text-3xl font-black italic tracking-tighter">OASIS</h1>
     <div class="flex gap-6 items-center">
-        <div class="relative hidden md:block">
-            <input type="text" placeholder="Search products..." class="bg-gray-100 px-5 py-2 rounded-full outline-none w-64 text-sm border focus:border-black transition">
+        <div class="relative cursor-pointer" onclick="toggleCart()">
+            <i class="fa fa-shopping-bag text-xl"></i>
+            <span id="cartCount" class="absolute -top-2 -right-2 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
         </div>
-        <i class="fa fa-shopping-bag text-xl cursor-pointer"></i>
-        <i class="fa fa-user-circle text-xl cursor-pointer"></i>
+        <i class="fa fa-user-circle text-xl cursor-pointer" onclick="toggleProfile()"></i>
     </div>
 </nav>
 
-<header id="hero-banner" class="w-full h-[300px] md:h-[500px] flex items-center justify-start p-12 relative">
-    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 hidden md:block">
-        <h2 class="text-white text-4xl font-black italic">NEW ARRIVALS</h2>
-        <p class="text-white/80 font-bold mt-2 text-lg">Premium Quality, Unmatched Style.</p>
-        <button class="mt-6 bg-white text-black px-8 py-3 rounded-full font-black hover:scale-105 transition">SHOP NOW</button>
+<div id="cartSidebar" class="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 p-6 overflow-y-auto">
+    <div class="flex justify-between items-center mb-8">
+        <h2 class="text-2xl font-bold italic">YOUR BAG</h2>
+        <i class="fa fa-times cursor-pointer text-xl" onclick="toggleCart()"></i>
     </div>
-</header>
-
-<section class="py-8 text-center bg-gray-50 border-b">
-    <div class="flex justify-center items-center gap-3 mb-4">
-        <span class="text-2xl">🔥</span>
-        <h2 class="text-xl font-bold uppercase tracking-widest">Flash Sale Ends In:</h2>
-    </div>
-    <div id="timer" class="flex justify-center gap-3 text-lg font-bold"></div>
-</section>
-
-<main class="max-w-7xl mx-auto px-6 py-12">
-    <h2 class="text-2xl font-black mb-10 border-l-4 border-black pl-4">EXPLORE PRODUCTS</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-10" id="productGrid">
+    <div id="cartItems" class="space-y-4">
         </div>
-</main>
+    <div class="border-t mt-10 pt-4">
+        <div class="flex justify-between font-bold text-xl mb-4">
+            <span>Total:</span>
+            <span id="cartTotal">Rs. 0</span>
+        </div>
+        <button onclick="checkout()" class="w-full bg-black text-white py-4 rounded-2xl font-black hover:bg-gray-800 transition">CHECKOUT VIA WHATSAPP</button>
+    </div>
+</div>
 
 <script>
+    let allProducts = [];
+    let cart = [];
     const REPO = "NeverPlayz7/oasis-store";
-    
-    // 1. BANNER IMAGES LIST
-    const bannerImages = [
-        'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2012&auto=format&fit=crop', // Shoes
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1999&auto=format&fit=crop', // Watch
-        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop', // Headphones
-        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop'  // Sneakers
-    ];
 
-    let currentSlide = 0;
-    const heroBanner = document.getElementById('hero-banner');
-
-    // Function to change banner
-    function rotateBanner() {
-        heroBanner.style.backgroundImage = `url('${bannerImages[currentSlide]}')`;
-        currentSlide = (currentSlide + 1) % bannerImages.length;
+    // 1. SEARCH SYSTEM
+    function searchProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
+        renderProducts(filtered);
     }
 
-    // Start auto sliding (every 3 seconds)
-    rotateBanner(); 
-    setInterval(rotateBanner, 3000);
-
-    // 2. FETCH PRODUCTS
+    // 2. FETCH & RENDER
     async function fetchProducts() {
         try {
             const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-            const data = await res.json();
-            const grid = document.getElementById('productGrid');
-            
-            grid.innerHTML = data.map(p => `
-                <div class="product-card">
-                    <i class="fa fa-heart heart-icon"></i>
-                    <img src="${p.image}" class="w-full h-72 object-cover rounded-2xl bg-gray-100 shadow-sm">
-                    <div class="mt-5">
-                        <h3 class="font-bold text-gray-800 text-sm truncate">${p.name}</h3>
-                        <p class="text-black font-extrabold text-xl mt-1">Rs. ${p.price}</p>
-                        <div class="flex text-[10px] text-yellow-500 my-2">
-                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
-                            <span class="text-gray-400 ml-2">(45 reviews)</span>
-                        </div>
-                        <button class="btn-buy active:scale-95">Add to Cart</button>
-                    </div>
-                </div>
-            `).join('');
-        } catch(e) { 
-            document.getElementById('productGrid').innerHTML = "<p class='text-center col-span-4 py-20 font-bold text-gray-400'>Adding new items soon...</p>";
-        }
+            allProducts = await res.json();
+            renderProducts(allProducts);
+        } catch(e) { console.log("Error loading products"); }
     }
 
-    // 3. TIMER LOGIC
-    setInterval(() => {
-        let now = new Date();
-        let h = 23 - now.getHours();
-        let m = 59 - now.getMinutes();
-        let s = 59 - now.getSeconds();
-        document.getElementById('timer').innerHTML = `
-            <span class="flash-box">${h}h</span>
-            <span class="flash-box">${m}m</span>
-            <span class="flash-box">${s}s</span>
-        `;
-    }, 1000);
+    function renderProducts(products) {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = products.map((p, index) => `
+            <div class="product-card group relative animate-fadeIn">
+                <i class="fa fa-heart absolute top-4 right-4 z-10 cursor-pointer text-gray-300 hover:text-red-500 transition-colors" 
+                   onclick="toggleLike(this)"></i>
+                
+                <div class="overflow-hidden rounded-3xl bg-gray-100">
+                    <img src="${p.image}" class="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                
+                <div class="mt-4">
+                    <h3 class="font-bold text-gray-800 truncate text-sm uppercase tracking-tight">${p.name}</h3>
+                    <p class="text-black font-black text-lg">Rs. ${p.price}</p>
+                    <button onclick="addToCart('${p.name}', ${p.price}, '${p.image}')" 
+                            class="w-full mt-3 bg-white border-2 border-black text-black py-2 rounded-xl font-bold hover:bg-black hover:text-white transition-all active:scale-95">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 3. CART SYSTEM
+    function addToCart(name, price, img) {
+        cart.push({ name, price, img });
+        updateCartUI();
+        // Simple notification
+        const btn = event.target;
+        btn.innerText = "✓ Added";
+        setTimeout(() => btn.innerText = "Add to Cart", 1000);
+    }
+
+    function updateCartUI() {
+        document.getElementById('cartCount').innerText = cart.length;
+        const cartBox = document.getElementById('cartItems');
+        let total = 0;
+
+        cartBox.innerHTML = cart.map((item, index) => {
+            total += parseInt(item.price);
+            return `
+                <div class="flex items-center gap-4 border-b pb-3">
+                    <img src="${item.img}" class="w-12 h-12 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <p class="text-xs font-bold truncate w-32">${item.name}</p>
+                        <p class="text-sm font-black text-blue-600">Rs. ${item.price}</p>
+                    </div>
+                    <i class="fa fa-trash text-gray-300 hover:text-red-500 cursor-pointer" onclick="removeFromCart(${index})"></i>
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('cartTotal').innerText = `Rs. ${total}`;
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+    }
+
+    function toggleCart() {
+        const sidebar = document.getElementById('cartSidebar');
+        sidebar.classList.toggle('translate-x-full');
+    }
+
+    // 4. LIKE & PROFILE
+    function toggleLike(el) {
+        el.classList.toggle('text-red-500');
+        el.classList.toggle('text-gray-300');
+    }
+
+    function toggleProfile() {
+        alert("Welcome, Ahmed! Dashboard is syncing...");
+    }
+
+    function checkout() {
+        if(cart.length === 0) return alert("Your bag is empty!");
+        let msg = "Assalam-o-Alaikum Oasis! I want to order:%0a";
+        cart.forEach(item => msg += `- ${item.name} (Rs. ${item.price})%0a`);
+        msg += `%0aTotal: ${document.getElementById('cartTotal').innerText}`;
+        window.open(`https://wa.me/923138974516?text=${msg}`); // Apka number
+    }
 
     fetchProducts();
 </script>
-</body>
-</html>
