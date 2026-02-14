@@ -10,125 +10,174 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
         .sidebar-item.active { background: white; color: black; border-radius: 15px 0 0 15px; box-shadow: -10px 0 20px rgba(0,0,0,0.05); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
 
     <aside class="w-80 bg-[#0b1120] text-slate-400 flex flex-col py-10 shadow-2xl">
         <div class="px-10 mb-12">
-            <h2 class="text-white text-3xl font-black italic tracking-tighter">OASIS PRO</h2>
+            <h2 class="text-white text-3xl font-black italic tracking-tighter uppercase">Oasis Pro</h2>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Management Suite</p>
         </div>
+        
         <nav class="flex-1 space-y-1 pl-6">
-            <button class="sidebar-item active w-full text-left py-4 px-8 font-bold flex items-center gap-4 hover:text-white transition-all">
+            <button onclick="showTab('inv')" id="m-inv" class="sidebar-item active w-full text-left py-4 px-8 font-bold flex items-center gap-4 hover:text-white transition-all">
                 <i class="fa fa-box"></i> Inventory
             </button>
-            <button class="sidebar-item w-full text-left py-4 px-8 font-bold flex items-center gap-4 hover:text-white transition-all">
+            <button onclick="showTab('ord')" id="m-ord" class="sidebar-item w-full text-left py-4 px-8 font-bold flex items-center gap-4 hover:text-white transition-all">
                 <i class="fa fa-shopping-cart"></i> Orders
             </button>
+            <button onclick="showTab('adm')" id="m-adm" class="sidebar-item w-full text-left py-4 px-8 font-bold flex items-center gap-4 hover:text-white transition-all">
+                <i class="fa fa-user-shield"></i> Staff Access
+            </button>
         </nav>
+
         <div class="px-10 mt-auto pt-8 border-t border-slate-800">
-            <p class="text-[10px] font-black text-slate-600 uppercase italic">Master Admin</p>
+            <p class="text-[10px] font-black text-slate-600 uppercase">Master Admin</p>
             <p class="text-white font-bold text-sm">Ahmed Boss</p>
         </div>
     </aside>
 
     <main class="flex-1 overflow-y-auto p-12">
-        <h3 class="text-4xl font-black text-slate-900 mb-8">Manage Items</h3>
-        
-        <div class="max-w-xl bg-white rounded-[35px] shadow-sm border border-slate-200 p-10 mb-12">
-            <h4 class="text-lg font-extrabold mb-6">Publish New Item</h4>
-            <div class="space-y-4">
-                <input id="p_name" type="text" placeholder="Product Name" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none">
-                <input id="p_price" type="number" placeholder="Price (PKR)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none">
-                <input id="p_img" type="text" placeholder="Image URL" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none">
-                <button onclick="sync('add')" id="mainBtn" class="w-full bg-[#22c55e] text-white py-5 rounded-2xl font-black text-lg shadow-lg hover:bg-green-600">
-                    Update Oasis Store
-                </button>
+        <div id="tab-inv" class="tab-panel active">
+            <h3 class="text-4xl font-black text-slate-900 mb-8 tracking-tight">Manage Items</h3>
+            
+            <div class="max-w-xl bg-white rounded-[35px] shadow-sm border border-slate-200 p-10 mb-12">
+                <h4 class="text-lg font-extrabold mb-6">Publish New Item</h4>
+                <div class="space-y-4">
+                    <input id="p_name" type="text" placeholder="Product Name" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 ring-emerald-100 font-medium">
+                    <input id="p_price" type="number" placeholder="Price (PKR)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 ring-emerald-100 font-medium">
+                    <input id="p_img" type="text" placeholder="Image URL (Link)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 ring-emerald-100 font-medium">
+                    
+                    <button onclick="syncStore('add')" id="actionBtn" class="w-full bg-[#22c55e] text-white py-5 rounded-2xl font-black text-lg hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-3">
+                        <i class="fa fa-sync" id="spinIcon"></i> Update Oasis Store
+                    </button>
+                </div>
             </div>
+
+            <h4 class="text-xl font-black mb-6 flex items-center gap-3">Live Products <span id="count" class="bg-slate-200 px-3 py-1 rounded-full text-xs">0</span></h4>
+            <div id="itemList" class="grid gap-4 max-w-2xl">
+                </div>
         </div>
 
-        <h4 class="text-xl font-black mb-6">Live Products</h4>
-        <div id="itemList" class="grid gap-4 max-w-2xl">
-            </div>
+        <div id="tab-ord" class="tab-panel"><h2 class="text-3xl font-black">Orders List</h2></div>
+        <div id="tab-adm" class="tab-panel"><h2 class="text-3xl font-black">Admin Settings</h2></div>
     </main>
 
 <script>
     // AHMED BHAI: Naya Token yahan laga diya hai
-    const TOKEN = "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"; 
-    const REPO = "NeverPlayz7/oasis-store";
-    const FILE = "data.json";
+    const CONFIG = {
+        token: "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", 
+        repo: "NeverPlayz7/oasis-store",
+        file: "data.json"
+    };
 
     // 1. Fetch Latest Data
-    async function getData() {
-        const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
-            headers: { 'Authorization': `token ${TOKEN}`, 'Cache-Control': 'no-cache' }
+    async function fetchLatest() {
+        const url = `https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.file}`;
+        const res = await fetch(url, {
+            headers: { 'Authorization': `token ${CONFIG.token}`, 'Cache-Control': 'no-cache' }
         });
-        if(!r.ok) throw new Error("Token Error - Recheck permissions!");
-        return await r.json();
+        if (!res.ok) throw new Error("Sync Failed: Token is invalid or expired.");
+        const file = await res.json();
+        return {
+            sha: file.sha,
+            data: JSON.parse(decodeURIComponent(escape(atob(file.content))))
+        };
     }
 
-    // 2. Add/Delete Sync Engine
-    async function sync(type, index = null) {
-        const btn = document.getElementById('mainBtn');
+    // 2. Sync Engine (Add & Delete)
+    async function syncStore(mode, index = null) {
+        const btn = document.getElementById('actionBtn');
+        const icon = document.getElementById('spinIcon');
+        
         try {
-            if(type === 'delete' && !confirm("Khatam kar dein?")) return;
-            btn.innerText = "Syncing...";
-            
-            const file = await getData();
-            let data = JSON.parse(decodeURIComponent(escape(atob(file.content))));
+            if (mode === 'delete' && !confirm("Item khatam kar dein?")) return;
 
-            if(type === 'add') {
+            btn.disabled = true;
+            icon.classList.add('fa-spin');
+            btn.innerText = "Connecting to Oasis...";
+
+            const remote = await fetchLatest();
+            let items = remote.data;
+
+            if (mode === 'add') {
                 const n = document.getElementById('p_name').value;
                 const p = document.getElementById('p_price').value;
                 const i = document.getElementById('p_img').value;
-                if(!n || !p || !i) return alert("Fill everything!");
-                data.push({ name: n, price: p, image: i });
+                if (!n || !p || !i) throw new Error("All fields are required!");
+                items.push({ name: n, price: p, image: i });
             } else {
-                data.splice(index, 1);
+                items.splice(index, 1);
             }
 
-            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
+            const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(items, null, 2))));
+            const push = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.file}`, {
                 method: 'PUT',
-                headers: { 'Authorization': `token ${TOKEN}` },
+                headers: { 'Authorization': `token ${CONFIG.token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: "Oasis Update",
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-                    sha: file.sha
+                    message: "Oasis Sync Update",
+                    content: updatedContent,
+                    sha: remote.sha
                 })
             });
 
-            if(res.ok) {
-                if(type === 'add') alert("Product Added!");
-                load();
+            if (push.ok) {
+                if (mode === 'add') {
+                    document.getElementById('p_name').value = '';
+                    document.getElementById('p_price').value = '';
+                    document.getElementById('p_img').value = '';
+                }
+                loadInventory();
+            } else {
+                throw new Error("GitHub Update Rejected!");
             }
-        } catch(e) { alert("Error: " + e.message); }
-        finally { btn.innerText = "Update Oasis Store"; }
+
+        } catch (err) {
+            alert("⚠️ " + err.message);
+        } finally {
+            btn.disabled = false;
+            icon.classList.remove('fa-spin');
+            btn.innerHTML = `<i class="fa fa-sync" id="spinIcon"></i> Update Oasis Store`;
+        }
     }
 
     // 3. UI Display
-    async function load() {
+    async function loadInventory() {
         const list = document.getElementById('itemList');
         try {
-            const file = await getData();
-            const data = JSON.parse(decodeURIComponent(escape(atob(file.content))));
-            list.innerHTML = data.map((p, i) => `
-                <div class="bg-white p-4 rounded-[25px] border flex items-center justify-between shadow-sm">
+            const remote = await fetchLatest();
+            document.getElementById('count').innerText = remote.data.length;
+            
+            list.innerHTML = remote.data.map((p, i) => `
+                <div class="bg-white p-4 rounded-[25px] border flex items-center justify-between shadow-sm hover:border-emerald-200 transition">
                     <div class="flex items-center gap-5">
-                        <img src="${p.image}" class="w-16 h-16 rounded-2xl object-cover bg-slate-50 border">
-                        <p class="font-black text-slate-800">${p.name}</p>
+                        <img src="${p.image}" class="w-16 h-16 rounded-2xl object-cover border shadow-inner">
+                        <p class="font-black text-slate-800 text-lg">${p.name}</p>
                     </div>
                     <div class="flex items-center gap-8">
                         <span class="font-bold text-slate-400">PKR ${p.price}</span>
-                        <button onclick="sync('delete', ${i})" class="text-red-400 hover:text-red-600 p-2">
+                        <button onclick="syncStore('delete', ${i})" class="w-10 h-10 rounded-full text-slate-300 hover:text-red-500 hover:bg-red-50 transition flex items-center justify-center">
                             <i class="fa fa-trash-alt"></i>
                         </button>
                     </div>
                 </div>
             `).join('');
-        } catch(e) { list.innerHTML = "Offline - Check Token"; }
+        } catch(e) { 
+            list.innerHTML = `<p class="p-10 text-red-500 font-bold bg-red-50 rounded-3xl border border-red-100"><i class="fa fa-exclamation-triangle"></i> Token Expired! Please update token.</p>`; 
+        }
     }
 
-    load();
+    function showTab(tab) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        document.getElementById('tab-'+tab).classList.add('active');
+        document.getElementById('m-'+tab).classList.add('active');
+    }
+
+    loadInventory();
 </script>
 </body>
 </html>
