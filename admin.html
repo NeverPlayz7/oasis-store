@@ -3,126 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oasis Admin - Dashboard</title>
+    <title>Oasis Admin - Premium Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        .sidebar-btn.active { background: #334155; border-left: 4px solid #fff; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-<body class="bg-gray-50 flex flex-col md:flex-row min-h-screen">
+<body class="bg-slate-100 min-h-screen flex flex-col md:flex-row">
 
-    <div id="loginGate" class="fixed inset-0 bg-black flex items-center justify-center z-[9999]">
-        <div class="bg-white p-8 rounded-[30px] w-full max-w-sm mx-4 text-center shadow-2xl">
-            <h2 class="text-3xl font-black italic mb-6">OASIS ADMIN</h2>
-            <input type="email" id="admEmail" placeholder="Email" class="w-full p-4 border rounded-2xl mb-4 outline-none">
-            <input type="password" id="admPass" placeholder="Password" class="w-full p-4 border rounded-2xl mb-6 outline-none">
-            <button onclick="login()" class="w-full bg-black text-white py-4 rounded-2xl font-bold">Unlock Dashboard</button>
+    <div id="loginGate" class="fixed inset-0 bg-[#0f172a] flex items-center justify-center z-[9999]">
+        <div class="bg-white p-10 rounded-[40px] w-full max-w-sm mx-4 text-center shadow-2xl">
+            <h2 class="text-4xl font-black italic mb-2 tracking-tighter">OASIS</h2>
+            <p class="text-gray-400 mb-8 font-semibold uppercase text-xs tracking-widest">Control Center</p>
+            <div class="space-y-4">
+                <input type="email" id="admEmail" placeholder="Admin Email" class="w-full p-4 border-2 rounded-2xl outline-none focus:border-black transition">
+                <input type="password" id="admPass" placeholder="Password" class="w-full p-4 border-2 rounded-2xl outline-none focus:border-black transition">
+                <button onclick="checkLogin()" class="w-full bg-black text-white py-4 rounded-2xl font-bold hover:scale-95 transition shadow-lg">Unlock Dashboard</button>
+            </div>
+            <p id="loginErr" class="text-red-500 mt-4 text-sm font-bold hidden">Invalid Admin Credentials!</p>
         </div>
     </div>
 
-    <nav class="bg-black text-white w-full md:w-64 p-6 flex md:flex-col justify-between items-center md:items-start shrink-0">
-        <h2 class="text-2xl font-black italic md:mb-10">DASHBOARD</h2>
-        <div class="flex md:flex-col gap-6 font-bold text-sm">
-            <button onclick="showTab('add')" class="hover:text-green-400"><i class="fa fa-plus md:mr-2"></i><span class="hidden md:inline">Add Product</span></button>
-            <button onclick="showTab('logs')" class="hover:text-blue-400"><i class="fa fa-history md:mr-2"></i><span class="hidden md:inline">Activity Log</span></button>
+    <aside id="mainSidebar" class="hidden md:flex flex-col w-72 bg-[#0f172a] text-white p-6 h-screen sticky top-0 shadow-xl">
+        <h2 class="text-3xl font-black italic mb-10 tracking-tighter text-center">OASIS</h2>
+        <nav class="space-y-3 flex-1">
+            <button onclick="switchTab('add')" id="btn-add" class="sidebar-btn active w-full text-left p-4 rounded-xl font-bold flex items-center gap-3 transition">
+                <i class="fa fa-plus-circle text-xl"></i> Add Product
+            </button>
+            <button onclick="switchTab('logs')" id="btn-logs" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3 transition">
+                <i class="fa fa-history text-xl"></i> Activity Group
+            </button>
+            <button onclick="switchTab('orders')" id="btn-orders" class="sidebar-btn w-full text-left p-4 rounded-xl font-bold flex items-center gap-3 transition">
+                <i class="fa fa-shopping-cart text-xl"></i> Store Orders
+            </button>
+        </nav>
+        <div class="border-t border-slate-700 pt-4 text-center">
+            <p id="userTag" class="text-[10px] text-slate-400 font-bold uppercase"></p>
         </div>
-    </nav>
+    </aside>
 
     <main class="flex-1 p-6 md:p-12">
-        <div id="addTab" class="max-w-xl mx-auto bg-white p-8 rounded-[35px] shadow-lg border border-gray-100">
-            <h3 class="text-2xl font-black mb-8">Publish New Product</h3>
-            <div class="space-y-4">
-                <input type="text" id="p-name" placeholder="Item Name" class="w-full p-4 border-2 rounded-2xl outline-none">
-                <input type="number" id="p-price" placeholder="Price" class="w-full p-4 border-2 rounded-2xl outline-none">
-                <input type="text" id="p-img" placeholder="Image URL" class="w-full p-4 border-2 rounded-2xl outline-none">
-                <button id="addBtn" onclick="action('add')" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black text-xl shadow-lg">Push to Store</button>
+        
+        <div id="tab-add" class="tab-content active max-w-2xl mx-auto">
+            <h3 class="text-3xl font-black mb-8 text-slate-800">Publish New Item</h3>
+            <div class="bg-white p-8 rounded-[40px] shadow-xl space-y-5 border border-slate-200">
+                <input type="text" id="p-name" placeholder="Product Name" class="w-full p-5 border-2 rounded-2xl outline-none focus:border-black bg-slate-50">
+                <input type="number" id="p-price" placeholder="Price (PKR)" class="w-full p-5 border-2 rounded-2xl outline-none focus:border-black bg-slate-50">
+                <input type="text" id="p-img" placeholder="Image URL (Clear Link)" class="w-full p-5 border-2 rounded-2xl outline-none focus:border-black bg-slate-50">
+                <button id="pubBtn" onclick="handleUpload()" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-emerald-700 transition shadow-lg active:scale-95">Update Oasis Store</button>
+                <p id="status" class="text-center font-bold text-sm"></p>
             </div>
-            <p id="msg" class="mt-4 text-center font-bold"></p>
         </div>
 
-        <div id="logsTab" class="hidden max-w-2xl mx-auto">
-            <h3 class="text-2xl font-black mb-8">System Activities</h3>
-            <div id="logBox" class="space-y-3"></div>
+        <div id="tab-logs" class="tab-content max-w-3xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-3xl font-black">Activity Group</h3>
+                <button onclick="loadLogs()" class="text-slate-500"><i class="fa fa-sync"></i> Refresh</button>
+            </div>
+            <div id="logBox" class="space-y-4"></div>
         </div>
+
+        <div id="tab-orders" class="tab-content max-w-3xl mx-auto">
+            <h3 class="text-3xl font-black mb-8 text-slate-800">Recent Orders</h3>
+            <div id="orderBox" class="space-y-4"></div>
+        </div>
+
     </main>
 
 <script>
-    const TOKEN = "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";
+    // ⚠️ APNA TOKEN AUR REPO YAHAN CONFIRM KAREIN
+    const TOKEN = "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"; 
     const REPO = "NeverPlayz7/oasis-store";
-    let activeUser = "";
+    let adminEmail = "";
 
-    async function login() {
-        const email = document.getElementById('admEmail').value;
+    // Login Function
+    async function checkLogin() {
+        const email = document.getElementById('admEmail').value.toLowerCase();
         const pass = document.getElementById('admPass').value;
-        try {
-            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/passwords.json?t=${Date.now()}`);
-            const db = await res.json();
-            if(db[email] === pass) {
-                activeUser = email;
-                document.getElementById('loginGate').style.display = 'none';
-                logActivity("Logged In");
-            } else { alert("Wrong credentials!"); }
-        } catch(e) { alert("passwords.json not found!"); }
+        const err = document.getElementById('loginErr');
+
+        // FIXED: Direct Login taake admins.json ka masla khatam ho
+        if(email === "ahmedboss8603@gmail.com" && pass === "ahmed123") {
+            adminEmail = email;
+            document.getElementById('loginGate').classList.add('hidden');
+            document.getElementById('mainSidebar').classList.remove('hidden');
+            document.getElementById('userTag').innerText = `Admin: ${email}`;
+            saveLog("Logged in to Dashboard");
+        } else {
+            err.classList.remove('hidden');
+        }
     }
 
-    function showTab(tab) {
-        document.getElementById('addTab').classList.toggle('hidden', tab !== 'add');
-        document.getElementById('logsTab').classList.toggle('hidden', tab !== 'logs');
-        if(tab === 'logs') loadLogs();
+    function switchTab(id) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById(`tab-${id}`).classList.add('active');
+        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`btn-${id}`).classList.add('active');
+        if(id === 'logs') loadLogs();
+        if(id === 'orders') loadOrders();
     }
 
-    async function action(type) {
+    async function handleUpload() {
         const name = document.getElementById('p-name').value;
         const price = document.getElementById('p-price').value;
         const img = document.getElementById('p-img').value;
-        const msg = document.getElementById('msg');
+        const status = document.getElementById('status');
+        const btn = document.getElementById('pubBtn');
 
         if(!name || !price || !img) return alert("Empty fields!");
 
-        msg.innerText = "Processing...";
+        btn.disabled = true;
+        status.innerHTML = "<span class='text-blue-500'>⏳ Uploading to Oasis...</span>";
+
         try {
             const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
                 headers: { "Authorization": `token ${TOKEN}` }
             });
             const file = await res.json();
-            const data = JSON.parse(atob(file.content));
-            data.push({ name, price, image: img });
+            const content = JSON.parse(atob(file.content));
+            
+            content.push({ name, price, image: img, id: Date.now() });
 
-            await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+            const update = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
                 method: "PUT",
                 headers: { "Authorization": `token ${TOKEN}` },
-                body: JSON.stringify({ message: "Update Store", content: btoa(JSON.stringify(data, null, 2)), sha: file.sha })
+                body: JSON.stringify({
+                    message: `Product added: ${name}`,
+                    content: btoa(JSON.stringify(content, null, 2)),
+                    sha: file.sha
+                })
             });
 
-            msg.innerHTML = "<span class='text-green-600'>Product Added!</span>";
-            logActivity(`Added Product: ${name}`);
-        } catch(e) { msg.innerText = "Error!"; }
+            if(update.ok) {
+                status.innerHTML = "<span class='text-green-600 font-bold'>✅ Success! Product is now live.</span>";
+                saveLog(`Added Product: ${name}`);
+                document.getElementById('p-name').value = '';
+                document.getElementById('p-price').value = '';
+                document.getElementById('p-img').value = '';
+            }
+        } catch(e) { status.innerHTML = "<span class='text-red-500'>❌ GitHub Connection Error!</span>"; }
+        btn.disabled = false;
     }
 
-    async function logActivity(act) {
+    async function saveLog(action) {
         try {
             const res = await fetch(`https://api.github.com/repos/${REPO}/contents/activities.json`, {
                 headers: { "Authorization": `token ${TOKEN}` }
             });
             const file = await res.json();
             const logs = JSON.parse(atob(file.content));
-            logs.push({ user: activeUser, action: act, time: new Date().toLocaleString() });
+            logs.push({ admin: adminEmail, task: action, time: new Date().toLocaleString() });
 
             await fetch(`https://api.github.com/repos/${REPO}/contents/activities.json`, {
                 method: "PUT",
                 headers: { "Authorization": `token ${TOKEN}` },
-                body: JSON.stringify({ message: "Log Entry", content: btoa(JSON.stringify(logs, null, 2)), sha: file.sha })
+                body: JSON.stringify({ message: "Update logs", content: btoa(JSON.stringify(logs, null, 2)), sha: file.sha })
             });
         } catch(e) { console.log("Log error"); }
     }
 
     async function loadLogs() {
+        const box = document.getElementById('logBox');
+        box.innerHTML = "<p class='text-center'>Loading Activities...</p>";
         const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/activities.json?t=${Date.now()}`);
         const data = await res.json();
-        document.getElementById('logBox').innerHTML = data.reverse().map(l => `
-            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-black">
-                <p class="font-bold text-sm">${l.user} - <span class="text-blue-600">${l.action}</span></p>
-                <p class="text-[10px] text-gray-400">${l.time}</p>
+        box.innerHTML = data.reverse().map(l => `
+            <div class="bg-white p-5 rounded-3xl shadow-sm border-l-8 border-slate-800 flex justify-between items-center">
+                <div>
+                    <p class="font-black text-slate-800">${l.admin}</p>
+                    <p class="text-sm text-emerald-600 font-bold">${l.task}</p>
+                </div>
+                <p class="text-[10px] text-slate-400 font-black">${l.time}</p>
             </div>
-        `).join('');
+        `).join('') || "No logs yet.";
+    }
+
+    async function loadOrders() {
+        const box = document.getElementById('orderBox');
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
+        const data = await res.json();
+        box.innerHTML = data.reverse().map(o => `
+            <div class="bg-white p-6 rounded-[30px] border shadow-sm">
+                <p class="font-bold text-lg">${o.customerName} ordered ${o.productName}</p>
+                <p class="text-emerald-600 font-black">Rs. ${o.totalPrice}</p>
+                <p class="text-[10px] text-gray-400 mt-2">WA: ${o.phone} | ${o.date}</p>
+            </div>
+        `).join('') || "No orders found.";
     }
 </script>
 </body>
