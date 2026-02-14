@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OASIS - Premium Store</title>
+    <title>OASIS - Luxury Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body class="bg-white font-sans text-slate-900">
+<body class="bg-white text-slate-900 overflow-x-hidden">
 
     <nav class="p-5 flex justify-between items-center bg-white border-b sticky top-0 z-50">
         <h1 class="text-3xl font-black italic tracking-tighter">OASIS</h1>
         <div class="flex-1 max-w-md mx-10 hidden md:block">
-            <input type="text" id="search" oninput="searchProducts()" placeholder="Search luxury..." class="w-full bg-slate-100 p-3 rounded-full text-xs outline-none border focus:border-black">
+            <input type="text" id="srch" oninput="searchItems()" placeholder="Search luxury products..." class="w-full bg-slate-100 p-3 rounded-full text-xs outline-none border focus:border-black">
         </div>
         <div class="flex gap-5 items-center">
             <div class="relative cursor-pointer" onclick="toggleCart()">
@@ -23,89 +23,105 @@
         </div>
     </nav>
 
-    <section class="py-10 text-center bg-slate-50 border-b">
-        <p class="font-bold text-sm mb-4">🔥 Flash Sale Ends In:</p>
-        <div class="flex justify-center gap-3 text-white font-black">
-            <div class="bg-pink-500 px-4 py-2 rounded-xl" id="hrs">13h</div>
-            <div class="bg-pink-500 px-4 py-2 rounded-xl" id="min">44m</div>
-            <div class="bg-pink-500 px-4 py-2 rounded-xl" id="sec">33s</div>
+    <section class="py-8 text-center bg-slate-50 border-b">
+        <p class="font-bold text-xs mb-3">🔥 Flash Sale Ends In:</p>
+        <div class="flex justify-center gap-2 text-white font-bold">
+            <span class="bg-pink-600 px-3 py-1 rounded-lg" id="th">13h</span>
+            <span class="bg-pink-600 px-3 py-1 rounded-lg" id="tm">44m</span>
+            <span class="bg-pink-600 px-3 py-1 rounded-lg" id="ts">33s</span>
         </div>
     </section>
 
-    <main class="max-w-7xl mx-auto px-6 py-12">
-        <div id="pGrid" class="grid grid-cols-2 md:grid-cols-4 gap-8">
-            </div>
+    <main class="max-w-7xl mx-auto px-6 py-10">
+        <div id="pGrid" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
     </main>
 
     <div id="cartSide" class="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-[100] translate-x-full transition-transform duration-300 p-6 flex flex-col">
-        <h2 class="text-3xl font-black italic mb-8">YOUR BAG</h2>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-black italic">CART</h2>
+            <i class="fa fa-times cursor-pointer" onclick="toggleCart()"></i>
+        </div>
         <div id="cartItems" class="flex-1 overflow-y-auto space-y-4"></div>
-        <div class="border-t pt-6">
-            <div class="flex justify-between font-black text-xl mb-6"><span>Total:</span><span id="cTotal">Rs. 0</span></div>
-            <button onclick="checkout()" class="w-full bg-black text-white py-4 rounded-2xl font-black hover:scale-95 transition">CHECKOUT</button>
+        <div class="border-t pt-5">
+            <div class="flex justify-between mb-4 font-black"><span>Total:</span><span id="totalP">Rs. 0</span></div>
+            <button onclick="placeOrder()" class="w-full bg-black text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition">PLACE ORDER</button>
         </div>
     </div>
 
 <script>
     const REPO = "NeverPlayz7/oasis-store";
-    const TOKEN = "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";
-    let allProducts = [];
-    let cart = [];
+    const TOKEN = "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";
+    let allP = []; let cart = [];
 
-    // Timer Logic
     setInterval(() => {
-        const now = new Date();
-        document.getElementById('hrs').innerText = 23 - now.getHours() + "h";
-        document.getElementById('min').innerText = 59 - now.getMinutes() + "m";
-        document.getElementById('sec').innerText = 59 - now.getSeconds() + "s";
+        const d = new Date();
+        document.getElementById('th').innerText = 23-d.getHours()+"h";
+        document.getElementById('tm').innerText = 59-d.getMinutes()+"m";
+        document.getElementById('ts').innerText = 59-d.getSeconds()+"s";
     }, 1000);
 
     async function init() {
         try {
-            const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-            allProducts = await res.json();
-            render(allProducts);
-        } catch(e) { console.log("Error loading data"); }
+            const r = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
+            allP = await r.json(); render(allP);
+        } catch(e) { document.getElementById('pGrid').innerHTML = "Store loading error..."; }
     }
 
     function render(data) {
         document.getElementById('pGrid').innerHTML = data.map(p => `
             <div class="group">
-                <div class="rounded-[40px] overflow-hidden bg-slate-100 aspect-square relative">
-                    <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                </div>
-                <div class="mt-5 text-center">
-                    <h3 class="font-bold text-xs uppercase tracking-widest text-slate-400">${p.name}</h3>
-                    <p class="font-black text-xl mt-1">Rs. ${p.price}</p>
-                    <button onclick="addToCart('${p.name}', ${p.price}, '${p.image}')" class="mt-4 px-8 py-2 border-2 border-black rounded-full font-bold text-[10px] hover:bg-black hover:text-white transition">ADD TO BAG</button>
+                <div class="rounded-[40px] overflow-hidden bg-slate-100 aspect-square"><img src="${p.image}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"></div>
+                <div class="mt-4 text-center">
+                    <h3 class="font-bold text-[10px] uppercase text-slate-400 tracking-widest">${p.name}</h3>
+                    <p class="font-black text-lg">Rs. ${p.price}</p>
+                    <button onclick="add('${p.name}',${p.price},'${p.image}')" class="mt-2 border-2 border-black px-6 py-1 rounded-full text-[10px] font-bold hover:bg-black hover:text-white transition">ADD TO BAG</button>
                 </div>
             </div>
         `).join('');
     }
 
-    function searchProducts() {
-        const query = document.getElementById('search').value.toLowerCase();
-        const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
-        render(filtered);
+    function searchItems() {
+        const q = document.getElementById('srch').value.toLowerCase();
+        render(allP.filter(p => p.name.toLowerCase().includes(q)));
     }
 
-    function addToCart(n, p, i) { cart.push({n, p, i}); updateUI(); toggleCart(true); }
+    function add(n,p,i) { cart.push({n,p,i}); updateUI(); toggleCart(true); }
     function updateUI() {
         document.getElementById('cCount').innerText = cart.length;
         let total = 0;
-        document.getElementById('cartItems').innerHTML = cart.map((item, idx) => {
-            total += parseInt(item.p);
-            return `<div class="flex items-center gap-4 border-b pb-4"><img src="${item.i}" class="w-16 h-16 rounded-2xl object-cover"><div class="flex-1"><p class="font-bold text-xs">${item.n}</p><p class="font-black">Rs. ${item.p}</p></div><i class="fa fa-trash text-slate-300 cursor-pointer" onclick="cart.splice(${idx},1);updateUI()"></i></div>`;
+        document.getElementById('cartItems').innerHTML = cart.map((c,i) => {
+            total += parseInt(c.p);
+            return `<div class="flex items-center gap-3 border-b pb-2"><img src="${c.i}" class="w-10 h-10 rounded-lg object-cover"><div class="flex-1 font-bold text-[10px]"><p>${c.n}</p><p>Rs. ${c.p}</p></div><i class="fa fa-trash text-slate-300" onclick="cart.splice(${i},1);updateUI()"></i></div>`
         }).join('');
-        document.getElementById('cTotal').innerText = "Rs. " + total;
+        document.getElementById('totalP').innerText = "Rs. " + total;
     }
-    function toggleCart(show = null) {
-        const el = document.getElementById('cartSide');
-        if(show === true) el.classList.remove('translate-x-full');
-        else el.classList.toggle('translate-x-full');
+    function toggleCart(open = null) {
+        const side = document.getElementById('cartSide');
+        if(open === true) side.classList.remove('translate-x-full');
+        else side.classList.toggle('translate-x-full');
     }
-    function checkout() { window.open("https://wa.me/923138974516"); }
 
+    async function placeOrder() {
+        if(cart.length === 0) return alert("Cart is empty");
+        const user = localStorage.getItem('oUser') || "Guest";
+        try {
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/orders.json`, {headers:{"Authorization":`token ${TOKEN}`}});
+            const file = await res.json();
+            const orders = JSON.parse(atob(file.content));
+            orders.unshift({ user, items: cart, date: new Date().toLocaleString() });
+            await fetch(`https://api.github.com/repos/${REPO}/contents/orders.json`, {
+                method:"PUT", headers:{"Authorization":`token ${TOKEN}`},
+                body: JSON.stringify({message:"Order", content: btoa(JSON.stringify(orders)), sha: file.sha})
+            });
+            alert("Order Placed Successfully!");
+            cart = []; updateUI(); toggleCart();
+        } catch(e) { alert("Checkout Error"); }
+    }
+
+    function handleAuth() {
+        const n = prompt("Your Name:");
+        if(n) { localStorage.setItem('oUser', n); alert("Welcome " + n); }
+    }
     init();
 </script>
 </body>
