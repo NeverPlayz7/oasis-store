@@ -1,103 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oasis Admin - Realtime</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body class="bg-slate-50 flex flex-col md:flex-row min-h-screen">
-
-    <aside class="w-72 bg-[#0f172a] text-white p-6 hidden md:flex flex-col sticky top-0 h-screen">
-        <h2 class="text-3xl font-black italic mb-10 tracking-tighter">OASIS PRO</h2>
-        <nav class="space-y-2 flex-1">
-            <button onclick="switchTab('stats')" class="w-full text-left p-4 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3"><i class="fa fa-chart-line"></i> Analytics</button>
-            <button onclick="switchTab('inventory')" class="w-full text-left p-4 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3"><i class="fa fa-box"></i> Inventory</button>
-            <button onclick="switchTab('users')" class="w-full text-left p-4 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3"><i class="fa fa-users"></i> Users</button>
-            <button onclick="switchTab('orders')" class="w-full text-left p-4 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3"><i class="fa fa-shopping-cart"></i> Orders</button>
-        </nav>
-    </aside>
-
-    <main class="flex-1 p-6 md:p-12 pb-24">
-        <div id="tab-stats" class="tab-content active">
-            <h3 class="text-3xl font-black mb-8">Live Analytics</h3>
-            <div id="analyticsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </div>
-
-        <div id="tab-users" class="tab-content hidden">
-            <h3 class="text-3xl font-black mb-8">Registered Members</h3>
-            <div id="userList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </div>
-
-        <div id="tab-inventory" class="tab-content hidden">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="text-3xl font-black">Manage Items</h3>
-                <button onclick="showAddPopup()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">+ New</button>
-            </div>
-            <div id="inventoryList" class="grid gap-4"></div>
-        </div>
-        
-        <div id="tab-orders" class="tab-content hidden text-3xl font-black">Orders Loading...</div>
-    </main>
-
-<script>
-    const TOKEN = "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";
+const TOKEN = "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"; 
     const REPO = "NeverPlayz7/oasis-store";
+    let adminEmail = "";
+    let localProducts = []; // Local cache for speed
 
-    // --- NOTIFICATIONS ---
-    if(Notification.permission !== 'granted') Notification.requestPermission();
-
-    let lastOrderCount = 0;
-    async function monitorOrders() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/orders.json?t=${Date.now()}`);
-        const orders = await res.json();
-        if(lastOrderCount > 0 && orders.length > lastOrderCount) {
-            new Notification("🔥 NEW ORDER!", { body: `${orders[orders.length-1].customerName} just placed an order!` });
+    function checkLogin() {
+        const email = document.getElementById('admEmail').value.toLowerCase();
+        const pass = document.getElementById('admPass').value;
+        if(email === "ahmedboss8603@gmail.com" && pass === "ahmed123") {
+            adminEmail = email;
+            document.getElementById('loginGate').classList.add('hidden');
+            saveLog("Dashboard Accessed");
+            initDashboard(); // Foran data load karega
+        } else {
+            document.getElementById('loginErr').classList.remove('hidden');
         }
-        lastOrderCount = orders.length;
     }
-    setInterval(monitorOrders, 30000);
 
-    // --- DATA LOADING ---
-    async function loadAnalytics() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/data.json?t=${Date.now()}`);
-        const data = await res.json();
-        document.getElementById('analyticsGrid').innerHTML = data.map(p => `
-            <div class="bg-white p-6 rounded-[35px] border shadow-sm">
-                <div class="flex items-center gap-4 mb-4">
-                    <img src="${p.image}" class="w-12 h-12 rounded-full object-cover">
-                    <p class="font-bold truncate">${p.name}</p>
+    // 1. DASHBOARD INITIALIZATION (Auto-refresh every 30 seconds)
+    function initDashboard() {
+        refreshStats();
+        loadInventory();
+        loadLogs();
+        setInterval(refreshStats, 30000); 
+    }
+
+    // 2. QUICK ADD (Optimistic UI)
+    async function handleUpload() {
+        const name = document.getElementById('p-name').value;
+        const price = document.getElementById('p-price').value;
+        const img = document.getElementById('p-img').value;
+        if(!name || !price || !img) return alert("Fields empty!");
+
+        const status = document.getElementById('status');
+        status.innerHTML = "<span class='text-blue-500 font-bold italic anim-pulse'>🚀 Fast Syncing...</span>";
+
+        // Step A: Foran UI update (Bina wait kiye)
+        const newItem = { name, price, image: img, id: Date.now() };
+        renderSingleItem(newItem); // Screen par foran dikhayega
+        
+        // Step B: Background mein GitHub update
+        try {
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+            const file = await res.json();
+            const products = JSON.parse(atob(file.content));
+            products.push(newItem);
+
+            await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                method: "PUT",
+                headers: { "Authorization": `token ${TOKEN}` },
+                body: JSON.stringify({ 
+                    message: `Quick Add: ${name}`, 
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))), 
+                    sha: file.sha 
+                })
+            });
+
+            status.innerHTML = "<span class='text-green-600'>✅ Done!</span>";
+            saveLog(`Added: ${name}`);
+        } catch(e) { 
+            status.innerHTML = "<span class='text-red-500'>❌ Failed. Check Token.</span>";
+        }
+    }
+
+    // 3. QUICK DELETE (Instant Removal)
+    async function deleteProduct(index, btnElement) {
+        if(!confirm("Remove this item?")) return;
+
+        // Foran screen se hatao
+        const card = btnElement.closest('.product-card-ui');
+        card.style.opacity = '0.3';
+        card.style.pointerEvents = 'none';
+
+        try {
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                headers: { "Authorization": `token ${TOKEN}` }
+            });
+            const file = await res.json();
+            let products = JSON.parse(atob(file.content));
+            const deletedName = products[index].name;
+            products.splice(index, 1);
+
+            await fetch(`https://api.github.com/repos/${REPO}/contents/data.json`, {
+                method: "PUT",
+                headers: { "Authorization": `token ${TOKEN}` },
+                body: JSON.stringify({ 
+                    message: `Quick Delete: ${deletedName}`, 
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))), 
+                    sha: file.sha 
+                })
+            });
+            
+            card.remove(); // Delete confirmed
+            saveLog(`Deleted: ${deletedName}`);
+            refreshStats();
+        } catch(e) {
+            card.style.opacity = '1';
+            alert("Delete failed on server.");
+        }
+    }
+
+    // UI Helper: Naya item screen par chipkane ke liye
+    function renderSingleItem(p) {
+        const box = document.getElementById('inventoryList');
+        const html = `
+            <div class="product-card-ui bg-white p-4 rounded-3xl border flex items-center justify-between shadow-sm animate-pulse">
+                <div class="flex items-center gap-4">
+                    <img src="${p.image}" class="w-16 h-16 rounded-xl object-cover bg-slate-100">
+                    <div>
+                        <p class="font-bold text-slate-800">${p.name}</p>
+                        <p class="text-blue-600 font-black text-sm">Rs. ${p.price}</p>
+                    </div>
                 </div>
-                <div class="flex justify-between text-center border-t pt-4">
-                    <div><p class="text-[10px] text-gray-400">VIEWS</p><p class="font-black text-blue-600">${p.stats?.views || 0}</p></div>
-                    <div><p class="text-[10px] text-gray-400">LIKES</p><p class="font-black text-red-500">${p.stats?.likes || 0}</p></div>
-                    <div><p class="text-[10px] text-gray-400">CARTS</p><p class="font-black text-green-600">${p.stats?.carts || 0}</p></div>
-                </div>
-            </div>
-        `).join('');
+            </div>`;
+        box.insertAdjacentHTML('afterbegin', html);
     }
-
-    async function loadUsers() {
-        const res = await fetch(`https://raw.githubusercontent.com/${REPO}/main/users.json?t=${Date.now()}`);
-        const users = await res.json();
-        document.getElementById('userList').innerHTML = users.reverse().map(u => `
-            <div class="bg-white p-4 rounded-3xl border flex items-center gap-4">
-                <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-bold">${u.name.charAt(0)}</div>
-                <div><p class="font-bold text-sm">${u.name}</p><p class="text-[10px] text-gray-400">${u.email}</p></div>
-            </div>
-        `).join('');
-    }
-
-    function switchTab(id) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-        document.getElementById(`tab-${id}`).classList.remove('hidden');
-        if(id === 'stats') loadAnalytics();
-        if(id === 'users') loadUsers();
-    }
-
-    // Initialize
-    loadAnalytics();
-</script>
-</body>
-</html>
