@@ -1,91 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Oasis Admin</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-10">
-
-<div id="loginBox" class="max-w-md mx-auto bg-white p-8 rounded shadow">
-<h2 class="text-2xl font-bold mb-4">Admin Login</h2>
-<input id="pass" type="password" placeholder="Enter Admin Password"
-class="w-full p-3 border mb-3">
-<button onclick="login()" class="bg-black text-white px-5 py-2">
-Login
-</button>
-<p id="error" class="text-red-500 mt-2"></p>
-</div>
-
-<div id="adminPanel" class="hidden">
-<h2 class="text-3xl font-bold mb-6">Manage Products</h2>
-
-<div class="space-x-2">
-<input id="name" placeholder="Product Name" class="p-3 border">
-<input id="price" placeholder="Price" class="p-3 border">
-<input id="image" placeholder="Image URL" class="p-3 border">
-<button onclick="addProduct()" 
-class="bg-green-600 text-white px-4 py-2">
-Add
-</button>
-</div>
-
-<div id="list" class="mt-6"></div>
-</div>
+<h1>Admin Panel</h1>
+<input id="name">
+<input id="price">
+<button onclick="addProduct()">Add</button>
 
 <script>
-const ADMIN_PASSWORD="ahmed123"; // change this
-
-function login(){
-if(pass.value===ADMIN_PASSWORD){
-loginBox.style.display="none";
-adminPanel.style.display="block";
-loadProducts();
-}else{
-error.innerText="Wrong password!";
-}
-}
-
-function getProducts(){
-return JSON.parse(localStorage.getItem("oasis_products"))||[];
-}
-
-function saveProducts(data){
-localStorage.setItem("oasis_products",JSON.stringify(data));
-}
-
-function loadProducts(){
-const products=getProducts();
-list.innerHTML=products.map((p,i)=>`
-<div class="bg-white p-4 mb-2 flex justify-between">
-${p.name} - PKR ${p.price}
-<button onclick="del(${i})" 
-class="text-red-500">Delete</button>
-</div>
-`).join("");
-}
-
 function addProduct(){
-const products=getProducts();
-products.push({
-name:name.value,
-price:price.value,
-image:image.value
-});
-saveProducts(products);
-name.value="";
-price.value="";
-image.value="";
-loadProducts();
-}
-
-function del(i){
-const products=getProducts();
-products.splice(i,1);
-saveProducts(products);
-loadProducts();
+ alert("Use GitHub to update JSON or connect database");
 }
 </script>
-
-</body>
-</html>
