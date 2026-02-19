@@ -1,19 +1,17 @@
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
-<script>
-  // Apne Firebase Console se ye details copy karein
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_ID",
-    appId: "YOUR_APP_ID"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-</script>
+// Database se products mangwane ka code
+db.collection("Products").onSnapshot((snapshot) => {
+    const productContainer = document.getElementById('product-list');
+    productContainer.innerHTML = ''; // Pehle wala saaf karein
+    
+    snapshot.forEach((doc) => {
+        const p = doc.data();
+        productContainer.innerHTML += `
+            <div class="bg-[#1e1e1e] p-4 rounded-xl border border-gray-800">
+                <img src="${p.image}" class="w-full h-40 object-cover rounded-md">
+                <h3 class="mt-2 font-bold">${p.name}</h3>
+                <p class="text-pink-500">Rs. ${p.price}</p>
+                <button class="w-full bg-pink-600 mt-2 py-1 rounded text-sm">Add to Cart</button>
+            </div>
+        `;
+    });
+});
