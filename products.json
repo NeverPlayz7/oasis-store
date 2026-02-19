@@ -1,0 +1,14 @@
+[
+  {
+    "id":1,
+    "name":"Luxury Watch",
+    "price":4500,
+    "image":"assets/watch.jpg"
+  },
+  {
+    "id":2,
+    "name":"Sneakers",
+    "price":6500,
+    "image":"assets/shoes.jpg"
+  }
+]
